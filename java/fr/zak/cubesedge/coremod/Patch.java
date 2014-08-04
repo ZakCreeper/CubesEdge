@@ -103,7 +103,7 @@ public class Patch {
 
 	private static float getFOVModifier(Class c, EntityRenderer renderer, float par1, boolean par2){
 		try {
-			Method m = c.getDeclaredMethods()[3];
+			Method m = c.getDeclaredMethod("getFOVModifier", float.class, boolean.class);
 			m.setAccessible(true);
 			return (Float) m.invoke(renderer, par1, par2);
 		} catch (IllegalAccessException e) {
@@ -115,12 +115,18 @@ public class Patch {
 		} catch (InvocationTargetException e) {
 			e.printStackTrace();
 			return 0;
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+			return 0;
+		} catch (SecurityException e) {
+			e.printStackTrace();
+			return 0;
 		}
 	}
 	
 	private static void hurtCameraEffect(Class c, EntityRenderer renderer, float par1){
 		try {
-			Method m = c.getDeclaredMethods()[13];
+			Method m = c.getDeclaredMethod("hurtCameraEffect", float.class);
 			m.setAccessible(true);
 			m.invoke(renderer, par1);
 		} catch (IllegalAccessException e) {
@@ -128,13 +134,17 @@ public class Patch {
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
 		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		} catch (SecurityException e) {
 			e.printStackTrace();
 		}
 	}
 	
 	private static void setupViewBobbing(Class c, EntityRenderer renderer, float par1){
 		try {
-			Method m = c.getDeclaredMethods()[12];
+			Method m = c.getDeclaredMethod("setupViewBobbing", float.class);
 			m.setAccessible(true);
 			m.invoke(renderer, par1);
 		} catch (IllegalAccessException e) {
@@ -142,6 +152,10 @@ public class Patch {
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
 		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		} catch (SecurityException e) {
 			e.printStackTrace();
 		}
 	}

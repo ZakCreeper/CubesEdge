@@ -9,6 +9,7 @@ public class CubesEdgeFMLLoadingPlugin implements cpw.mods.fml.relauncher.IFMLLo
 
 	@Override
 	public String[] getASMTransformerClass() {
+		//TODO : Adapt for obfuscated environment
 		return new String[]{EntityRendererTransformer.class.getName(), EntityTransformer.class.getName()};
 	}
 

@@ -72,7 +72,6 @@ public class ClientTickHandler {
 	}
 
 	private void roll(int heading){
-		System.out.println(minecraft.thePlayer.fallDistance);
 		if(minecraft.thePlayer.fallDistance > 4.5F && minecraft.thePlayer.fallDistance < 15F){
 			if (minecraft.gameSettings.keyBindSneak.isPressed()){
 				Util.isRolling = true;
