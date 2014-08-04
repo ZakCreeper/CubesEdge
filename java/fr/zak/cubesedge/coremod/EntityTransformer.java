@@ -25,7 +25,8 @@ public class EntityTransformer implements IClassTransformer{
 	@Override
 	public byte[] transform(String name, String transformedName, byte[] basicClass) {
 		if (transformedName.equals("net.minecraft.entity.Entity")) {
-			methodName = obfuscated ? Translator.getMapedMethodName("Entity", "setAngles") : "setAngles";
+			System.out.println("Cube\'s Edge Core - Patching class Entity...");
+			methodName = /*obfuscated ? Translator.getMapedMethodName("Entity", "setAngles") : */"setAngles";
 
 			ClassReader cr = new ClassReader(basicClass);
 			ClassNode cn = new ClassNode(Opcodes.ASM4);
@@ -39,6 +40,7 @@ public class EntityTransformer implements IClassTransformer{
 			ClassWriter cw = new ClassWriter(0);
 			cn.accept(cw);
 
+			System.out.println("Cube\'s Edge Core - Patching class Entity done.");
 			return cw.toByteArray();
 		}
 		else{

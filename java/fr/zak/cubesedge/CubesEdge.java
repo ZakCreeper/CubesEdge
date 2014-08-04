@@ -1,6 +1,8 @@
 package fr.zak.cubesedge;
 
-import net.minecraft.entity.Entity;
+import java.lang.reflect.Method;
+
+import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;

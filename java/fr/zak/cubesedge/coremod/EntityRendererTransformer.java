@@ -15,7 +15,7 @@ import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
-public class RenderPlayerTransformer implements IClassTransformer{
+public class EntityRendererTransformer implements IClassTransformer{
 
 	private String methodName;
 
@@ -23,8 +23,9 @@ public class RenderPlayerTransformer implements IClassTransformer{
 	
 	@Override
 	public byte[] transform(String name, String transformedName, byte[] basicClass) {
-		if (transformedName.equals("net.minecraft.client.renderer.entity.RenderPlayer")){
-			methodName = obfuscated ? Translator.getMapedMethodName("RenderPlayer", "renderFirstPersonArm") : "renderFirstPersonArm";
+		if (transformedName.equals("net.minecraft.client.renderer.EntityRenderer")){
+			System.out.println("Cube\'s Edge Core - Patching class EntityRenderer...");
+			methodName = /*obfuscated ? Translator.getMapedMethodName("EntityRenderer", "renderHand") : */"renderHand";
 
 			ClassReader cr = new ClassReader(basicClass);
 			ClassNode cn = new ClassNode(Opcodes.ASM4);
@@ -37,7 +38,7 @@ public class RenderPlayerTransformer implements IClassTransformer{
 			}
 			ClassWriter cw = new ClassWriter(0);
 			cn.accept(cw);
-
+			System.out.println("Cube\'s Edge Core - Patching class EntityRenderer done.");
 			return cw.toByteArray();
 		}
 		else{
@@ -47,16 +48,18 @@ public class RenderPlayerTransformer implements IClassTransformer{
 	
 	private static void patchMethod(MethodNode mn) {
 
-		System.out.println("\tPatching method renderFirstPersonArm in RenderPlayer");
+		System.out.println("\tPatching method renderHand in EntityRenderer");
 		InsnList newList = new InsnList();
 
 		Iterator<AbstractInsnNode> it = mn.instructions.iterator();
 		while (it.hasNext()) {
 			AbstractInsnNode insn = it.next();
 			if (insn.getOpcode() == Opcodes.RETURN) {
-				newList.add(new VarInsnNode(Opcodes.ALOAD, 1));
-				newList.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "fr/zak/cubesedge/coremod/Patch", "renderPlayerRenderFirstPersonArmPatch"
-						, "(Lnet/minecraft/entity/player/EntityPlayer;)V"));
+				newList.add(new VarInsnNode(Opcodes.FLOAD, 1));
+				newList.add(new VarInsnNode(Opcodes.ILOAD, 2));
+				newList.add(new VarInsnNode(Opcodes.ALOAD, 0));
+				newList.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "fr/zak/cubesedge/coremod/Patch", "entityRendererRenderHandPatch"
+						, "(FILnet/minecraft/client/renderer/EntityRenderer;)V"));
 				newList.add(insn);
 			}
 		}

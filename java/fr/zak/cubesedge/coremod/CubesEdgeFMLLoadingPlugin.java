@@ -9,7 +9,7 @@ public class CubesEdgeFMLLoadingPlugin implements cpw.mods.fml.relauncher.IFMLLo
 
 	@Override
 	public String[] getASMTransformerClass() {
-		return new String[]{RenderPlayerTransformer.class.getName(), EntityTransformer.class.getName()};
+		return new String[]{EntityRendererTransformer.class.getName(), EntityTransformer.class.getName()};
 	}
 
 	@Override
