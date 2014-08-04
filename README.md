@@ -15,10 +15,13 @@ Ce mod inclue :
 	Le ralenti dure 5 secondes, il permet de ralentir le jeu et d'effectuer des actions plus facilement. Il suffit d'appuyer sur la touche R (par défaut (configurable dans les options) ) pour l'activer.
 	
 -La roulade :
-	La roulade permet de ne pas perdre de point de vie lorsque vous tomber, il faut que vous soyez à plus de 5 blocs de haut eet d'appuyer sur la touche de sneak pour la faire.
+	La roulade permet de ne pas perdre de point de vie lorsque vous tomber, il faut que vous soyez entre 5 et ~15-20 blocs de haut et d'appuyer sur la touche de sneak pour la faire.
 
 -L'affichage de la vitesse :
 	La vitesse est affichée en bas à droite, elle va de 0 km/h à 32 km/h.
 	
 -Modification du sprint :
 	Lorsque vous sprintez, vous irez de plus en plus vite.
+
+-Le grab :
+	Lorsque vous tomber et que vous êtes en face d'un bloc sans bloc au-dessus, vous vous accrocherez automatiquement au bloc. Touche de sneak pour relacher, touche de saut pour remonter.
