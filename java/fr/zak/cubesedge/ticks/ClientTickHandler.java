@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
+import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Timer;
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
@@ -30,14 +31,13 @@ public class ClientTickHandler {
 	@SubscribeEvent
 	public void tick(TickEvent.RenderTickEvent event) {
 		if(event.phase == TickEvent.Phase.END && minecraft.theWorld != null){
-			
 			ralenti();
-
 			int heading = MathHelper.floor_double((double)(minecraft.thePlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-			
+
 			if(!minecraft.thePlayer.capabilities.isFlying){
 				roll(heading);
 			}
+			grab(heading);
 			wallJumping(heading);
 			jump(heading);
 
@@ -72,32 +72,28 @@ public class ClientTickHandler {
 	}
 
 	private void roll(int heading){
-		if(minecraft.thePlayer.fallDistance > 4.5F){
-			for(int i = (int) minecraft.thePlayer.posY; i > 0; i--){
-				if(minecraft.theWorld.getBlock((int)minecraft.thePlayer.posX, i, (int)minecraft.thePlayer.posZ) != Blocks.air){
-					y = i;
-					break;
-				}
-			}
-			if(minecraft.thePlayer.getDistance(minecraft.thePlayer.posX, y, minecraft.thePlayer.posZ) <= 3 && minecraft.thePlayer.isSneaking()){
+		System.out.println(minecraft.thePlayer.fallDistance);
+		if(minecraft.thePlayer.fallDistance > 4.5F && minecraft.thePlayer.fallDistance < 15F){
+			if (minecraft.gameSettings.keyBindSneak.isPressed()){
 				Util.isRolling = true;
 			}
 		}
-		if(Util.isRolling){
+		if(Util.isRolling && minecraft.thePlayer.onGround){
+
 			if(heading == 0){
-				minecraft.thePlayer.motionZ = 1;
+				minecraft.thePlayer.motionZ = 0.5;
 				minecraft.thePlayer.motionX = 0;
 			}
 			if(heading == 1){
-				minecraft.thePlayer.motionX = -1;
+				minecraft.thePlayer.motionX = -0.5;
 				minecraft.thePlayer.motionZ = 0;
 			}
 			if(heading == 2){
-				minecraft.thePlayer.motionZ = -1;
+				minecraft.thePlayer.motionZ = -0.5;
 				minecraft.thePlayer.motionX = 0;
 			}
 			if(heading == 3){
-				minecraft.thePlayer.motionX = 1;
+				minecraft.thePlayer.motionX = 0.5;
 				minecraft.thePlayer.motionZ = 0;
 			}
 			if(rollingTime == 0){
@@ -238,26 +234,51 @@ public class ClientTickHandler {
 			if((minecraft.theWorld.getBlock((int)minecraft.thePlayer.posX, (int)minecraft.thePlayer.posY, (int)minecraft.thePlayer.posZ - 1) == Blocks.air && heading == 2) || (minecraft.theWorld.getBlock((int)minecraft.thePlayer.posX, (int)minecraft.thePlayer.posY, (int)minecraft.thePlayer.posZ + 1) == Blocks.air && heading == 0) || (minecraft.theWorld.getBlock((int)minecraft.thePlayer.posX - 1, (int)minecraft.thePlayer.posY, (int)minecraft.thePlayer.posZ) == Blocks.air && heading == 1) || (minecraft.theWorld.getBlock((int)minecraft.thePlayer.posX + 1, (int)minecraft.thePlayer.posY, (int)minecraft.thePlayer.posZ) == Blocks.air && heading == 3)){
 				if(ObfuscationReflectionHelper.getPrivateValue(EntityLivingBase.class, (EntityLivingBase)minecraft.thePlayer, 41)){
 					minecraft.thePlayer.motionY = 0.41999998688697815D;
+					Util.isGrabbing = true;
+				}
+				else{
+					Util.isGrabbing = false;
 				}
 			}
 		}
 	}
 
-//	public static void forceSetSize(Class clz, Entity ent, float width, float height)
-//	{
-//		try
-//		{
-//			Method m = clz.getDeclaredMethods()[3];
-//			m.setAccessible(true);
-//			m.invoke(ent, width, height);
-//		}
-//		catch(IllegalAccessException e)
-//		{
-//			e.printStackTrace();
-//		}
-//		catch (InvocationTargetException e) 
-//		{
-//			e.printStackTrace();
-//		}
-//	}
+	private void grab(int heading){
+		if((minecraft.theWorld.getBlock((int)minecraft.thePlayer.posX, (int)minecraft.thePlayer.posY, (int)minecraft.thePlayer.posZ - 1) != Blocks.air && heading == 2) || (minecraft.theWorld.getBlock((int)minecraft.thePlayer.posX, (int)minecraft.thePlayer.posY, (int)minecraft.thePlayer.posZ + 1) != Blocks.air && heading == 0) || (minecraft.theWorld.getBlock((int)minecraft.thePlayer.posX - 1, (int)minecraft.thePlayer.posY, (int)minecraft.thePlayer.posZ) != Blocks.air && heading == 1) || (minecraft.theWorld.getBlock((int)minecraft.thePlayer.posX + 1, (int)minecraft.thePlayer.posY, (int)minecraft.thePlayer.posZ) != Blocks.air && heading == 3)){
+			if((minecraft.theWorld.getBlock((int)minecraft.thePlayer.posX, (int)minecraft.thePlayer.posY + 1, (int)minecraft.thePlayer.posZ - 1) == Blocks.air && heading == 2) || (minecraft.theWorld.getBlock((int)minecraft.thePlayer.posX, (int)minecraft.thePlayer.posY + 1, (int)minecraft.thePlayer.posZ + 1) == Blocks.air && heading == 0) || (minecraft.theWorld.getBlock((int)minecraft.thePlayer.posX - 1, (int)minecraft.thePlayer.posY + 1, (int)minecraft.thePlayer.posZ) == Blocks.air && heading == 1) || (minecraft.theWorld.getBlock((int)minecraft.thePlayer.posX + 1, (int)minecraft.thePlayer.posY + 1, (int)minecraft.thePlayer.posZ) == Blocks.air && heading == 3)){
+				if(!minecraft.thePlayer.isSneaking() && !(Boolean)ObfuscationReflectionHelper.getPrivateValue(EntityLivingBase.class, (EntityLivingBase)minecraft.thePlayer, 41)){
+					minecraft.thePlayer.motionY = 0.0;
+				}
+				else if(ObfuscationReflectionHelper.getPrivateValue(EntityLivingBase.class, (EntityLivingBase)minecraft.thePlayer, 41)){
+					minecraft.thePlayer.motionY = 0.41999998688697815D;
+				}
+			}
+		}
+	}
+
+	public static void forceSetSize(Class clz, Entity ent, float width, float height)
+	{
+		try
+		{
+			Method m = clz.getDeclaredMethod("setSize", float.class, float.class);
+			m.setAccessible(true);
+			m.invoke(ent, width, height);
+		}
+		catch(IllegalAccessException e)
+		{
+			e.printStackTrace();
+		}
+		catch (InvocationTargetException e) 
+		{
+			e.printStackTrace();
+		} 
+		catch (NoSuchMethodException e) 
+		{
+			e.printStackTrace();
+		} 
+		catch (SecurityException e) 
+		{
+			e.printStackTrace();
+		}
+	}
 }

@@ -3,44 +3,37 @@ package fr.zak.cubesedge.coremod;
 import java.util.Iterator;
 
 import jdk.internal.org.objectweb.asm.Opcodes;
+import net.minecraft.entity.Entity;
 import net.minecraft.launchwrapper.IClassTransformer;
+import net.minecraft.profiler.IPlayerUsage;
 
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.FieldInsnNode;
-import org.objectweb.asm.tree.FieldNode;
 import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
-import com.sun.xml.internal.stream.Entity;
+public class EntityTransformer implements IClassTransformer{
 
-public class CubesEdgeTransformer implements IClassTransformer{
+	private String methodName;
 
-	private String entityClass;
-
-	private String setAnglesMethodName;
-
-	private boolean obfuscated = Entity.class.getDeclaredMethods()[3].getName().equals("isUnparsed") ? false : true;
+	private boolean obfuscated = IPlayerUsage.class.getDeclaredMethods()[0].getName().equals("addServerStatsToSnooper") ? false : true;
+	
 	@Override
-	public byte[] transform(String name, String transformedName,
-			byte[] basicClass) {
+	public byte[] transform(String name, String transformedName, byte[] basicClass) {
 		if (transformedName.equals("net.minecraft.entity.Entity")) {
-			entityClass = obfuscated ? Translator.getMapedClassName("Entity") : "/net/minecraft/entity/Entity";
-
-			setAnglesMethodName = obfuscated ? Translator.getMapedMethodName("Entity", "setAngles") : "setAngles";
+			methodName = obfuscated ? Translator.getMapedMethodName("Entity", "setAngles") : "setAngles";
 
 			ClassReader cr = new ClassReader(basicClass);
 			ClassNode cn = new ClassNode(Opcodes.ASM4);
 			cr.accept(cn, 0);
 			for (Object mnObj : cn.methods) {
 				MethodNode mn = (MethodNode)mnObj;
-				if (mn.name.equals(setAnglesMethodName)) {
-					processRenderItemMethod(mn);
+				if (mn.name.equals(methodName)) {
+					patchMethod(mn);
 				}
 			}
 			ClassWriter cw = new ClassWriter(0);
@@ -52,7 +45,8 @@ public class CubesEdgeTransformer implements IClassTransformer{
 			return basicClass;
 		}
 	}
-	private void processRenderItemMethod(MethodNode mn) {
+
+	private static void patchMethod(MethodNode mn) {
 
 		System.out.println("\tPatching method setAngles in Entity");
 		InsnList newList = new InsnList();
@@ -71,6 +65,5 @@ public class CubesEdgeTransformer implements IClassTransformer{
 		}
 
 		mn.instructions = newList;
-	}
-
+	}	
 }

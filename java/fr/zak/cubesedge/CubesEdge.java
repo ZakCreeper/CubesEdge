@@ -1,7 +1,6 @@
 package fr.zak.cubesedge;
 
-import com.sun.xml.internal.stream.Entity;
-
+import net.minecraft.entity.Entity;
 import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -24,12 +23,11 @@ public class CubesEdge{
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event){
-		proxy.registerRenderThings();
 	}
 
 	@EventHandler
 	public void init(FMLInitializationEvent event){
-
+		proxy.registerRenderThings();
 		MinecraftForge.EVENT_BUS.register(new SpeedEvent());
 	}
 
