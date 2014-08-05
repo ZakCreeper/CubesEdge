@@ -8,13 +8,19 @@ import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
+import cpw.mods.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import fr.zak.cubesedge.event.SpeedEvent;
 import fr.zak.cubesedge.proxys.CommonProxy;
 
-@Mod(modid = "cubesedge", name = "Cube's Edge", version = "Alpha 0.0.1")
+/**
+ * 
+ * @author Zak (alex.ulysse@gmail.com)
+ *
+ */
+@Mod(modid = "cubesedge", name = "Cube's Edge", version = "Alpha 0.0.4")
 public class CubesEdge{
 
 	@Instance("cubesedge")
@@ -25,6 +31,7 @@ public class CubesEdge{
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event){
+		Util.detectObfuscation();
 	}
 
 	@EventHandler

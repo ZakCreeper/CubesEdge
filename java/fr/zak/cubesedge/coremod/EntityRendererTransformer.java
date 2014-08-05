@@ -18,14 +18,14 @@ import org.objectweb.asm.tree.VarInsnNode;
 public class EntityRendererTransformer implements IClassTransformer{
 
 	private String methodName;
-
-	private boolean obfuscated = IPlayerUsage.class.getDeclaredMethods()[0].getName().equals("addServerStatsToSnooper") ? false : true;
+	private static String className;
 	
 	@Override
 	public byte[] transform(String name, String transformedName, byte[] basicClass) {
 		if (transformedName.equals("net.minecraft.client.renderer.EntityRenderer")){
 			System.out.println("Cube\'s Edge Core - Patching class EntityRenderer...");
-			methodName = /*obfuscated ? Translator.getMapedMethodName("EntityRenderer", "renderHand") : */"renderHand";
+			methodName = CubesEdgeFMLLoadingPlugin.obfuscation ? "func_78476_b" : "renderHand";
+			className = CubesEdgeFMLLoadingPlugin.obfuscation ? "bll" : "net/minecraft/client/renderer/EntityRenderer";
 
 			ClassReader cr = new ClassReader(basicClass);
 			ClassNode cn = new ClassNode(Opcodes.ASM4);
@@ -59,7 +59,7 @@ public class EntityRendererTransformer implements IClassTransformer{
 				newList.add(new VarInsnNode(Opcodes.ILOAD, 2));
 				newList.add(new VarInsnNode(Opcodes.ALOAD, 0));
 				newList.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "fr/zak/cubesedge/coremod/Patch", "entityRendererRenderHandPatch"
-						, "(FILnet/minecraft/client/renderer/EntityRenderer;)V"));
+						, "(FIL" + className + ";)V"));
 				newList.add(insn);
 			}
 		}

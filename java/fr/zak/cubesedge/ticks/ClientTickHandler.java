@@ -8,14 +8,15 @@ import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
-import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Timer;
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
+import cpw.mods.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import fr.zak.cubesedge.Util;
 import fr.zak.cubesedge.event.KeyHandler;
+import fr.zak.cubesedge.renderer.EntityRendererCustom;
 
 public class ClientTickHandler {
 
@@ -28,12 +29,29 @@ public class ClientTickHandler {
 
 	int y = 0, rollingTime = 0;
 
+	private EntityRenderer renderer, prevRenderer;
+
 	@SubscribeEvent
 	public void tick(TickEvent.RenderTickEvent event) {
+//		if(event.phase == TickEvent.Phase.START && minecraft.theWorld != null){
+//			if(!Util.b){
+//				if (renderer == null) {
+//					renderer = new EntityRendererCustom(minecraft);
+//				}
+//				if (minecraft.entityRenderer != renderer) {
+//					// be sure to store the previous renderer
+//					prevRenderer = minecraft.entityRenderer;
+//					minecraft.entityRenderer = renderer;
+//				}
+//				forceSetSize(Entity.class, minecraft.thePlayer, 0.6F, 0.6F);
+//			} else if (prevRenderer != null && minecraft.entityRenderer != prevRenderer) {
+//				// reset the renderer
+//				minecraft.entityRenderer = prevRenderer;
+//			}
+//		}
 		if(event.phase == TickEvent.Phase.END && minecraft.theWorld != null){
 			ralenti();
 			int heading = MathHelper.floor_double((double)(minecraft.thePlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-
 			if(!minecraft.thePlayer.capabilities.isFlying){
 				roll(heading);
 			}
@@ -259,7 +277,7 @@ public class ClientTickHandler {
 	{
 		try
 		{
-			Method m = clz.getDeclaredMethod("setSize", float.class, float.class);
+			Method m = clz.getDeclaredMethod(Util.obfuscation ? "func_70105_a" : "setSize", float.class, float.class);
 			m.setAccessible(true);
 			m.invoke(ent, width, height);
 		}

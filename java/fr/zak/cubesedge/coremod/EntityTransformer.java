@@ -19,15 +19,15 @@ import org.objectweb.asm.tree.VarInsnNode;
 public class EntityTransformer implements IClassTransformer{
 
 	private String methodName;
-
-	private boolean obfuscated = IPlayerUsage.class.getDeclaredMethods()[0].getName().equals("addServerStatsToSnooper") ? false : true;
+	private static String className;
 	
 	@Override
 	public byte[] transform(String name, String transformedName, byte[] basicClass) {
 		if (transformedName.equals("net.minecraft.entity.Entity")) {
 			System.out.println("Cube\'s Edge Core - Patching class Entity...");
-			methodName = /*obfuscated ? Translator.getMapedMethodName("Entity", "setAngles") : */"setAngles";
-
+			methodName = CubesEdgeFMLLoadingPlugin.obfuscation ? "func_70082_c" : "setAngles";
+			className = CubesEdgeFMLLoadingPlugin.obfuscation ? "qn" : "net/minecraft/entity/Entity";
+			
 			ClassReader cr = new ClassReader(basicClass);
 			ClassNode cn = new ClassNode(Opcodes.ASM4);
 			cr.accept(cn, 0);
@@ -61,7 +61,7 @@ public class EntityTransformer implements IClassTransformer{
 				newList.add(new VarInsnNode(Opcodes.FLOAD, 2));
 				newList.add(new VarInsnNode(Opcodes.ALOAD, 0));
 				newList.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "fr/zak/cubesedge/coremod/Patch", "entitySetAnglesPatch"
-						, "(FFLnet/minecraft/entity/Entity;)V"));
+						, "(FFL" + className + ";)V"));
 				newList.add(insn);
 			}		
 		}

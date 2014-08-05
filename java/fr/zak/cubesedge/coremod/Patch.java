@@ -103,7 +103,7 @@ public class Patch {
 
 	private static float getFOVModifier(Class c, EntityRenderer renderer, float par1, boolean par2){
 		try {
-			Method m = c.getDeclaredMethod("getFOVModifier", float.class, boolean.class);
+			Method m = c.getDeclaredMethod(CubesEdgeFMLLoadingPlugin.obfuscation ? "func_78481_a" : "getFOVModifier", float.class, boolean.class);
 			m.setAccessible(true);
 			return (Float) m.invoke(renderer, par1, par2);
 		} catch (IllegalAccessException e) {
@@ -126,7 +126,7 @@ public class Patch {
 	
 	private static void hurtCameraEffect(Class c, EntityRenderer renderer, float par1){
 		try {
-			Method m = c.getDeclaredMethod("hurtCameraEffect", float.class);
+			Method m = c.getDeclaredMethod(CubesEdgeFMLLoadingPlugin.obfuscation ? "func_78482_e" : "hurtCameraEffect", float.class);
 			m.setAccessible(true);
 			m.invoke(renderer, par1);
 		} catch (IllegalAccessException e) {
@@ -144,7 +144,7 @@ public class Patch {
 	
 	private static void setupViewBobbing(Class c, EntityRenderer renderer, float par1){
 		try {
-			Method m = c.getDeclaredMethod("setupViewBobbing", float.class);
+			Method m = c.getDeclaredMethod(CubesEdgeFMLLoadingPlugin.obfuscation ? "func_78475_f" : "setupViewBobbing", float.class);
 			m.setAccessible(true);
 			m.invoke(renderer, par1);
 		} catch (IllegalAccessException e) {
