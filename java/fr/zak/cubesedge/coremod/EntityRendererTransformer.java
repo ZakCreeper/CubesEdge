@@ -24,7 +24,7 @@ public class EntityRendererTransformer implements IClassTransformer{
 	public byte[] transform(String name, String transformedName, byte[] basicClass) {
 		if (transformedName.equals("net.minecraft.client.renderer.EntityRenderer")){
 			System.out.println("Cube\'s Edge Core - Patching class EntityRenderer...");
-			methodName = CubesEdgeFMLLoadingPlugin.obfuscation ? "func_78476_b" : "renderHand";
+			methodName = CubesEdgeFMLLoadingPlugin.obfuscation ? "b" : "renderHand";
 			className = CubesEdgeFMLLoadingPlugin.obfuscation ? "bll" : "net/minecraft/client/renderer/EntityRenderer";
 
 			ClassReader cr = new ClassReader(basicClass);
@@ -32,7 +32,7 @@ public class EntityRendererTransformer implements IClassTransformer{
 			cr.accept(cn, 0);
 			for (Object mnObj : cn.methods) {
 				MethodNode mn = (MethodNode)mnObj;
-				if (mn.name.equals(methodName)) {
+				if (mn.name.equals(methodName) && mn.desc.equals("(FI)V")) {
 					patchMethod(mn);
 				}
 			}

@@ -25,7 +25,7 @@ public class EntityTransformer implements IClassTransformer{
 	public byte[] transform(String name, String transformedName, byte[] basicClass) {
 		if (transformedName.equals("net.minecraft.entity.Entity")) {
 			System.out.println("Cube\'s Edge Core - Patching class Entity...");
-			methodName = CubesEdgeFMLLoadingPlugin.obfuscation ? "func_70082_c" : "setAngles";
+			methodName = CubesEdgeFMLLoadingPlugin.obfuscation ? "c" : "setAngles";
 			className = CubesEdgeFMLLoadingPlugin.obfuscation ? "qn" : "net/minecraft/entity/Entity";
 			
 			ClassReader cr = new ClassReader(basicClass);
@@ -33,7 +33,7 @@ public class EntityTransformer implements IClassTransformer{
 			cr.accept(cn, 0);
 			for (Object mnObj : cn.methods) {
 				MethodNode mn = (MethodNode)mnObj;
-				if (mn.name.equals(methodName)) {
+				if (mn.name.equals(methodName) && mn.desc.equals("(FF)V")) {
 					patchMethod(mn);
 				}
 			}
