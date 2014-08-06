@@ -11,8 +11,9 @@ public class Util {
 	
 	public static boolean isGrabbing = false;
 	
+	public static boolean beginingRunning = false;
 	public static float tickRunningLeft = 0;
-	public static float tickRunningRight = 0.085F;
+	public static float tickRunningRight = 0;
 	public static boolean animRunnig = false;
 	
 	public static void detectObfuscation()

@@ -475,7 +475,6 @@ public class Patch {
 				if (((Minecraft)ObfuscationReflectionHelper.getPrivateValue(ItemRenderer.class, renderer, 3)).renderViewEntity instanceof EntityPlayer)
 				{
 					if(entityplayer.isSprinting()){
-						GL11.glRotatef(Math.abs(MathHelper.cos((float)Math.PI - 0.2F) * Util.tickRunningRight) * 180.0F, 1.0F, 0.0F, 0.0F);
 						GL11.glRotatef(bf4, 1.0F, 0.0F, 0.0F);
 					}
 				}
@@ -504,6 +503,16 @@ public class Patch {
 			renderplayer = (RenderPlayer)render;
 			f10 = 1.0F;
 			GL11.glScalef(f10, f10, f10);
+			if(Minecraft.getMinecraft().gameSettings.viewBobbing){
+				EntityPlayer entityplayer = (EntityPlayer)((Minecraft)ObfuscationReflectionHelper.getPrivateValue(ItemRenderer.class, renderer, 3)).renderViewEntity;
+				if (((Minecraft)ObfuscationReflectionHelper.getPrivateValue(ItemRenderer.class, renderer, 3)).renderViewEntity instanceof EntityPlayer)
+				{
+					if(entityplayer.isSprinting()){
+						GL11.glTranslatef(0.F, Util.tickRunningRight * 0.6F, 0);
+						GL11.glRotatef(-Util.tickRunningRight * 20F, 0, 0, 0.4F);
+					}
+				}
+			}
 			renderplayer.renderFirstPersonArm(((Minecraft)ObfuscationReflectionHelper.getPrivateValue(ItemRenderer.class, renderer, 3)).thePlayer);
 			GL11.glPopMatrix();
 		}
@@ -521,7 +530,6 @@ public class Patch {
 				if (((Minecraft)ObfuscationReflectionHelper.getPrivateValue(ItemRenderer.class, renderer, 3)).renderViewEntity instanceof EntityPlayer)
 				{
 					if(entityplayer.isSprinting()){
-						GL11.glRotatef(Math.abs(MathHelper.cos((float)Math.PI - 0.2F) * Util.tickRunningLeft) * 180.0F, 1.0F, 0.0F, 0.0F);
 						GL11.glRotatef(bf4, 1.0F, 0.0F, 0.0F);
 					}
 				}
@@ -547,6 +555,16 @@ public class Patch {
 			GL11.glTranslatef(0.2F, 0, -0.15F);
 			GL11.glRotatef(5, 0, 1, 0);
 			GL11.glTranslatef(0, 0.08F, 0);
+			if(Minecraft.getMinecraft().gameSettings.viewBobbing){
+				EntityPlayer entityplayer = (EntityPlayer)((Minecraft)ObfuscationReflectionHelper.getPrivateValue(ItemRenderer.class, renderer, 3)).renderViewEntity;
+				if (((Minecraft)ObfuscationReflectionHelper.getPrivateValue(ItemRenderer.class, renderer, 3)).renderViewEntity instanceof EntityPlayer)
+				{
+					if(entityplayer.isSprinting()){
+						GL11.glTranslatef(0.F, Util.tickRunningLeft * 0.8F, 0);
+						GL11.glRotatef(Util.tickRunningLeft * 20F, 0, 0, 0.4F);
+					}
+				}
+			}
 			renderplayer.renderFirstPersonArm(((Minecraft)ObfuscationReflectionHelper.getPrivateValue(ItemRenderer.class, renderer, 3)).thePlayer);
 			GL11.glPopMatrix();
 		}

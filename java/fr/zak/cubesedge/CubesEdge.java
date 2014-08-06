@@ -1,17 +1,14 @@
 package fr.zak.cubesedge;
 
-import java.lang.reflect.Method;
-
-import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import fr.zak.cubesedge.event.PlayerFall;
 import fr.zak.cubesedge.event.SpeedEvent;
 import fr.zak.cubesedge.proxys.CommonProxy;
 
@@ -38,6 +35,7 @@ public class CubesEdge{
 	public void init(FMLInitializationEvent event){
 		proxy.registerRenderThings();
 		MinecraftForge.EVENT_BUS.register(new SpeedEvent());
+		MinecraftForge.EVENT_BUS.register(new PlayerFall());
 	}
 
 	@EventHandler

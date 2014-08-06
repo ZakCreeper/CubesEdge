@@ -2,6 +2,7 @@ package fr.zak.cubesedge.event;
 
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.entity.RenderPlayer;
+import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -19,6 +20,5 @@ public class RenderPlayerEventCustom {
 		}
 //		((ModelBiped)ObfuscationReflectionHelper.getPrivateValue(RenderPlayer.class, event.renderer, 1)).bipedHead.offsetY = 1.4F;
 //		((ModelBiped)ObfuscationReflectionHelper.getPrivateValue(RenderPlayer.class, event.renderer, 1)).bipedLeftLeg.postRender(0.0625F);
-	}
-	
+	}	
 }
