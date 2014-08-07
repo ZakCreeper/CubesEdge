@@ -16,24 +16,24 @@ import fr.zak.cubesedge.proxys.CommonProxy;
 /**
  * 
  * @author Zak (alex.ulysse@gmail.com)
- *
+ * 
  */
 @Mod(modid = "cubesedge", name = "Cube's Edge", version = "Alpha 0.0.5")
-public class CubesEdge{
+public class CubesEdge {
 
 	@Instance("cubesedge")
 	public static CubesEdge cubesEdgeInstance;
 
-	@SidedProxy(clientSide="fr.zak.cubesedge.proxys.ClientProxy", serverSide="fr.zak.cubesedge.proxys.CommonProxy")
+	@SidedProxy(clientSide = "fr.zak.cubesedge.proxys.ClientProxy", serverSide = "fr.zak.cubesedge.proxys.CommonProxy")
 	public static CommonProxy proxy;
 
 	@EventHandler
-	public void preInit(FMLPreInitializationEvent event){
+	public void preInit(FMLPreInitializationEvent event) {
 		Util.detectObfuscation();
 	}
 
 	@EventHandler
-	public void init(FMLInitializationEvent event){
+	public void init(FMLInitializationEvent event) {
 		proxy.registerRenderThings();
 		MinecraftForge.EVENT_BUS.register(new SpeedEvent());
 		MinecraftForge.EVENT_BUS.register(new PlayerFall());
@@ -41,7 +41,7 @@ public class CubesEdge{
 	}
 
 	@EventHandler
-	public void postInit(FMLPostInitializationEvent event){
+	public void postInit(FMLPostInitializationEvent event) {
 
 	}
 }

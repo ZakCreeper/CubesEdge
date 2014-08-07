@@ -74,7 +74,7 @@ public class Patch {
 
 			if ((Double)ObfuscationReflectionHelper.getPrivateValue(EntityRenderer.class, renderer, 46) != 1.0D)
 			{
-				GL11.glTranslatef((Float)ObfuscationReflectionHelper.getPrivateValue(EntityRenderer.class, renderer, 47), (float)(-(Double)ObfuscationReflectionHelper.getPrivateValue(EntityRenderer.class, renderer, 48)), 0.0F);
+				GL11.glTranslatef(((Double)ObfuscationReflectionHelper.getPrivateValue(EntityRenderer.class, renderer, 47)).floatValue(), (float)(-(Double)ObfuscationReflectionHelper.getPrivateValue(EntityRenderer.class, renderer, 48)), 0.0F);
 				GL11.glScaled((Double)ObfuscationReflectionHelper.getPrivateValue(EntityRenderer.class, renderer, 46), (Double)ObfuscationReflectionHelper.getPrivateValue(EntityRenderer.class, renderer, 46), 1.0D);
 			}
 
@@ -87,7 +87,18 @@ public class Patch {
 			}
 
 			GL11.glMatrixMode(GL11.GL_MODELVIEW);
-			GL11.glLoadIdentity();
+			if(!Util.isGrabbing){
+				GL11.glLoadIdentity();
+			}
+			int heading = MathHelper.floor_double((double)(Minecraft.getMinecraft().thePlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+			if(Util.isGrabbing && heading != 2){
+				if(heading != 0){
+					GL11.glRotatef(90 * heading, 0, 1, 0);
+				}
+				else{
+					GL11.glRotatef(180, 0, 1, 0);
+				}
+			}
 
 			if (((Minecraft)ObfuscationReflectionHelper.getPrivateValue(EntityRenderer.class, renderer, 5)).gameSettings.anaglyph)
 			{
@@ -187,16 +198,16 @@ public class Patch {
 		float f1 = (Float)ObfuscationReflectionHelper.getPrivateValue(ItemRenderer.class, renderer, 6) + ((Float)ObfuscationReflectionHelper.getPrivateValue(ItemRenderer.class, renderer, 5) - (Float)ObfuscationReflectionHelper.getPrivateValue(ItemRenderer.class, renderer, 6)) * par1;
 		EntityClientPlayerMP entityclientplayermp = ((Minecraft)ObfuscationReflectionHelper.getPrivateValue(ItemRenderer.class, renderer, 3)).thePlayer;
 		float f2 = entityclientplayermp.prevRotationPitch + (entityclientplayermp.rotationPitch - entityclientplayermp.prevRotationPitch) * par1;
-		GL11.glPushMatrix();
-		GL11.glRotatef(f2, 1.0F, 0.0F, 0.0F);
-		GL11.glRotatef(entityclientplayermp.prevRotationYaw + (entityclientplayermp.rotationYaw - entityclientplayermp.prevRotationYaw) * par1, 0.0F, 1.0F, 0.0F);
-		RenderHelper.enableStandardItemLighting();
-		GL11.glPopMatrix();
+		//		GL11.glPushMatrix();
+		//		GL11.glRotatef(f2, 1.0F, 0.0F, 0.0F);
+		//		GL11.glRotatef(entityclientplayermp.prevRotationYaw + (entityclientplayermp.rotationYaw - entityclientplayermp.prevRotationYaw) * par1, 0.0F, 1.0F, 0.0F);
+		//		RenderHelper.enableStandardItemLighting();
+		//		GL11.glPopMatrix();
 		EntityPlayerSP entityplayersp = (EntityPlayerSP)entityclientplayermp;
 		float f3 = entityplayersp.prevRenderArmPitch + (entityplayersp.renderArmPitch - entityplayersp.prevRenderArmPitch) * par1;
 		float f4 = entityplayersp.prevRenderArmYaw + (entityplayersp.renderArmYaw - entityplayersp.prevRenderArmYaw) * par1;
-		GL11.glRotatef((entityclientplayermp.rotationPitch - f3) * 0.1F, 1.0F, 0.0F, 0.0F);
-		GL11.glRotatef((entityclientplayermp.rotationYaw - f4) * 0.1F, 0.0F, 1.0F, 0.0F);
+		//		GL11.glRotatef((entityclientplayermp.rotationPitch - f3) * 0.1F, 1.0F, 0.0F, 0.0F);
+		//		GL11.glRotatef((entityclientplayermp.rotationYaw - f4) * 0.1F, 0.0F, 1.0F, 0.0F);
 		ItemStack itemstack = (ItemStack)ObfuscationReflectionHelper.getPrivateValue(ItemRenderer.class, renderer, 4);
 
 		if (itemstack != null && itemstack.getItem() instanceof ItemCloth)
