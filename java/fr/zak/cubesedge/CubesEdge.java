@@ -9,6 +9,7 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import fr.zak.cubesedge.event.PlayerFall;
+import fr.zak.cubesedge.event.PlayerJump;
 import fr.zak.cubesedge.event.SpeedEvent;
 import fr.zak.cubesedge.proxys.CommonProxy;
 
@@ -36,6 +37,7 @@ public class CubesEdge{
 		proxy.registerRenderThings();
 		MinecraftForge.EVENT_BUS.register(new SpeedEvent());
 		MinecraftForge.EVENT_BUS.register(new PlayerFall());
+		MinecraftForge.EVENT_BUS.register(new PlayerJump());
 	}
 
 	@EventHandler

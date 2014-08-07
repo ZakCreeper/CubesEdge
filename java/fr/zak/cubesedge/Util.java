@@ -15,6 +15,16 @@ public class Util {
 	public static float tickRunningLeft = 0;
 	public static float tickRunningRight = 0;
 	public static boolean animRunnig = false;
+	public static boolean backLeft = false;
+	public static boolean backRight = false;
+	
+	public static int temps = 0;
+	public static boolean ralenti = false;
+	
+	public static boolean wallJump = false;
+	public static boolean animRight = false;
+	public static boolean animLeft = false;
+
 	
 	public static void detectObfuscation()
     {

@@ -35,7 +35,9 @@ public class SpeedEvent {
 			else{
 				speed = 1;
 			}
+			//			if(Util.isRolling){
+//			ObfuscationReflectionHelper.setPrivateValue(EntityPlayer.class, (EntityPlayer)event.entityLiving, true, 18);
+			//			}
 		}
 	}
-
 }
