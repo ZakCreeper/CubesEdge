@@ -40,7 +40,7 @@ public class ClientTickHandler {
 				System.out.println(i);
 				if(i > 0){
 					event.player.playSound(i > 4 ? "game.neutral.hurt.fall.big" : "game.neutral.hurt.fall.small", 1.0F, 1.0F);
-					event.player.attackEntityFrom(DamageSource.fall, (float)i);
+					damageEntity(EntityLivingBase.class, event.player, DamageSource.fall, (float)i);
 				}
 				event.player.fallDistance = 0;
 			}
@@ -366,5 +366,23 @@ public class ClientTickHandler {
 		{
 			e.printStackTrace();
 		} 
+	}
+	
+	private void damageEntity(Class c, EntityPlayer p, DamageSource d, float f){
+		try {
+			Method m = c.getDeclaredMethod(Util.obfuscation ? "func_70665_d" : "damageEntity", DamageSource.class, float.class);
+			m.setAccessible(true);
+			m.invoke(p, d, f);
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		}
 	}
 }
