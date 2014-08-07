@@ -10,6 +10,7 @@ public class Util {
 	public static boolean isRolling = false;
 
 	public static boolean isGrabbing = false;
+	public static boolean[] grabbingDirections = {false, false, false, false}; 
 
 	public static boolean beginingRunning = false;
 	public static float tickRunningLeft = 0;

@@ -329,9 +329,27 @@ public class ClientTickHandler {
 	private void grab(int heading, EntityPlayer player){
 		if(((minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ) - 1).isNormalCube() && heading == 2) || (minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ) + 1).isNormalCube() && heading == 0) || (minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX) - 1, MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ)).isNormalCube() && heading == 1) || (minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX) + 1, MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ)).isNormalCube() && heading == 3)) && ((minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY) + 1, MathHelper.floor_double(player.posZ) - 1) == Blocks.air && heading == 2) || (minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY) + 1, MathHelper.floor_double(player.posZ) + 1) == Blocks.air && heading == 0) || (minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX) - 1, MathHelper.floor_double(player.posY) + 1, MathHelper.floor_double(player.posZ)) == Blocks.air && heading == 1) || (minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX) + 1, MathHelper.floor_double(player.posY) + 1, MathHelper.floor_double(player.posZ)) == Blocks.air && heading == 3)) && (minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY) - 2, MathHelper.floor_double(player.posZ)) == Blocks.air)){
 			Util.isGrabbing = true;
+			Util.grabbingDirections[heading] = true;
+			if(heading == 0){
+				Util.grabbingDirections[3] = true;
+			}
+			else{
+				Util.grabbingDirections[heading - 1] = true;
+			}
+			
+			if(heading == 3){
+				Util.grabbingDirections[0] = true;
+			}
+			else{
+				Util.grabbingDirections[heading + 1] = true;
+			}
 		}
 		else{
 			Util.isGrabbing = false;
+			Util.grabbingDirections[0] = false;
+			Util.grabbingDirections[1] = false;
+			Util.grabbingDirections[2] = false;
+			Util.grabbingDirections[3] = false;
 		}
 		if(!player.isSneaking() && !(Boolean)ObfuscationReflectionHelper.getPrivateValue(EntityLivingBase.class, (EntityLivingBase)player, 41) && Util.isGrabbing){
 			player.motionY = 0.0;

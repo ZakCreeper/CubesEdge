@@ -41,7 +41,7 @@ public class Patch {
 	public static void entitySetAnglesPatch(float par1, float par2, Entity entity){
 		float f2 = entity.rotationPitch;
 		float f3 = entity.rotationYaw;
-		if(!Util.isRolling){
+		if(!Util.isRolling && !Util.isGrabbing){
 			entity.rotationYaw = (float)((double)entity.rotationYaw + (double)par1 * 0.15D);
 			entity.rotationPitch = (float)((double)entity.rotationPitch - (double)par2 * 0.15D);
 
@@ -53,6 +53,57 @@ public class Patch {
 			if (entity.rotationPitch > 90.0F)
 			{
 				entity.rotationPitch = 90.0F;
+			}
+
+			entity.prevRotationPitch += entity.rotationPitch - f2;
+			entity.prevRotationYaw += entity.rotationYaw - f3;
+		}
+		if(Util.isGrabbing){
+			entity.rotationYaw = (float)((double)entity.rotationYaw + (double)par1 * 0.15D);
+			entity.rotationPitch = (float)((double)entity.rotationPitch - (double)par2 * 0.15D);
+			int heading = MathHelper.floor_double((double)(Minecraft.getMinecraft().thePlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+
+			if(Util.grabbingDirections[0] && Util.grabbingDirections[3] && Util.grabbingDirections[1]){
+				if(MathHelper.wrapAngleTo180_float(entity.rotationYaw) > 44){
+					entity.rotationYaw = 44;
+				}
+				if(MathHelper.wrapAngleTo180_float(entity.rotationYaw) < -44){
+					entity.rotationYaw = -44;
+				}
+			}
+			else if(Util.grabbingDirections[1] && Util.grabbingDirections[0] && Util.grabbingDirections[2]){
+				if(MathHelper.wrapAngleTo180_float(entity.rotationYaw) < 46){
+					entity.rotationYaw = 46;
+				}
+				if(MathHelper.wrapAngleTo180_float(entity.rotationYaw) > 134){
+					entity.rotationYaw = 134;
+				}
+			}
+			else if(Util.grabbingDirections[2] && Util.grabbingDirections[1] && Util.grabbingDirections[3]){
+				if(MathHelper.wrapAngleTo180_float(entity.rotationYaw) < 136 && MathHelper.wrapAngleTo180_float(entity.rotationYaw) > 1){
+					entity.rotationYaw = 136;
+				}
+				if(MathHelper.wrapAngleTo180_float(entity.rotationYaw) > -136 && MathHelper.wrapAngleTo180_float(entity.rotationYaw) < -1){
+					entity.rotationYaw = -136;
+				}
+			}
+			else if(Util.grabbingDirections[3] && Util.grabbingDirections[2] && Util.grabbingDirections[0]){
+				if(MathHelper.wrapAngleTo180_float(entity.rotationYaw) > -46){
+					entity.rotationYaw = -46;
+				}
+				if(MathHelper.wrapAngleTo180_float(entity.rotationYaw) < -134){
+					entity.rotationYaw = -134;
+				}
+			}
+
+			if (entity.rotationPitch > 0.0F)
+			{
+				entity.rotationPitch = 0.0F;
+			}
+
+			if (entity.rotationPitch < -20.0F)
+			{
+				entity.rotationPitch = -20.0F;
 			}
 
 			entity.prevRotationPitch += entity.rotationPitch - f2;
@@ -524,6 +575,9 @@ public class Patch {
 					}
 				}
 			}
+			if(Util.isGrabbing){
+				GL11.glRotatef(-20, 1, 0, 1);
+			}
 			renderplayer.renderFirstPersonArm(((Minecraft)ObfuscationReflectionHelper.getPrivateValue(ItemRenderer.class, renderer, 3)).thePlayer);
 			GL11.glPopMatrix();
 		}
@@ -575,6 +629,10 @@ public class Patch {
 						GL11.glRotatef(Util.tickRunningLeft * 20F, 0, 0, 0.4F);
 					}
 				}
+			}
+			if(Util.isGrabbing){
+				GL11.glRotatef(15, 1, 0, 1);
+				GL11.glTranslatef(0.1F, 0.22F, 0);
 			}
 			renderplayer.renderFirstPersonArm(((Minecraft)ObfuscationReflectionHelper.getPrivateValue(ItemRenderer.class, renderer, 3)).thePlayer);
 			GL11.glPopMatrix();
