@@ -249,16 +249,20 @@ public class Patch {
 		float f1 = (Float)ObfuscationReflectionHelper.getPrivateValue(ItemRenderer.class, renderer, 6) + ((Float)ObfuscationReflectionHelper.getPrivateValue(ItemRenderer.class, renderer, 5) - (Float)ObfuscationReflectionHelper.getPrivateValue(ItemRenderer.class, renderer, 6)) * par1;
 		EntityClientPlayerMP entityclientplayermp = ((Minecraft)ObfuscationReflectionHelper.getPrivateValue(ItemRenderer.class, renderer, 3)).thePlayer;
 		float f2 = entityclientplayermp.prevRotationPitch + (entityclientplayermp.rotationPitch - entityclientplayermp.prevRotationPitch) * par1;
-		//		GL11.glPushMatrix();
-		//		GL11.glRotatef(f2, 1.0F, 0.0F, 0.0F);
-		//		GL11.glRotatef(entityclientplayermp.prevRotationYaw + (entityclientplayermp.rotationYaw - entityclientplayermp.prevRotationYaw) * par1, 0.0F, 1.0F, 0.0F);
-		//		RenderHelper.enableStandardItemLighting();
-		//		GL11.glPopMatrix();
+		if(!Util.isGrabbing){
+				GL11.glPushMatrix();
+				GL11.glRotatef(f2, 1.0F, 0.0F, 0.0F);
+				GL11.glRotatef(entityclientplayermp.prevRotationYaw + (entityclientplayermp.rotationYaw - entityclientplayermp.prevRotationYaw) * par1, 0.0F, 1.0F, 0.0F);
+				RenderHelper.enableStandardItemLighting();
+				GL11.glPopMatrix();
+		}
 		EntityPlayerSP entityplayersp = (EntityPlayerSP)entityclientplayermp;
 		float f3 = entityplayersp.prevRenderArmPitch + (entityplayersp.renderArmPitch - entityplayersp.prevRenderArmPitch) * par1;
 		float f4 = entityplayersp.prevRenderArmYaw + (entityplayersp.renderArmYaw - entityplayersp.prevRenderArmYaw) * par1;
-		//		GL11.glRotatef((entityclientplayermp.rotationPitch - f3) * 0.1F, 1.0F, 0.0F, 0.0F);
-		//		GL11.glRotatef((entityclientplayermp.rotationYaw - f4) * 0.1F, 0.0F, 1.0F, 0.0F);
+		if(!Util.isGrabbing){
+				GL11.glRotatef((entityclientplayermp.rotationPitch - f3) * 0.1F, 1.0F, 0.0F, 0.0F);
+				GL11.glRotatef((entityclientplayermp.rotationYaw - f4) * 0.1F, 0.0F, 1.0F, 0.0F);
+		}
 		ItemStack itemstack = (ItemStack)ObfuscationReflectionHelper.getPrivateValue(ItemRenderer.class, renderer, 4);
 
 		if (itemstack != null && itemstack.getItem() instanceof ItemCloth)
