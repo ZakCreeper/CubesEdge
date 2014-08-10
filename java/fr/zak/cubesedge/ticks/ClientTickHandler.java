@@ -52,12 +52,14 @@ public class ClientTickHandler {
 
 				int heading = MathHelper.floor_double((double)(event.player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
 				if(!event.player.capabilities.isFlying){
-					roll(heading, event.player);
-					grab(heading, event.player);
-					if(event.player instanceof EntityPlayerSP){
-						wallJumping(heading, (EntityPlayerSP)event.player);
+					if(!Util.isSneaking){
+						roll(heading, event.player);
+						grab(heading, event.player);
+						if(event.player instanceof EntityPlayerSP){
+							wallJumping(heading, (EntityPlayerSP)event.player);
+						}
+						jump(heading, event.player);
 					}
-					jump(heading, event.player);
 					sneak(event.player);
 				}
 
@@ -89,13 +91,22 @@ public class ClientTickHandler {
 				forceSetSize(Entity.class, minecraft.thePlayer, 0.6F, 0.6F);
 			} else if (prevRenderer != null && minecraft.entityRenderer != prevRenderer && !minecraft.thePlayer.isSneaking()) {
 				// reset the renderer
-				minecraft.entityRenderer = prevRenderer;
+				if(EntityRendererCustom.offsetY < 0F){
+					EntityRendererCustom.offsetY += 0.2F;
+				}
+				if(EntityRendererCustom.offsetY > -0.2F){
+					EntityRendererCustom.offsetY = 0;
+				}
+				if(EntityRendererCustom.offsetY == 0){
+					minecraft.entityRenderer = prevRenderer;
+				}
 				forceSetSize(Entity.class, minecraft.thePlayer, 0.6F, 1.8F);
-
+				Util.isSneaking = false;
+				Util.sneakTime = 0;
 			}
 		}
 	}
-	
+
 
 	private void sneak(EntityPlayer player) {
 		if(!player.isSprinting() && Util.wasSprinting){
@@ -104,15 +115,13 @@ public class ClientTickHandler {
 			}
 		}
 		if(Util.isSneaking && player.isSneaking()){
-			if(Util.sneakTime < 15){
+			if(Util.sneakTime < 16){
 				player.motionX *= (0.98F * 0.91F) + 1;
 				player.motionZ *= (0.98F * 0.91F) + 1;
-				System.out.println("test");
 				Util.sneakTime++;
 			}
-			if(Util.sneakTime == 15){
-				Util.isSneaking = false;
-				Util.sneakTime = 0;
+			if(EntityRendererCustom.offsetY > -1F){
+				EntityRendererCustom.offsetY -= 0.2F;
 			}
 		}
 		if(Util.isSneaking && !player.isSneaking()){

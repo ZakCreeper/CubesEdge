@@ -13,7 +13,7 @@ import net.minecraft.entity.Entity;
 public class EntityRendererCustom extends EntityRenderer
 {
 	private final Minecraft mc;
-	private float offsetY = -1F; // just for testing, should be based on actual render size
+	public static float offsetY = 0F; // just for testing, should be based on actual render size
 
 	public EntityRendererCustom(Minecraft mc) {
 		super(mc, mc.getResourceManager());

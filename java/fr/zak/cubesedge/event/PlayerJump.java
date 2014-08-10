@@ -9,7 +9,7 @@ public class PlayerJump {
 
 	@SubscribeEvent
 	public void jump(LivingJumpEvent event){
-		if(event.entityLiving instanceof EntityPlayer && Util.isRolling){
+		if(event.entityLiving instanceof EntityPlayer && (Util.isRolling || Util.isSneaking)){
 			event.entityLiving.motionY = 0;
 		}
 	}
