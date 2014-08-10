@@ -1,7 +1,14 @@
 package fr.zak.cubesedge.renderer;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
+import org.lwjgl.opengl.GL11;
+
+import fr.zak.cubesedge.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.EntityRenderer;
+import net.minecraft.entity.Entity;
 
 public class EntityRendererCustom extends EntityRenderer
 {
@@ -36,6 +43,8 @@ public class EntityRendererCustom extends EntityRenderer
 		// not perfect, as the server posY does not match, meaning
 		// that some block clicks do not process correctly
 		// (distance check or something like that)
+		
+//		mc.thePlayer.eyeHeight = 1.12F;
 		mc.thePlayer.posY += offsetY;
 		mc.thePlayer.prevPosY += offsetY;
 		mc.thePlayer.lastTickPosY += offsetY;
@@ -43,5 +52,6 @@ public class EntityRendererCustom extends EntityRenderer
 		mc.thePlayer.posY -= offsetY;
 		mc.thePlayer.prevPosY -= offsetY;
 		mc.thePlayer.lastTickPosY -= offsetY;
+//		mc.thePlayer.eyeHeight = 0.12F;
 	}
 }

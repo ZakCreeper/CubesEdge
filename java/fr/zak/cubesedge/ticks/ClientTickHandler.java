@@ -6,15 +6,18 @@ import java.lang.reflect.Method;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.EntityRenderer;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Timer;
+import net.minecraftforge.client.ForgeHooksClient;
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
@@ -51,8 +54,11 @@ public class ClientTickHandler {
 				if(!event.player.capabilities.isFlying){
 					roll(heading, event.player);
 					grab(heading, event.player);
-					wallJumping(heading, (EntityPlayerSP)event.player);
+					if(event.player instanceof EntityPlayerSP){
+						wallJumping(heading, (EntityPlayerSP)event.player);
+					}
 					jump(heading, event.player);
+					squezze(event.player);
 				}
 
 				if(event.player.onGround){
@@ -68,31 +74,53 @@ public class ClientTickHandler {
 		}
 	}
 
-	//	@SubscribeEvent
-	//	public void tick(TickEvent.RenderTickEvent event) {
-	//		if(event.phase == TickEvent.Phase.START && minecraft.theWorld != null){
-	//			if(!Util.b){
-	//				if (renderer == null) {
-	//					renderer = new EntityRendererCustom(minecraft);
-	//				}
-	//				if (minecraft.entityRenderer != renderer) {
-	//					// be sure to store the previous renderer
-	//					prevRenderer = minecraft.entityRenderer;
-	//					minecraft.entityRenderer = renderer;
-	//				}
-	//				forceSetSize(Entity.class, minecraft.thePlayer, 0.6F, 0.6F);
-	//				minecraft.thePlayer.eyeHeight = 1F;
-	//			} else if (prevRenderer != null && minecraft.entityRenderer != prevRenderer) {
-	//				// reset the renderer
-	//				minecraft.entityRenderer = prevRenderer;
-	//			}
-	//		}
-	//		if(event.phase == TickEvent.Phase.END && minecraft.theWorld != null){
-	//
-	//		}
-	//	}
+	@SubscribeEvent
+	public void tick(TickEvent.RenderTickEvent event) {
+		if(event.phase == TickEvent.Phase.START && minecraft.theWorld != null){
+			if(Util.isSqueezing){
+				if (renderer == null) {
+					renderer = new EntityRendererCustom(minecraft);
+				}
+				if (minecraft.entityRenderer != renderer) {
+					// be sure to store the previous renderer
+					prevRenderer = minecraft.entityRenderer;
+					minecraft.entityRenderer = renderer;
+				}
+				forceSetSize(Entity.class, minecraft.thePlayer, 0.6F, 0.6F);
+			} else if (prevRenderer != null && minecraft.entityRenderer != prevRenderer && !minecraft.thePlayer.isSneaking()) {
+				// reset the renderer
+				minecraft.entityRenderer = prevRenderer;
+			}
+		}
+	}
+	
 
-	public void sprintAnimation(EntityPlayer player){
+	private void squezze(EntityPlayer player) {
+		if(!player.isSprinting() && Util.wasSprinting){
+			if(player.isSneaking() && player.onGround && !Util.isRolling){
+				Util.isSqueezing = true;
+			}
+		}
+		if(Util.isSqueezing && player.isSneaking()){
+			if(Util.squeezingTime < 15){
+				player.motionX *= (0.98F * 0.91F) + 1;
+				player.motionZ *= (0.98F * 0.91F) + 1;
+				System.out.println("test");
+				Util.squeezingTime++;
+			}
+			if(Util.squeezingTime == 15){
+				Util.isSqueezing = false;
+				Util.squeezingTime = 0;
+			}
+		}
+		if(Util.isSqueezing && !player.isSneaking()){
+			Util.isSqueezing = false;
+			Util.squeezingTime = 0;
+		}
+		Util.wasSprinting = player.isSprinting();
+	}
+
+	private void sprintAnimation(EntityPlayer player){
 		if(player.isSprinting()){
 			if(Util.tickRunningRight < 0.5F && !Util.beginingRunning){
 				Util.tickRunningRight += (SpeedEvent.speed - 1) * 0.05;
@@ -165,6 +193,11 @@ public class ClientTickHandler {
 			Util.isRolling = true;
 		}
 		if(Util.isRolling){
+			KeyBinding.setKeyBindState(minecraft.gameSettings.keyBindForward.getKeyCode(), false);
+			KeyBinding.setKeyBindState(minecraft.gameSettings.keyBindLeft.getKeyCode(), false);
+			KeyBinding.setKeyBindState(minecraft.gameSettings.keyBindRight.getKeyCode(), false);
+			KeyBinding.setKeyBindState(minecraft.gameSettings.keyBindBack.getKeyCode(), false);
+			KeyBinding.setKeyBindState(minecraft.gameSettings.keyBindSneak.getKeyCode(), false);
 			if(heading == 0){
 				player.motionZ = 0.1;
 				player.motionX = 0;
@@ -336,7 +369,7 @@ public class ClientTickHandler {
 			else{
 				Util.grabbingDirections[heading - 1] = true;
 			}
-			
+
 			if(heading == 3){
 				Util.grabbingDirections[0] = true;
 			}
@@ -359,7 +392,7 @@ public class ClientTickHandler {
 		}
 	}
 
-	public static void forceSetSize(Class clz, Entity ent, float width, float height)
+	private void forceSetSize(Class clz, Entity ent, float width, float height)
 	{
 		try
 		{
@@ -383,7 +416,7 @@ public class ClientTickHandler {
 			e.printStackTrace();
 		} 
 	}
-	
+
 	private void damageEntity(Class c, EntityPlayer p, DamageSource d, float f){
 		try {
 			Method m = c.getDeclaredMethod(Util.obfuscation ? "func_70665_d" : "damageEntity", DamageSource.class, float.class);

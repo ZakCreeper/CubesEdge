@@ -23,6 +23,8 @@ import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemCloth;
 import net.minecraft.item.ItemMap;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.NetHandlerPlayServer;
+import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.storage.MapData;
@@ -644,5 +646,9 @@ public class Patch {
 
 		GL11.glDisable(GL12.GL_RESCALE_NORMAL);
 		RenderHelper.disableStandardItemLighting();
+	}
+	
+	public static void processPlayerPatch(NetHandlerPlayServer net, float f1, float f2){
+		System.out.println(net + " : " + f1 + " : " + f2);
 	}
 }

@@ -1,5 +1,7 @@
 package fr.zak.cubesedge.event;
 
+import org.lwjgl.opengl.GL11;
+
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraftforge.client.event.RenderPlayerEvent;
@@ -9,6 +11,10 @@ import fr.zak.cubesedge.Util;
 
 public class RenderPlayerEventCustom {
 
+	@SubscribeEvent
+	public void onRenderFirstPerson(RenderPlayerEvent.Pre event){
+	}
+	
 	@SubscribeEvent
 	public void onRenderFirstPerson(RenderPlayerEvent.Post event){
 		if(Util.animLeft){
