@@ -30,6 +30,9 @@ public class Util {
 	public static boolean isSneaking = false;
 	public static int sneakTime = 0; 
 	public static boolean wasSprinting = false;
+	
+	public static boolean isTurning = false;
+	public static int turningTime = 0;
 
 	public static void detectObfuscation() {
 		obfuscation = true;
