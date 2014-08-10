@@ -5,6 +5,9 @@ import java.lang.reflect.Field;
 public class Util {
 	public static boolean obfuscation;
 
+	public static int isJumping = 0;
+	public static int jumpTime = 0;
+	
 	public static boolean prevRolling = false;
 	public static int rollingTime = 0;
 	public static boolean isRolling = false;
@@ -32,8 +35,9 @@ public class Util {
 	public static boolean wasSprinting = false;
 	
 	public static boolean isTurning = false;
+	public static boolean isTurningOnWall = false;
 	public static int turningTime = 0;
-
+	
 	public static void detectObfuscation() {
 		obfuscation = true;
 		try {

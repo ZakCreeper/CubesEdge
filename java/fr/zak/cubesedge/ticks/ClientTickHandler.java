@@ -13,11 +13,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Timer;
-import net.minecraftforge.client.ForgeHooksClient;
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
@@ -49,10 +47,10 @@ public class ClientTickHandler {
 			if(event.side == Side.CLIENT){
 				sprintAnimation(event.player);
 				ralenti();
-				turn(event.player);
 
 				int heading = MathHelper.floor_double((double)(event.player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
 				if(!event.player.capabilities.isFlying){
+					turn(event.player, heading);
 					if(!Util.isSneaking){
 						roll(heading, event.player);
 						grab(heading, event.player);
@@ -108,29 +106,63 @@ public class ClientTickHandler {
 		}
 	}
 
-	private void turn(EntityPlayer player) {
+	private void turn(EntityPlayer player, int heading) {
 		if(Util.isTurning){
 			if(!Util.isOnWall){
 				float yaw = MathHelper.wrapAngleTo180_float(player.rotationYaw);
 				player.rotationYaw = yaw - 180;
 				Util.isTurning = false;
+				if(Util.isJumping != 0 && Util.turningTime == 0 && !Util.isTurningOnWall){
+					Util.isTurningOnWall = true;
+				}
 			}
 			else{
-				if(Util.turningTime == 0){
+				if(Util.turningTime == 0 && !Util.isTurningOnWall){
 					float yaw = MathHelper.wrapAngleTo180_float(player.rotationYaw);
-					player.rotationYaw = yaw - 90;
+					if((player.worldObj.getBlock(MathHelper.floor_double(player.posX) + 1, MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ)).isNormalCube() && heading == 0) || (player.worldObj.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ) + 1).isNormalCube() && heading == 1) || (player.worldObj.getBlock(MathHelper.floor_double(player.posX) - 1, MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ)).isNormalCube() && heading == 2) || (player.worldObj.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ) - 1).isNormalCube() && heading == 3)){
+						player.rotationYaw = yaw - 90;
+					}
+					else if((player.worldObj.getBlock(MathHelper.floor_double(player.posX) - 1, MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ)).isNormalCube() && heading == 0) || (player.worldObj.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ) - 1).isNormalCube() && heading == 1) || (player.worldObj.getBlock(MathHelper.floor_double(player.posX) + 1, MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ)).isNormalCube() && heading == 2) || (player.worldObj.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ) + 1).isNormalCube() && heading == 3)){
+						player.rotationYaw = yaw + 90;
+					}
+					Util.isTurningOnWall = true;
 				}
-				if(Util.turningTime < 20){
-					Util.turningTime++;
-				}
-				if(Util.turningTime == 20){
-					Util.isTurning = false;
-					Util.turningTime = 0;
+			}
+		}
+		if(Util.isTurningOnWall){
+			if(Util.turningTime < 10){
+				Util.turningTime++;
+			}
+			if(Util.turningTime == 10){
+				Util.isTurning = false;
+				Util.turningTime = 0;
+				Util.isTurningOnWall = false;
+			}
+			if((player.worldObj.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ) - 1).isNormalCube() && heading == 0) || (player.worldObj.getBlock(MathHelper.floor_double(player.posX) + 1, MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ)).isNormalCube() && heading == 1) || (player.worldObj.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ) + 1).isNormalCube() && heading == 2) || (player.worldObj.getBlock(MathHelper.floor_double(player.posX) - 1, MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ )).isNormalCube() && heading == 3)) {
+				player.motionZ *= 0.95D;
+				player.motionX *= 0.95D;
+				player.motionY *= 0.75D;
+				if(player instanceof EntityPlayerSP) {
+					if(((EntityPlayerSP)player).movementInput.jump){
+						if(heading == 0){
+							player.motionZ = 0.7F;
+						}
+						if(heading == 1){
+							player.motionX = -0.7F;
+						}
+						if(heading == 2){
+							player.motionZ = -0.7F;
+						}
+						if(heading == 3){
+							player.motionX = 0.7F;
+						}
+						player.motionY = 0.7D;
+					}
 				}
 			}
 		}
 	}
-	
+
 	private void sneak(EntityPlayer player) {
 		if(!player.isSprinting() && Util.wasSprinting){
 			if(player.isSneaking() && player.onGround && !Util.isRolling){
@@ -253,118 +285,130 @@ public class ClientTickHandler {
 	}
 
 	private void wallJumping(int heading, EntityPlayerSP player){
-		if(player.fallDistance > 0){
-			if((minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX) + 1, MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ)).isNormalCube() || minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX) + 1, MathHelper.floor_double(player.posY) - 1, MathHelper.floor_double(player.posZ)).isNormalCube()) && (( heading == 0) || (heading == 2)) && player.moveForward > 0){
+		if(!player.onGround && player.motionY <= 0){
+			if((minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX) + 1, MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ)).isNormalCube() || minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX) + 1, MathHelper.floor_double(player.posY) - 1, MathHelper.floor_double(player.posZ)).isNormalCube()) && (( heading == 0) || (heading == 2))){
 				Util.isOnWall = true;
-				if(player.movementInput.jump && !Util.wallJump){
-					Util.animRight = false;
-					Util.animLeft = false;
-					if(heading == 0){
-						player.motionZ = 0.7D;
-						player.motionX = -0.2D;
+				if(player.moveForward > 0){
+					if(player.movementInput.jump && !Util.wallJump){
+						Util.animRight = false;
+						Util.animLeft = false;
+						if(heading == 0){
+							player.motionZ = 0.7D;
+							player.motionX = -0.2D;
+						}
+						if(heading == 2){
+							player.motionZ = -0.7D;
+							player.motionX = -0.2D;
+						}
+						player.motionY = 0.41999998688697815D;
+						Util.wallJump = true;
 					}
-					if(heading == 2){
-						player.motionZ = -0.7D;
-						player.motionX = -0.2D;
-					}
-					player.motionY = 0.41999998688697815D;
-					Util.wallJump = true;
-				}
-				if(!player.movementInput.jump){
-					if(heading == 2){
-						Util.animRight = true;
-					}
-					if(heading == 0){
-						Util.animLeft = true;
+					if(!player.movementInput.jump){
+						if(heading == 2){
+							Util.animRight = true;
+						}
+						if(heading == 0){
+							Util.animLeft = true;
 
+						}
 					}
 				}
 			}
-			else if((minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX) - 1, MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ)).isNormalCube() || minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX) - 1, MathHelper.floor_double(player.posY) - 1, MathHelper.floor_double(player.posZ)).isNormalCube()) && ((heading == 0) || (heading == 2)) && player.moveForward > 0){
+			else if((minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX) - 1, MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ)).isNormalCube() || minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX) - 1, MathHelper.floor_double(player.posY) - 1, MathHelper.floor_double(player.posZ)).isNormalCube()) && ((heading == 0) || (heading == 2))){
 				Util.isOnWall = true;
-				if(player.movementInput.jump && !Util.wallJump){
-					Util.animRight = false;
-					Util.animLeft = false;
-					if(heading == 0){
-						player.motionZ = 0.7D;
-						player.motionX = 0.2D;
+				if(player.moveForward > 0){
+					if(player.movementInput.jump && !Util.wallJump){
+						Util.animRight = false;
+						Util.animLeft = false;
+						if(heading == 0){
+							player.motionZ = 0.7D;
+							player.motionX = 0.2D;
+						}
+						if(heading == 2){
+							player.motionZ = -0.7D;
+							player.motionX = 0.2D;
+						}
+						player.motionY = 0.41999998688697815D;
+						Util.wallJump = true;
 					}
-					if(heading == 2){
-						player.motionZ = -0.7D;
-						player.motionX = 0.2D;
-					}
-					player.motionY = 0.41999998688697815D;
-					Util.wallJump = true;
-				}
-				if(!player.movementInput.jump){
-					if(heading == 2){
-						Util.animLeft = true;
-					}
-					if(heading == 0){
-						Util.animRight = true;
-
+					if(!player.movementInput.jump){
+						if(heading == 2){
+							Util.animLeft = true;
+						}
+						if(heading == 0){
+							Util.animRight = true;
+						}
 					}
 				}
 			}
-			else if((minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ) + 1).isNormalCube() || minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY) - 1, MathHelper.floor_double(player.posZ) + 1).isNormalCube()) && ((heading == 3) || (heading == 1)) && player.moveForward > 0){
+			else if((minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ) + 1).isNormalCube() || minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY) - 1, MathHelper.floor_double(player.posZ) + 1).isNormalCube()) && ((heading == 3) || (heading == 1))){
 				Util.isOnWall = true;
-				if(player.movementInput.jump && !Util.wallJump){
-					Util.animRight = false;
-					Util.animLeft = false;
-					if(heading == 3){
-						player.motionX = 0.7D;
-						player.motionZ = -0.2D;
+				if(player.moveForward > 0){
+					if(player.movementInput.jump && !Util.wallJump){
+						Util.animRight = false;
+						Util.animLeft = false;
+						if(heading == 3){
+							player.motionX = 0.7D;
+							player.motionZ = -0.2D;
+						}
+						if(heading == 1){
+							player.motionX = -0.7D;
+							player.motionZ = -0.2D;
+						}
+						player.motionY = 0.41999998688697815D;
+						Util.wallJump = true;
 					}
-					if(heading == 1){
-						player.motionX = -0.7D;
-						player.motionZ = -0.2D;
-					}
-					player.motionY = 0.41999998688697815D;
-					Util.wallJump = true;
-				}
-				if(!player.movementInput.jump){
-					if(heading == 3){
-						Util.animRight = true;
-					}
-					if(heading == 1){
-						Util.animLeft = true;
+					if(!player.movementInput.jump){
+						if(heading == 3){
+							Util.animRight = true;
+						}
+						if(heading == 1){
+							Util.animLeft = true;
+						}
 					}
 				}
 			}
-			else if((minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ) - 1).isNormalCube() || minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX) , MathHelper.floor_double(player.posY) - 1, MathHelper.floor_double(player.posZ) - 1).isNormalCube()) && ((heading == 3) || (heading == 1)) && player.moveForward > 0){
+			else if((minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ) - 1).isNormalCube() || minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX) , MathHelper.floor_double(player.posY) - 1, MathHelper.floor_double(player.posZ) - 1).isNormalCube()) && ((heading == 3) || (heading == 1))){
 				Util.isOnWall = true;
-				if(player.movementInput.jump && !Util.wallJump){
-					Util.animRight = false;
-					Util.animLeft = false;
-					if(heading == 3){
-						player.motionX = 0.7D;
-						player.motionZ = 0.2D;
+				if(player.moveForward > 0){
+					if(player.movementInput.jump && !Util.wallJump){
+						Util.animRight = false;
+						Util.animLeft = false;
+						if(heading == 3){
+							player.motionX = 0.7D;
+							player.motionZ = 0.2D;
+						}
+						if(heading == 1){
+							player.motionX = -0.7D;
+							player.motionZ = 0.2D;
+						}
+						player.motionY = 0.41999998688697815D;
+						Util.wallJump = true;
 					}
-					if(heading == 1){
-						player.motionX = -0.7D;
-						player.motionZ = 0.2D;
-					}
-					player.motionY = 0.41999998688697815D;
-					Util.wallJump = true;
-				}
-				if(!player.movementInput.jump){
-					if(heading == 3){
-						Util.animLeft = true;
-					}
-					if(heading == 1){
-						Util.animRight = true;
-
+					if(!player.movementInput.jump){
+						if(heading == 3){
+							Util.animLeft = true;
+						}
+						if(heading == 1){
+							Util.animRight = true;
+						}
 					}
 				}
 			}
 			else {
 				Util.isOnWall = false;
 			}
-			if(Util.isOnWall || Util.isTurning){
+			//			if(player.onGround){
+			//				Util.isOnWall = false;
+			//			}
+			if(Util.isOnWall && player.moveForward > 0){
 				player.motionZ *= 0.95D;
 				player.motionX *= 0.95D;
 				player.motionY *= 0.75D;
 			}
+		}
+		else {
+			Util.isOnWall = false;
 		}
 	}
 
@@ -373,17 +417,37 @@ public class ClientTickHandler {
 			if((minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ) - 1) == Blocks.air && heading == 2) || (minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ) + 1) == Blocks.air && heading == 0) || (minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX) - 1, MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ)) == Blocks.air && heading == 1) || (minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX) + 1, MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ)) == Blocks.air && heading == 3)){
 				if(ObfuscationReflectionHelper.getPrivateValue(EntityLivingBase.class, (EntityLivingBase)player, 41)){
 					player.motionY = 0.41999998688697815D;
-					Util.isGrabbing = true;
-				}
-				else{
-					Util.isGrabbing = false;
 				}
 			}
+			if((minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ) - 1).isNormalCube() && heading == 2) || (minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ) + 1).isNormalCube() && heading == 0) || (minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX) - 1, MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ)).isNormalCube() && heading == 1) || (minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX) + 1, MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ)).isNormalCube() && heading == 3)){
+				Util.isJumping = 3;
+				if((minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY) + 1, MathHelper.floor_double(player.posZ) - 1).isNormalCube() && heading == 2) || (minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY) + 1, MathHelper.floor_double(player.posZ) + 1).isNormalCube() && heading == 0) || (minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX) - 1, MathHelper.floor_double(player.posY) + 1, MathHelper.floor_double(player.posZ)).isNormalCube() && heading == 1) || (minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX) + 1, MathHelper.floor_double(player.posY) + 1, MathHelper.floor_double(player.posZ)).isNormalCube() && heading == 3)){
+					Util.isJumping = 4;
+				}
+			}
+		}
+		if(player.fallDistance == 0 && !player.onGround){
+			if(Util.isJumping == 3){
+				player.motionY *= 0.75D;
+			}
+			if(Util.isJumping == 4){
+				if(Util.jumpTime < 1){
+					player.motionY = 0.41999998688697815D;
+					System.out.println(Util.jumpTime);
+					Util.jumpTime++;
+				}
+			}
+		}
+		if(player.onGround || Util.isTurning || Util.isGrabbing){
+			if(!(Boolean)ObfuscationReflectionHelper.getPrivateValue(EntityLivingBase.class, (EntityLivingBase)player, 41)){
+				Util.isJumping = 0;
+			}
+			Util.jumpTime = 0;
 		}
 	}
 
 	private void grab(int heading, EntityPlayer player){
-		if((((minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ) - 1).isNormalCube() && heading == 2) || (minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ) + 1).isNormalCube() && heading == 0) || (minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX) - 1, MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ)).isNormalCube() && heading == 1) || (minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX) + 1, MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ)).isNormalCube() && heading == 3)) && ((minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY) + 1, MathHelper.floor_double(player.posZ) - 1) == Blocks.air && heading == 2) || (minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY) + 1, MathHelper.floor_double(player.posZ) + 1) == Blocks.air && heading == 0) || (minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX) - 1, MathHelper.floor_double(player.posY) + 1, MathHelper.floor_double(player.posZ)) == Blocks.air && heading == 1) || (minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX) + 1, MathHelper.floor_double(player.posY) + 1, MathHelper.floor_double(player.posZ)) == Blocks.air && heading == 3)) && (minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY) - 2, MathHelper.floor_double(player.posZ)) == Blocks.air)) && !player.isOnLadder()){
+		if((((minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ) - 1).isNormalCube() && heading == 2) || (minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ) + 1).isNormalCube() && heading == 0) || (minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX) - 1, MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ)).isNormalCube() && heading == 1) || (minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX) + 1, MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ)).isNormalCube() && heading == 3)) && ((minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY) + 1, MathHelper.floor_double(player.posZ) - 1) == Blocks.air && heading == 2) || (minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY) + 1, MathHelper.floor_double(player.posZ) + 1) == Blocks.air && heading == 0) || (minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX) - 1, MathHelper.floor_double(player.posY) + 1, MathHelper.floor_double(player.posZ)) == Blocks.air && heading == 1) || (minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX) + 1, MathHelper.floor_double(player.posY) + 1, MathHelper.floor_double(player.posZ)) == Blocks.air && heading == 3)) && (minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY) - 2, MathHelper.floor_double(player.posZ)) == Blocks.air))){
 			Util.isGrabbing = true;
 			Util.grabbingDirections[heading] = true;
 			if(heading == 0){
@@ -407,11 +471,11 @@ public class ClientTickHandler {
 			Util.grabbingDirections[2] = false;
 			Util.grabbingDirections[3] = false;
 		}
-		if(!player.isSneaking() && !(Boolean)ObfuscationReflectionHelper.getPrivateValue(EntityLivingBase.class, (EntityLivingBase)player, 41) && Util.isGrabbing){
+		if(!player.isSneaking() && !(Boolean)ObfuscationReflectionHelper.getPrivateValue(EntityLivingBase.class, (EntityLivingBase)player, 41) && Util.isGrabbing && !player.isOnLadder()){
 			player.motionY = 0.0;
 		}
-		else if((Boolean)ObfuscationReflectionHelper.getPrivateValue(EntityLivingBase.class, (EntityLivingBase)player, 41) && Util.isGrabbing){
-			player.motionY = 0.41999998688697815D;
+		else if((Boolean)ObfuscationReflectionHelper.getPrivateValue(EntityLivingBase.class, (EntityLivingBase)player, 41) && Util.isGrabbing && !player.isOnLadder()){
+			player.motionY = 0.8D;
 		}
 	}
 
