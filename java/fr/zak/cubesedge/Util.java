@@ -22,12 +22,13 @@ public class Util {
 	public static int temps = 0;
 	public static boolean ralenti = false;
 
+	public static boolean isOnWall = false;
 	public static boolean wallJump = false;
 	public static boolean animRight = false;
 	public static boolean animLeft = false;
 	
-	public static boolean isSqueezing = false;
-	public static int squeezingTime = 0; 
+	public static boolean isSneaking = false;
+	public static int sneakTime = 0; 
 	public static boolean wasSprinting = false;
 
 	public static void detectObfuscation() {
