@@ -18,7 +18,7 @@ import fr.zak.cubesedge.proxys.CommonProxy;
  * @author Zak (alex.ulysse@gmail.com)
  * 
  */
-@Mod(modid = "cubesedge", name = "Cube's Edge", version = "Alpha 0.1.1")
+@Mod(modid = "cubesedge", name = "Cube's Edge", version = "Alpha 0.1.4")
 public class CubesEdge {
 
 	@Instance("cubesedge")

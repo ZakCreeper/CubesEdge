@@ -66,6 +66,9 @@ public class NetHandlerPlayServerTransformer implements IClassTransformer{
 			if(returns == 10){
 //				newList.remove(insn.getPrevious());
 //				newList.remove(insn);
+//				newList.add(new VarInsnNode(Opcodes.ALOAD, 0));
+//				newList.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "fr/zak/cubesedge/coremod/Patch", "processPlayerPatch"
+//						, "(L" + className + ";)V"));
 			}
 		}
 		newList.add(new InsnNode(Opcodes.RETURN));

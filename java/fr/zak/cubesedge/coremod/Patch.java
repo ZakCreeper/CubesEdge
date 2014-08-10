@@ -648,7 +648,7 @@ public class Patch {
 		RenderHelper.disableStandardItemLighting();
 	}
 	
-	public static void processPlayerPatch(NetHandlerPlayServer net, float f1, float f2){
-		System.out.println(net + " : " + f1 + " : " + f2);
+	public static void processPlayerPatch(NetHandlerPlayServer net){
+		System.out.println(net);
 	}
 }
