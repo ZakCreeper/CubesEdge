@@ -880,4 +880,31 @@ public class Patch {
             }
         }
 	}
+	
+	public static boolean isEntityInsideOpaqueBlockPatch(Entity ent){
+		for (int i = 0; i < 8; ++i)
+        {
+            float f = ((float)((i >> 0) % 2) - 0.5F) * ent.width * 0.8F;
+            float f1 = ((float)((i >> 1) % 2) - 0.5F) * 0.1F;
+            float f2 = ((float)((i >> 2) % 2) - 0.5F) * ent.width * 0.8F;
+            int j = MathHelper.floor_double(ent.posX + (double)f);
+            int k = 0;
+            if(!Util.isSneaking){
+            	k = MathHelper.floor_double(ent.posY + (double)ent.getEyeHeight() + (double)f1);
+            }
+            else{
+            	if(ent instanceof EntityPlayer){
+            		k = MathHelper.floor_double(ent.posY + (-0.88) + (double)f1);
+            	}
+            }
+            int l = MathHelper.floor_double(ent.posZ + (double)f2);
+
+            if (ent.worldObj.getBlock(j, k, l).isNormalCube())
+            {
+                return true;
+            }
+        }
+
+        return false;
+	}
 }
