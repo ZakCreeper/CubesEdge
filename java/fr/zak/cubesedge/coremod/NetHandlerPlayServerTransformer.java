@@ -1,17 +1,17 @@
 package fr.zak.cubesedge.coremod;
 
-import java.util.Iterator;
+import java.util.ArrayList;
 
-import jdk.internal.org.objectweb.asm.Opcodes;
 import net.minecraft.launchwrapper.IClassTransformer;
 
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.FieldInsnNode;
 import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.InsnNode;
+import org.objectweb.asm.tree.LabelNode;
+import org.objectweb.asm.tree.LocalVariableNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
@@ -49,28 +49,39 @@ public class NetHandlerPlayServerTransformer implements IClassTransformer{
 		}
 	}
 	
-	private static int returns = 0;
+	private static int returns = 0, aloads = 0, nb = -1;
+	private static LabelNode l1 = new LabelNode();
 	
 	private static void patchMethod(MethodNode mn) {
-
 		System.out.println("\tPatching method processPlayer in NetHandlerPlayServer");
 		InsnList newList = new InsnList();
+//		
+//		Iterator<AbstractInsnNode> it = mn.instructions.iterator();
+//		while (it.hasNext()) {
+//			AbstractInsnNode insn = it.next();
+//			if(insn.getOpcode() == Opcodes.ALOAD){
+//				aloads++;
+//			}
+//			if(aloads == 131){
+//				newList.add(new FieldInsnNode(Opcodes.GETSTATIC, "fr/zak/cubesedge/Util", "isSneaking", "Z"));
+//				newList.add(new JumpInsnNode(Opcodes.IFNE, l1));
+//				newList.add(new InsnNode(Opcodes.RETURN));
+//				newList.add(l1);
+//			}
+//			System.out.println(insn.getOpcode());
+//			if (insn.getOpcode() == Opcodes.RETURN) {
+//				returns++;
+//			}
+//			if(returns == 10){
+//				returns++;
+//			}
+//			newList.add(insn);
+//		}
+		mn.localVariables = new ArrayList<LocalVariableNode>(5);
 		
-		Iterator<AbstractInsnNode> it = mn.instructions.iterator();
-		while (it.hasNext()) {
-			AbstractInsnNode insn = it.next();
-			newList.add(insn);
-			if (insn.getOpcode() == Opcodes.RETURN) {
-				returns++;
-			}
-			if(returns == 10){
-//				newList.remove(insn.getPrevious());
-//				newList.remove(insn);
-//				newList.add(new VarInsnNode(Opcodes.ALOAD, 0));
-//				newList.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "fr/zak/cubesedge/coremod/Patch", "processPlayerPatch"
-//						, "(L" + className + ";)V"));
-			}
-		}
+		newList.add(new VarInsnNode(Opcodes.ALOAD, 0));
+		newList.add(new VarInsnNode(Opcodes.ALOAD, 1));
+		newList.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "fr/zak/cubesedge/coremod/Patch", "processPlayerPatch", "(L" + className + ";L" + packetPlayerClassName + ";)V"));
 		newList.add(new InsnNode(Opcodes.RETURN));
 		mn.instructions = newList;
 	}

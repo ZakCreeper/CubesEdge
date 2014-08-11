@@ -2,7 +2,7 @@ package fr.zak.cubesedge.coremod;
 
 import java.util.Iterator;
 
-import jdk.internal.org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Opcodes;
 import net.minecraft.launchwrapper.IClassTransformer;
 import net.minecraft.profiler.IPlayerUsage;
 

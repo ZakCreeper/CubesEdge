@@ -25,12 +25,16 @@ import net.minecraft.item.ItemMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.network.play.client.C03PacketPlayer;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.WorldServer;
 import net.minecraft.world.storage.MapData;
 import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.MinecraftForgeClient;
 
+import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 import org.lwjgl.util.glu.Project;
@@ -648,7 +652,232 @@ public class Patch {
 		RenderHelper.disableStandardItemLighting();
 	}
 	
-	public static void processPlayerPatch(NetHandlerPlayServer net){
-		System.out.println(net);
+	public static void processPlayerPatch(NetHandlerPlayServer net, C03PacketPlayer packet){
+		WorldServer worldserver = ((MinecraftServer) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 2)).worldServerForDimension(net.playerEntity.dimension);
+		ObfuscationReflectionHelper.setPrivateValue(NetHandlerPlayServer.class, net, true, 6);
+
+        if (!net.playerEntity.playerConqueredTheEnd)
+        {
+            double d0;
+
+            if (!((Boolean) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 17)))
+            {
+                d0 = packet.func_149467_d() - ((Double) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 15));
+
+                if (packet.func_149464_c() == ((Double) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 14)) && d0 * d0 < 0.01D && packet.func_149472_e() == ((Double) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 16)))
+                {
+                	ObfuscationReflectionHelper.setPrivateValue(NetHandlerPlayServer.class, net, true, 17);                }
+            }
+
+            if (((Boolean) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 17)))
+            {
+                double d1;
+                double d2;
+                double d3;
+
+                if (net.playerEntity.ridingEntity != null)
+                {
+                    float f4 = net.playerEntity.rotationYaw;
+                    float f = net.playerEntity.rotationPitch;
+                    net.playerEntity.ridingEntity.updateRiderPosition();
+                    d1 = net.playerEntity.posX;
+                    d2 = net.playerEntity.posY;
+                    d3 = net.playerEntity.posZ;
+
+                    if (packet.func_149463_k())
+                    {
+                        f4 = packet.func_149462_g();
+                        f = packet.func_149470_h();
+                    }
+
+                    net.playerEntity.onGround = packet.func_149465_i();
+                    net.playerEntity.onUpdateEntity();
+                    net.playerEntity.ySize = 0.0F;
+                    net.playerEntity.setPositionAndRotation(d1, d2, d3, f4, f);
+
+                    if (net.playerEntity.ridingEntity != null)
+                    {
+                        net.playerEntity.ridingEntity.updateRiderPosition();
+                    }
+
+                    if (!((Boolean) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 17))) //Fixes teleportation kick while riding entities
+                    {
+                        return;
+                    }
+
+                    ((MinecraftServer) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 2)).getConfigurationManager().updatePlayerPertinentChunks(net.playerEntity);
+
+                    if (((Boolean) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 17)))
+                    {
+                        ObfuscationReflectionHelper.setPrivateValue(NetHandlerPlayServer.class, net, net.playerEntity.posX, 14);
+                        ObfuscationReflectionHelper.setPrivateValue(NetHandlerPlayServer.class, net, net.playerEntity.posY, 15);
+                        ObfuscationReflectionHelper.setPrivateValue(NetHandlerPlayServer.class, net, net.playerEntity.posZ, 16);
+                    }
+
+                    worldserver.updateEntity(net.playerEntity);
+                    return;
+                }
+
+                if (net.playerEntity.isPlayerSleeping())
+                {
+                    net.playerEntity.onUpdateEntity();
+                    net.playerEntity.setPositionAndRotation(((Double) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 14)), ((Double) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 15)), ((Double) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 16)), net.playerEntity.rotationYaw, net.playerEntity.rotationPitch);
+                    worldserver.updateEntity(net.playerEntity);
+                    return;
+                }
+
+                d0 = net.playerEntity.posY;
+                ObfuscationReflectionHelper.setPrivateValue(NetHandlerPlayServer.class, net, net.playerEntity.posX, 14);
+                ObfuscationReflectionHelper.setPrivateValue(NetHandlerPlayServer.class, net, net.playerEntity.posY, 15);
+                ObfuscationReflectionHelper.setPrivateValue(NetHandlerPlayServer.class, net, net.playerEntity.posZ, 16);
+                d1 = net.playerEntity.posX;
+                d2 = net.playerEntity.posY;
+                d3 = net.playerEntity.posZ;
+                float f1 = net.playerEntity.rotationYaw;
+                float f2 = net.playerEntity.rotationPitch;
+
+                if (packet.func_149466_j() && packet.func_149467_d() == -999.0D && packet.func_149471_f() == -999.0D)
+                {
+                    packet.func_149469_a(false);
+                }
+
+                double d4;
+
+                if (packet.func_149466_j())
+                {
+                    d1 = packet.func_149464_c();
+                    d2 = packet.func_149467_d();
+                    d3 = packet.func_149472_e();
+                    d4 = packet.func_149471_f() - packet.func_149467_d();
+
+                    if (!net.playerEntity.isPlayerSleeping() && (d4 > 1.65D || d4 < 0.1D))
+                    {
+                        net.kickPlayerFromServer("Illegal stance");
+                        ((Logger)ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 0)).warn(net.playerEntity.getCommandSenderName() + " had an illegal stance: " + d4);
+                        return;
+                    }
+
+                    if (Math.abs(packet.func_149464_c()) > 3.2E7D || Math.abs(packet.func_149472_e()) > 3.2E7D)
+                    {
+                        net.kickPlayerFromServer("Illegal position");
+                        return;
+                    }
+                }
+
+                if (packet.func_149463_k())
+                {
+                    f1 = packet.func_149462_g();
+                    f2 = packet.func_149470_h();
+                }
+
+                net.playerEntity.onUpdateEntity();
+                net.playerEntity.ySize = 0.0F;
+                net.playerEntity.setPositionAndRotation(((Double) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 14)), ((Double) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 15)), ((Double) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 16)), f1, f2);
+
+                if (!((Boolean) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 17)))
+                {
+                    return;
+                }
+
+                d4 = d1 - net.playerEntity.posX;
+                double d5 = d2 - net.playerEntity.posY;
+                double d6 = d3 - net.playerEntity.posZ;
+                //BUGFIX: min -> max, grabs the highest distance
+                double d7 = Math.max(Math.abs(d4), Math.abs(net.playerEntity.motionX));
+                double d8 = Math.max(Math.abs(d5), Math.abs(net.playerEntity.motionY));
+                double d9 = Math.max(Math.abs(d6), Math.abs(net.playerEntity.motionZ));
+                double d10 = d7 * d7 + d8 * d8 + d9 * d9;
+
+                if (d10 > 100.0D && (!((MinecraftServer) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 2)).isSinglePlayer() || !((MinecraftServer) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 2)).getServerOwner().equals(net.playerEntity.getCommandSenderName())))
+                {
+                    ((Logger)ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 0)).warn(net.playerEntity.getCommandSenderName() + " moved too quickly! " + d4 + "," + d5 + "," + d6 + " (" + d7 + ", " + d8 + ", " + d9 + ")");
+                    net.setPlayerLocation(((Double) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 14)), ((Double) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 15)), ((Double) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 16)), net.playerEntity.rotationYaw, net.playerEntity.rotationPitch);
+                    return;
+                }
+
+                float f3 = 0.0625F;
+                boolean flag = worldserver.getCollidingBoundingBoxes(net.playerEntity, net.playerEntity.boundingBox.copy().contract((double)f3, (double)f3, (double)f3)).isEmpty();
+
+                if (net.playerEntity.onGround && !packet.func_149465_i() && d5 > 0.0D)
+                {
+                    net.playerEntity.jump();
+                }
+
+                if (!((Boolean) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 17))) //Fixes "Moved Too Fast" kick when being teleported while moving
+                {
+                    return;
+                }
+
+                net.playerEntity.moveEntity(d4, d5, d6);
+                net.playerEntity.onGround = packet.func_149465_i();
+                net.playerEntity.addMovementStat(d4, d5, d6);
+                double d11 = d5;
+                d4 = d1 - net.playerEntity.posX;
+                d5 = d2 - net.playerEntity.posY;
+
+                if (d5 > -0.5D || d5 < 0.5D)
+                {
+                    d5 = 0.0D;
+                }
+
+                d6 = d3 - net.playerEntity.posZ;
+                d10 = d4 * d4 + d5 * d5 + d6 * d6;
+                boolean flag1 = false;
+
+                if (d10 > 0.0625D && !net.playerEntity.isPlayerSleeping() && !net.playerEntity.theItemInWorldManager.isCreative())
+                {
+                    flag1 = true;
+                    ((Logger)ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 0)).warn(net.playerEntity.getCommandSenderName() + " moved wrongly!");
+                }
+
+                if (!((Boolean) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 17))) //Fixes "Moved Too Fast" kick when being teleported while moving
+                {
+                    return;
+                }
+
+                net.playerEntity.setPositionAndRotation(d1, d2, d3, f1, f2);
+                boolean flag2 = worldserver.getCollidingBoundingBoxes(net.playerEntity, net.playerEntity.boundingBox.copy().contract((double)f3, (double)f3, (double)f3)).isEmpty();
+
+                if (flag && (flag1 || !flag2) && !net.playerEntity.isPlayerSleeping() && !net.playerEntity.noClip && !Util.isSneaking)
+                {
+                    net.setPlayerLocation(((Double) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 14)), ((Double) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 15)), ((Double) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 16)), f1, f2);
+                    return;
+                }
+
+                AxisAlignedBB axisalignedbb = net.playerEntity.boundingBox.copy().expand((double)f3, (double)f3, (double)f3).addCoord(0.0D, -0.55D, 0.0D);
+
+                if (!((MinecraftServer) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 2)).isFlightAllowed() && !net.playerEntity.theItemInWorldManager.isCreative() && !worldserver.checkBlockCollision(axisalignedbb) && !net.playerEntity.capabilities.allowFlying)
+                {
+                    if (d11 >= -0.03125D)
+                    {
+                        ObfuscationReflectionHelper.setPrivateValue(NetHandlerPlayServer.class, net, ((Integer)ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 5)) + 1, 5);
+
+                        if (((Integer)ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 5)) > 80)
+                        {
+                            ((Logger)ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 0)).warn(net.playerEntity.getCommandSenderName() + " was kicked for floating too long!");
+                            net.kickPlayerFromServer("Flying is not enabled on net server");
+                            return;
+                        }
+                    }
+                }
+                else
+                {
+                	ObfuscationReflectionHelper.setPrivateValue(NetHandlerPlayServer.class, net, 0, 5);
+                }
+
+                if (!((Boolean) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 17))) //Fixes "Moved Too Fast" kick when being teleported while moving
+                {
+                    return;
+                }
+
+                net.playerEntity.onGround = packet.func_149465_i();
+                ((MinecraftServer) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 2)).getConfigurationManager().updatePlayerPertinentChunks(net.playerEntity);
+                net.playerEntity.handleFalling(net.playerEntity.posY - d0, packet.func_149465_i());
+            }
+            else if (((Integer)ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 4)) % 20 == 0)
+            {
+                net.setPlayerLocation(((Double) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 14)), ((Double) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 15)), ((Double) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 16)), net.playerEntity.rotationYaw, net.playerEntity.rotationPitch);
+            }
+        }
 	}
 }

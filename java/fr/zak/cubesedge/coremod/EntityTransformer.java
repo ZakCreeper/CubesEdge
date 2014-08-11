@@ -2,13 +2,11 @@ package fr.zak.cubesedge.coremod;
 
 import java.util.Iterator;
 
-import jdk.internal.org.objectweb.asm.Opcodes;
-import net.minecraft.entity.Entity;
 import net.minecraft.launchwrapper.IClassTransformer;
-import net.minecraft.profiler.IPlayerUsage;
 
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.InsnList;

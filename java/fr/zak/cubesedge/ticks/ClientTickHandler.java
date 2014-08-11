@@ -88,7 +88,7 @@ public class ClientTickHandler {
 					minecraft.entityRenderer = renderer;
 				}
 				forceSetSize(Entity.class, minecraft.thePlayer, 0.6F, 0.6F);
-			} else if (prevRenderer != null && minecraft.entityRenderer != prevRenderer && !minecraft.thePlayer.isSneaking()) {
+			} else if (prevRenderer != null && minecraft.entityRenderer != prevRenderer && !minecraft.thePlayer.isSneaking() && minecraft.theWorld.getBlock(MathHelper.floor_double(minecraft.thePlayer.posX), MathHelper.floor_double(minecraft.thePlayer.posY) + 1, MathHelper.floor_double(minecraft.thePlayer.posZ)) == Blocks.air) {
 				// reset the renderer
 				if(EntityRendererCustom.offsetY < 0F){
 					EntityRendererCustom.offsetY += 0.2F;

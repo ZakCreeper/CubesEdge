@@ -15,7 +15,7 @@ public class PlayerFall {
 
 	@SubscribeEvent
 	public void onFall(LivingFallEvent event){
-		if(Util.prevRolling && event.entityLiving instanceof EntityPlayer){
+		if(Util.isRolling && event.entityLiving instanceof EntityPlayer){
 			event.distance = 0;
 		}
 	}
