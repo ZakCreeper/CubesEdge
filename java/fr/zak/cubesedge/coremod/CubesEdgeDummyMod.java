@@ -16,7 +16,7 @@ public class CubesEdgeDummyMod extends DummyModContainer{
 		ModMetadata meta = getMetadata();
 		meta.modId = "cubesedgecore";
 		meta.name = "Cube's Edge Core";
-		meta.version = "Alpha 0.1.4"; //String.format("%d.%d.%d.%d", majorVersion, minorVersion, revisionVersion, buildVersion);
+		meta.version = "Alpha 0.1.6"; //String.format("%d.%d.%d.%d", majorVersion, minorVersion, revisionVersion, buildVersion);
 		meta.authorList = Arrays.asList("Zak");
 		meta.description = "";
 		meta.updateUrl = "";
