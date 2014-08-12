@@ -11,10 +11,14 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.relauncher.Side;
 import fr.zak.cubesedge.event.ConstructEvent;
 import fr.zak.cubesedge.event.PlayerFall;
 import fr.zak.cubesedge.event.PlayerJump;
 import fr.zak.cubesedge.event.SpeedEvent;
+import fr.zak.cubesedge.packet.MessageHandlerPacketPlayer;
+import fr.zak.cubesedge.packet.PacketPlayer;
 import fr.zak.cubesedge.proxys.CommonProxy;
 
 /**
@@ -43,6 +47,8 @@ public class CubesEdge {
 		MinecraftForge.EVENT_BUS.register(new PlayerFall());
 		MinecraftForge.EVENT_BUS.register(new PlayerJump());
 		MinecraftForge.EVENT_BUS.register(new ConstructEvent());
+		Util.channel = NetworkRegistry.INSTANCE.newSimpleChannel("cubesedge");
+		Util.channel.registerMessage(MessageHandlerPacketPlayer.class, PacketPlayer.class, 0, Side.SERVER);
 	}
 
 	@EventHandler

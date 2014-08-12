@@ -840,6 +840,7 @@ public class Patch {
 
                 if (flag && (flag1 || !flag2) && !net.playerEntity.isPlayerSleeping() && !net.playerEntity.noClip && (EntityPlayerCustom)net.playerEntity.getExtendedProperties("Player Custom") != null && !((EntityPlayerCustom)net.playerEntity.getExtendedProperties("Player Custom")).isSneaking)
                 {
+                	System.out.println(((EntityPlayerCustom)net.playerEntity.getExtendedProperties("Player Custom")).isSneaking);
                     net.setPlayerLocation(((Double) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 14)), ((Double) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 15)), ((Double) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 16)), f1, f2);
                     return;
                 }
@@ -889,15 +890,18 @@ public class Patch {
             float f2 = ((float)((i >> 2) % 2) - 0.5F) * ent.width * 0.8F;
             int j = MathHelper.floor_double(ent.posX + (double)f);
             int k = 0;
+            int l = MathHelper.floor_double(ent.posZ + (double)f2);
             if(!(ent instanceof EntityPlayer)){
             	k = MathHelper.floor_double(ent.posY + (double)ent.getEyeHeight() + (double)f1);
             }
             else{
-            	if(!((EntityPlayerCustom)ent.getExtendedProperties("Player Custom")).isSneaking){
+            	if(((EntityPlayerCustom)ent.getExtendedProperties("Player Custom")).isSneaking){
             		k = MathHelper.floor_double(ent.posY + (double)ent.getEyeHeight() + (double)f1) - 1;
             	}
+            	else{
+            		k = MathHelper.floor_double(ent.posY + (double)ent.getEyeHeight() + (double)f1);
+            	}
             }
-            int l = MathHelper.floor_double(ent.posZ + (double)f2);
             if (ent.worldObj.getBlock(j, k, l).isNormalCube())
             {
                 return true;

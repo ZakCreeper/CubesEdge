@@ -9,8 +9,8 @@ public class ConstructEvent {
 
 	@SubscribeEvent
 	public void construct(EntityConstructing event){
-		if(event.entity instanceof EntityPlayer && event.entity != null){
-			event.entity.registerExtendedProperties("Player Custom", new EntityPlayerCustom());
+		if(event.entity != null && event.entity instanceof EntityPlayer){
+			((EntityPlayer)event.entity).registerExtendedProperties("Player Custom", new EntityPlayerCustom());
 		}
 	}
 	

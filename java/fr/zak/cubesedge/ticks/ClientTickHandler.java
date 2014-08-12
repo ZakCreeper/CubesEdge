@@ -24,6 +24,7 @@ import fr.zak.cubesedge.Util;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
 import fr.zak.cubesedge.event.KeyHandler;
 import fr.zak.cubesedge.event.SpeedEvent;
+import fr.zak.cubesedge.packet.PacketPlayer;
 import fr.zak.cubesedge.renderer.EntityRendererCustom;
 
 public class ClientTickHandler {
@@ -102,7 +103,6 @@ public class ClientTickHandler {
 					minecraft.entityRenderer = prevRenderer;
 				}
 				forceSetSize(Entity.class, minecraft.thePlayer, 0.6F, 1.8F);
-				((EntityPlayerCustom)minecraft.thePlayer.getExtendedProperties("Player Custom")).isSneaking = false;
 				((EntityPlayerCustom)minecraft.thePlayer.getExtendedProperties("Player Custom")).sneakTime = 0;
 			}
 		}
@@ -170,6 +170,7 @@ public class ClientTickHandler {
 		if(!player.isSprinting() && ((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).wasSprinting){
 			if(player.isSneaking() && player.onGround && !((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).isRolling){
 				((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).isSneaking = true;
+				Util.channel.sendToServer(new PacketPlayer(true));
 			}
 		}
 		if(((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).isSneaking && player.isSneaking()){
@@ -187,6 +188,7 @@ public class ClientTickHandler {
 		}
 		if(((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).isSneaking && !player.isSneaking()){
 			((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).isSneaking = false;
+			Util.channel.sendToServer(new PacketPlayer(false));
 			((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).sneakTime = 0;
 		}
 		((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).wasSprinting = player.isSprinting();

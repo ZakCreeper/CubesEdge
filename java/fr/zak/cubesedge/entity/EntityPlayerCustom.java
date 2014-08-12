@@ -6,7 +6,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
 
 public class EntityPlayerCustom implements IExtendedEntityProperties {
-
+	
 	public int isJumping = 0;
 	public int jumpTime = 0;
 	public boolean isJumpingOnWall = false;
@@ -16,8 +16,9 @@ public class EntityPlayerCustom implements IExtendedEntityProperties {
 	public boolean isRolling = false;
 
 	public boolean isGrabbing = false;
+	public boolean grabbingDamage = false;
 	public boolean[] grabbingDirections = {false, false, false, false};
-	public byte[] grabbingDirectionsByte = {0, 0, 0, 0}; 
+	private byte[] grabbingDirectionsByte = {0, 0, 0, 0}; 
 
 	public boolean beginingRunning = false;
 	public float tickRunningLeft = 0;
@@ -51,6 +52,7 @@ public class EntityPlayerCustom implements IExtendedEntityProperties {
 		compound.setInteger("rollingTime", this.rollingTime);
 		compound.setBoolean("isRolling", this.isRolling);
 		compound.setBoolean("isGrabbing", this.isGrabbing);
+		compound.setBoolean("grabbingDamage", this.grabbingDamage);
 		for(int i = 0; i < this.grabbingDirections.length; i++){
 			if(this.grabbingDirections[i]){
 				this.grabbingDirectionsByte[i] = 1;
@@ -89,6 +91,7 @@ public class EntityPlayerCustom implements IExtendedEntityProperties {
 		this.rollingTime = compound.getInteger("rollingTime");
 		this.isRolling = compound.getBoolean("isRolling");
 		this.isGrabbing = compound.getBoolean("isGrabbing");
+		this.grabbingDamage = compound.getBoolean("grabbingDamage");
 		for(int i = 0; i < compound.getByteArray("grabbingDirections").length; i++){
 			if(compound.getByteArray("grabbingDirections")[i] == 0){
 				this.grabbingDirections[i] = false;
@@ -121,5 +124,4 @@ public class EntityPlayerCustom implements IExtendedEntityProperties {
 	public void init(Entity entity, World world) {
 		
 	}
-
 }

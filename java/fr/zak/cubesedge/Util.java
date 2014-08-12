@@ -5,12 +5,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.block.Block;
+import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 
 public class Util {
 	
 	public static boolean obfuscation;
 	
-	public static final String VERSION = "Alpha 0.1.7";
+	public static SimpleNetworkWrapper channel;
+	
+	public static final String VERSION = "Alpha 0.1.9";
 	
 	public static List<Block> cubes = new ArrayList<Block>();
 	
