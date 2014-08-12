@@ -13,40 +13,6 @@ public class Util {
 	public static final String VERSION = "Alpha 0.1.7";
 	
 	public static List<Block> cubes = new ArrayList<Block>();
-
-	public static int isJumping = 0;
-	public static int jumpTime = 0;
-	public static boolean isJumpingOnWall = false;
-	
-	public static boolean prevRolling = false;
-	public static int rollingTime = 0;
-	public static boolean isRolling = false;
-
-	public static boolean isGrabbing = false;
-	public static boolean[] grabbingDirections = {false, false, false, false}; 
-
-	public static boolean beginingRunning = false;
-	public static float tickRunningLeft = 0;
-	public static float tickRunningRight = 0;
-	public static boolean animRunnig = false;
-	public static boolean backLeft = false;
-	public static boolean backRight = false;
-
-	public static int temps = 0;
-	public static boolean ralenti = false;
-
-	public static boolean isOnWall = false;
-	public static boolean wallJump = false;
-	public static boolean animRight = false;
-	public static boolean animLeft = false;
-	
-	public static boolean isSneaking = false;
-	public static int sneakTime = 0; 
-	public static boolean wasSprinting = false;
-	
-	public static boolean isTurning = false;
-	public static boolean isTurningOnWall = false;
-	public static int turningTime = 0;
 	
 	public static void detectObfuscation() {
 		obfuscation = true;
