@@ -40,14 +40,14 @@ import org.lwjgl.opengl.GL12;
 import org.lwjgl.util.glu.Project;
 
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
-import fr.zak.cubesedge.Util;
+import fr.zak.cubesedge.entity.EntityPlayerCustom;
 
 public class Patch {
 
 	public static void entitySetAnglesPatch(float par1, float par2, Entity entity){
 		float f2 = entity.rotationPitch;
 		float f3 = entity.rotationYaw;
-		if(!Util.isRolling && !Util.isGrabbing){
+		if(!((EntityPlayerCustom)entity.getExtendedProperties("Player Custom")).isRolling && !((EntityPlayerCustom)entity.getExtendedProperties("Player Custom")).isGrabbing){
 			entity.rotationYaw = (float)((double)entity.rotationYaw + (double)par1 * 0.15D);
 			entity.rotationPitch = (float)((double)entity.rotationPitch - (double)par2 * 0.15D);
 
@@ -64,12 +64,12 @@ public class Patch {
 			entity.prevRotationPitch += entity.rotationPitch - f2;
 			entity.prevRotationYaw += entity.rotationYaw - f3;
 		}
-		if(Util.isGrabbing){
+		if(((EntityPlayerCustom)entity.getExtendedProperties("Player Custom")).isGrabbing){
 			entity.rotationYaw = (float)((double)entity.rotationYaw + (double)par1 * 0.15D);
 			entity.rotationPitch = (float)((double)entity.rotationPitch - (double)par2 * 0.15D);
 			int heading = MathHelper.floor_double((double)(Minecraft.getMinecraft().thePlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
 
-			if(Util.grabbingDirections[0] && Util.grabbingDirections[3] && Util.grabbingDirections[1]){
+			if(((EntityPlayerCustom)entity.getExtendedProperties("Player Custom")).grabbingDirections[0] && ((EntityPlayerCustom)entity.getExtendedProperties("Player Custom")).grabbingDirections[3] && ((EntityPlayerCustom)entity.getExtendedProperties("Player Custom")).grabbingDirections[1]){
 				if(MathHelper.wrapAngleTo180_float(entity.rotationYaw) > 44){
 					entity.rotationYaw = 44;
 				}
@@ -77,7 +77,7 @@ public class Patch {
 					entity.rotationYaw = -44;
 				}
 			}
-			else if(Util.grabbingDirections[1] && Util.grabbingDirections[0] && Util.grabbingDirections[2]){
+			else if(((EntityPlayerCustom)entity.getExtendedProperties("Player Custom")).grabbingDirections[1] && ((EntityPlayerCustom)entity.getExtendedProperties("Player Custom")).grabbingDirections[0] && ((EntityPlayerCustom)entity.getExtendedProperties("Player Custom")).grabbingDirections[2]){
 				if(MathHelper.wrapAngleTo180_float(entity.rotationYaw) < 46){
 					entity.rotationYaw = 46;
 				}
@@ -85,7 +85,7 @@ public class Patch {
 					entity.rotationYaw = 134;
 				}
 			}
-			else if(Util.grabbingDirections[2] && Util.grabbingDirections[1] && Util.grabbingDirections[3]){
+			else if(((EntityPlayerCustom)entity.getExtendedProperties("Player Custom")).grabbingDirections[2] && ((EntityPlayerCustom)entity.getExtendedProperties("Player Custom")).grabbingDirections[1] && ((EntityPlayerCustom)entity.getExtendedProperties("Player Custom")).grabbingDirections[3]){
 				if(MathHelper.wrapAngleTo180_float(entity.rotationYaw) < 136 && MathHelper.wrapAngleTo180_float(entity.rotationYaw) > 1){
 					entity.rotationYaw = 136;
 				}
@@ -93,7 +93,7 @@ public class Patch {
 					entity.rotationYaw = -136;
 				}
 			}
-			else if(Util.grabbingDirections[3] && Util.grabbingDirections[2] && Util.grabbingDirections[0]){
+			else if(((EntityPlayerCustom)entity.getExtendedProperties("Player Custom")).grabbingDirections[3] && ((EntityPlayerCustom)entity.getExtendedProperties("Player Custom")).grabbingDirections[2] && ((EntityPlayerCustom)entity.getExtendedProperties("Player Custom")).grabbingDirections[0]){
 				if(MathHelper.wrapAngleTo180_float(entity.rotationYaw) > -46){
 					entity.rotationYaw = -46;
 				}
@@ -144,11 +144,11 @@ public class Patch {
 			}
 
 			GL11.glMatrixMode(GL11.GL_MODELVIEW);
-			if(!Util.isGrabbing){
+			if(!((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).isGrabbing){
 				GL11.glLoadIdentity();
 			}
 			int heading = MathHelper.floor_double((double)(Minecraft.getMinecraft().thePlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-			if(Util.isGrabbing && heading != 2){
+			if(((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).isGrabbing && heading != 2){
 				if(heading != 0){
 					GL11.glRotatef(90 * heading, 0, 1, 0);
 				}
@@ -255,7 +255,7 @@ public class Patch {
 		float f1 = (Float)ObfuscationReflectionHelper.getPrivateValue(ItemRenderer.class, renderer, 6) + ((Float)ObfuscationReflectionHelper.getPrivateValue(ItemRenderer.class, renderer, 5) - (Float)ObfuscationReflectionHelper.getPrivateValue(ItemRenderer.class, renderer, 6)) * par1;
 		EntityClientPlayerMP entityclientplayermp = ((Minecraft)ObfuscationReflectionHelper.getPrivateValue(ItemRenderer.class, renderer, 3)).thePlayer;
 		float f2 = entityclientplayermp.prevRotationPitch + (entityclientplayermp.rotationPitch - entityclientplayermp.prevRotationPitch) * par1;
-		if(!Util.isGrabbing){
+		if(!((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).isGrabbing){
 				GL11.glPushMatrix();
 				GL11.glRotatef(f2, 1.0F, 0.0F, 0.0F);
 				GL11.glRotatef(entityclientplayermp.prevRotationYaw + (entityclientplayermp.rotationYaw - entityclientplayermp.prevRotationYaw) * par1, 0.0F, 1.0F, 0.0F);
@@ -265,7 +265,7 @@ public class Patch {
 		EntityPlayerSP entityplayersp = (EntityPlayerSP)entityclientplayermp;
 		float f3 = entityplayersp.prevRenderArmPitch + (entityplayersp.renderArmPitch - entityplayersp.prevRenderArmPitch) * par1;
 		float f4 = entityplayersp.prevRenderArmYaw + (entityplayersp.renderArmYaw - entityplayersp.prevRenderArmYaw) * par1;
-		if(!Util.isGrabbing){
+		if(!((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).isGrabbing){
 				GL11.glRotatef((entityclientplayermp.rotationPitch - f3) * 0.1F, 1.0F, 0.0F, 0.0F);
 				GL11.glRotatef((entityclientplayermp.rotationYaw - f4) * 0.1F, 0.0F, 1.0F, 0.0F);
 		}
@@ -580,12 +580,12 @@ public class Patch {
 				if (((Minecraft)ObfuscationReflectionHelper.getPrivateValue(ItemRenderer.class, renderer, 3)).renderViewEntity instanceof EntityPlayer)
 				{
 					if(entityplayer.isSprinting()){
-						GL11.glTranslatef(0.F, Util.tickRunningRight * 0.6F, 0);
-						GL11.glRotatef(-Util.tickRunningRight * 20F, 0, 0, 0.4F);
+						GL11.glTranslatef(0.F, ((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).tickRunningRight * 0.6F, 0);
+						GL11.glRotatef(-((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).tickRunningRight * 20F, 0, 0, 0.4F);
 					}
 				}
 			}
-			if(Util.isGrabbing){
+			if(((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).isGrabbing){
 				GL11.glRotatef(-20, 1, 0, 1);
 			}
 			renderplayer.renderFirstPersonArm(((Minecraft)ObfuscationReflectionHelper.getPrivateValue(ItemRenderer.class, renderer, 3)).thePlayer);
@@ -635,12 +635,12 @@ public class Patch {
 				if (((Minecraft)ObfuscationReflectionHelper.getPrivateValue(ItemRenderer.class, renderer, 3)).renderViewEntity instanceof EntityPlayer)
 				{
 					if(entityplayer.isSprinting()){
-						GL11.glTranslatef(0.F, Util.tickRunningLeft * 0.8F, 0);
-						GL11.glRotatef(Util.tickRunningLeft * 20F, 0, 0, 0.4F);
+						GL11.glTranslatef(0.F, ((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).tickRunningLeft * 0.8F, 0);
+						GL11.glRotatef(((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).tickRunningLeft * 20F, 0, 0, 0.4F);
 					}
 				}
 			}
-			if(Util.isGrabbing){
+			if(((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).isGrabbing){
 				GL11.glRotatef(15, 1, 0, 1);
 				GL11.glTranslatef(0.1F, 0.22F, 0);
 			}
@@ -838,7 +838,7 @@ public class Patch {
                 net.playerEntity.setPositionAndRotation(d1, d2, d3, f1, f2);
                 boolean flag2 = worldserver.getCollidingBoundingBoxes(net.playerEntity, net.playerEntity.boundingBox.copy().contract((double)f3, (double)f3, (double)f3)).isEmpty();
 
-                if (flag && (flag1 || !flag2) && !net.playerEntity.isPlayerSleeping() && !net.playerEntity.noClip && !Util.isSneaking)
+                if (flag && (flag1 || !flag2) && !net.playerEntity.isPlayerSleeping() && !net.playerEntity.noClip && (EntityPlayerCustom)net.playerEntity.getExtendedProperties("Player Custom") != null && !((EntityPlayerCustom)net.playerEntity.getExtendedProperties("Player Custom")).isSneaking)
                 {
                     net.setPlayerLocation(((Double) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 14)), ((Double) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 15)), ((Double) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 16)), f1, f2);
                     return;
@@ -889,11 +889,11 @@ public class Patch {
             float f2 = ((float)((i >> 2) % 2) - 0.5F) * ent.width * 0.8F;
             int j = MathHelper.floor_double(ent.posX + (double)f);
             int k = 0;
-            if(!Util.isSneaking){
+            if(!(ent instanceof EntityPlayer)){
             	k = MathHelper.floor_double(ent.posY + (double)ent.getEyeHeight() + (double)f1);
             }
             else{
-            	if(ent instanceof EntityPlayer){
+            	if(!((EntityPlayerCustom)ent.getExtendedProperties("Player Custom")).isSneaking){
             		k = MathHelper.floor_double(ent.posY + (double)ent.getEyeHeight() + (double)f1) - 1;
             	}
             }

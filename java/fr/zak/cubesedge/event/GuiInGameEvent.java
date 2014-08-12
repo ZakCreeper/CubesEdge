@@ -14,7 +14,7 @@ public class GuiInGameEvent {
 	@SubscribeEvent
 	public void onRenderInGame(RenderGameOverlayEvent.Post event){
 		if(event.type == RenderGameOverlayEvent.ElementType.ALL){
-			this.drawString(Minecraft.getMinecraft().fontRenderer, "Vitesse : " + (int)((SpeedEvent.speed - 1) * 100) + " block/h", event.resolution.getScaledWidth() - 100, event.resolution.getScaledHeight() - 15, new Color(255, 255, 255).getRGB());
+			this.drawString(Minecraft.getMinecraft().fontRenderer, "Vitesse : " + (int)((SpeedEvent.speed - 1) * 100) + " block/h", event.resolution.getScaledWidth() - 104, event.resolution.getScaledHeight() - 15, new Color(255, 255, 255).getRGB());
 		}
 	}
 

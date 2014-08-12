@@ -7,7 +7,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -22,6 +21,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 import fr.zak.cubesedge.Util;
+import fr.zak.cubesedge.entity.EntityPlayerCustom;
 import fr.zak.cubesedge.event.KeyHandler;
 import fr.zak.cubesedge.event.SpeedEvent;
 import fr.zak.cubesedge.renderer.EntityRendererCustom;
@@ -35,7 +35,7 @@ public class ClientTickHandler {
 	@SubscribeEvent
 	public void playerUpdate(TickEvent.PlayerTickEvent event){
 		if(event.phase == TickEvent.Phase.END){
-			if(Util.isGrabbing && !event.player.capabilities.isCreativeMode){
+			if(((EntityPlayerCustom)event.player.getExtendedProperties("Player Custom")).isGrabbing && !event.player.capabilities.isCreativeMode){
 				PotionEffect potioneffect = event.player.getActivePotionEffect(Potion.jump);
 				float f1 = potioneffect != null ? (float)(potioneffect.getAmplifier() + 1) : 0.0F;
 				int i = MathHelper.ceiling_float_int(event.player.fallDistance - 3.0F - f1);
@@ -47,12 +47,12 @@ public class ClientTickHandler {
 			}
 			if(event.side == Side.CLIENT){
 				sprintAnimation(event.player);
-				ralenti();
+				ralenti(event.player);
 
 				int heading = MathHelper.floor_double((double)(event.player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
 				if(!event.player.capabilities.isFlying){
 					turn(event.player, heading);
-					if(!Util.isSneaking){
+					if(!((EntityPlayerCustom)event.player.getExtendedProperties("Player Custom")).isSneaking){
 						roll(heading, event.player);
 						grab(heading, event.player);
 						if(event.player instanceof EntityPlayerSP){
@@ -64,14 +64,14 @@ public class ClientTickHandler {
 				}
 
 				if(event.player.onGround){
-					Util.wallJump = false;
-					Util.animRight = false;
-					Util.animLeft = false;
-					Util.isJumpingOnWall = false;
+					((EntityPlayerCustom)event.player.getExtendedProperties("Player Custom")).wallJump = false;
+					((EntityPlayerCustom)event.player.getExtendedProperties("Player Custom")).animRight = false;
+					((EntityPlayerCustom)event.player.getExtendedProperties("Player Custom")).animLeft = false;
+					((EntityPlayerCustom)event.player.getExtendedProperties("Player Custom")).isJumpingOnWall = false;
 				}
 				if(event.player.capabilities.isFlying){
-					Util.animRight = false;
-					Util.animLeft = false;
+					((EntityPlayerCustom)event.player.getExtendedProperties("Player Custom")).animRight = false;
+					((EntityPlayerCustom)event.player.getExtendedProperties("Player Custom")).animLeft = false;
 				}
 			}
 		}
@@ -80,7 +80,7 @@ public class ClientTickHandler {
 	@SubscribeEvent
 	public void tick(TickEvent.RenderTickEvent event) {
 		if(event.phase == TickEvent.Phase.START && minecraft.theWorld != null){
-			if(Util.isSneaking || Util.isRolling){
+			if(((EntityPlayerCustom)minecraft.thePlayer.getExtendedProperties("Player Custom")).isSneaking || ((EntityPlayerCustom)minecraft.thePlayer.getExtendedProperties("Player Custom")).isRolling){
 				if (renderer == null) {
 					renderer = new EntityRendererCustom(minecraft);
 				}
@@ -102,24 +102,24 @@ public class ClientTickHandler {
 					minecraft.entityRenderer = prevRenderer;
 				}
 				forceSetSize(Entity.class, minecraft.thePlayer, 0.6F, 1.8F);
-				Util.isSneaking = false;
-				Util.sneakTime = 0;
+				((EntityPlayerCustom)minecraft.thePlayer.getExtendedProperties("Player Custom")).isSneaking = false;
+				((EntityPlayerCustom)minecraft.thePlayer.getExtendedProperties("Player Custom")).sneakTime = 0;
 			}
 		}
 	}
 
 	private void turn(EntityPlayer player, int heading) {
-		if(Util.isTurning){
-			if(!Util.isOnWall){
+		if(((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).isTurning){
+			if(!((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).isOnWall){
 				float yaw = MathHelper.wrapAngleTo180_float(player.rotationYaw);
 				player.rotationYaw = yaw - 180;
-				Util.isTurning = false;
-				if(Util.isJumping != 0 && Util.turningTime == 0 && !Util.isTurningOnWall){
-					Util.isTurningOnWall = true;
+				((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).isTurning = false;
+				if(((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).isJumping != 0 && ((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).turningTime == 0 && !((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).isTurningOnWall){
+					((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).isTurningOnWall = true;
 				}
 			}
 			else{
-				if(Util.turningTime == 0 && !Util.isTurningOnWall){
+				if(((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).turningTime == 0 && !((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).isTurningOnWall){
 					float yaw = MathHelper.wrapAngleTo180_float(player.rotationYaw);
 					if((player.worldObj.getBlock(MathHelper.floor_double(player.posX) + 1, MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ)).isNormalCube() && heading == 0) || (player.worldObj.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ) + 1).isNormalCube() && heading == 1) || (player.worldObj.getBlock(MathHelper.floor_double(player.posX) - 1, MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ)).isNormalCube() && heading == 2) || (player.worldObj.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ) - 1).isNormalCube() && heading == 3)){
 						player.rotationYaw = yaw - 90;
@@ -127,25 +127,25 @@ public class ClientTickHandler {
 					else if((player.worldObj.getBlock(MathHelper.floor_double(player.posX) - 1, MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ)).isNormalCube() && heading == 0) || (player.worldObj.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ) - 1).isNormalCube() && heading == 1) || (player.worldObj.getBlock(MathHelper.floor_double(player.posX) + 1, MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ)).isNormalCube() && heading == 2) || (player.worldObj.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ) + 1).isNormalCube() && heading == 3)){
 						player.rotationYaw = yaw + 90;
 					}
-					Util.isTurningOnWall = true;
+					((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).isTurningOnWall = true;
 				}
 			}
 		}
-		if(Util.isTurningOnWall){
-			if(Util.turningTime < 10){
-				Util.turningTime++;
+		if(((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).isTurningOnWall){
+			if(((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).turningTime < 10){
+				((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).turningTime++;
 			}
-			if(Util.turningTime == 10){
-				Util.isTurning = false;
-				Util.turningTime = 0;
-				Util.isTurningOnWall = false;
+			if(((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).turningTime == 10){
+				((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).isTurning = false;
+				((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).turningTime = 0;
+				((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).isTurningOnWall = false;
 			}
 			if((player.worldObj.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ) - 1).isNormalCube() && heading == 0) || (player.worldObj.getBlock(MathHelper.floor_double(player.posX) + 1, MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ)).isNormalCube() && heading == 1) || (player.worldObj.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ) + 1).isNormalCube() && heading == 2) || (player.worldObj.getBlock(MathHelper.floor_double(player.posX) - 1, MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ )).isNormalCube() && heading == 3)) {
 				player.motionZ *= 0.95D;
 				player.motionX *= 0.95D;
 				player.motionY *= 0.75D;
 				if(player instanceof EntityPlayerSP) {
-					if(((EntityPlayerSP)player).movementInput.jump && !Util.isJumpingOnWall){
+					if(((EntityPlayerSP)player).movementInput.jump && !((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).isJumpingOnWall){
 						if(heading == 0){
 							player.motionZ = 0.7F;
 						}
@@ -159,7 +159,7 @@ public class ClientTickHandler {
 							player.motionX = 0.7F;
 						}
 						player.motionY = 0.7D;
-						Util.isJumpingOnWall = true;
+						((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).isJumpingOnWall = true;
 					}
 				}
 			}
@@ -167,91 +167,91 @@ public class ClientTickHandler {
 	}
 
 	private void sneak(EntityPlayer player) {
-		if(!player.isSprinting() && Util.wasSprinting){
-			if(player.isSneaking() && player.onGround && !Util.isRolling){
-				Util.isSneaking = true;
+		if(!player.isSprinting() && ((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).wasSprinting){
+			if(player.isSneaking() && player.onGround && !((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).isRolling){
+				((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).isSneaking = true;
 			}
 		}
-		if(Util.isSneaking && player.isSneaking()){
+		if(((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).isSneaking && player.isSneaking()){
 			if(player.isCollidedHorizontally){
-				Util.sneakTime = 16;
+				((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).sneakTime = 16;
 			}
-			if(Util.sneakTime < 16){
+			if(((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).sneakTime < 16){
 				player.motionX *= (0.98F * 0.91F) + 1;
 				player.motionZ *= (0.98F * 0.91F) + 1;
-				Util.sneakTime++;
+				((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).sneakTime++;
 			}
 			if(EntityRendererCustom.offsetY > -1F){
 				EntityRendererCustom.offsetY -= 0.2F;
 			}
 		}
-		if(Util.isSneaking && !player.isSneaking()){
-			Util.isSneaking = false;
-			Util.sneakTime = 0;
+		if(((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).isSneaking && !player.isSneaking()){
+			((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).isSneaking = false;
+			((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).sneakTime = 0;
 		}
-		Util.wasSprinting = player.isSprinting();
+		((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).wasSprinting = player.isSprinting();
 	}
 
 	private void sprintAnimation(EntityPlayer player){
 		if(player.isSprinting()){
-			if(Util.tickRunningRight < 0.5F && !Util.beginingRunning){
-				Util.tickRunningRight += (SpeedEvent.speed - 1) * 0.05;
+			if(((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).tickRunningRight < 0.5F && !((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).beginingRunning){
+				((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).tickRunningRight += (SpeedEvent.speed - 1) * 0.05;
 			}
-			if(Util.tickRunningRight >= 0.5F && !Util.beginingRunning){
-				Util.beginingRunning = true;
+			if(((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).tickRunningRight >= 0.5F && !((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).beginingRunning){
+				((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).beginingRunning = true;
 			}
-			if(Util.beginingRunning){
-				Util.animRunnig = true;
+			if(((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).beginingRunning){
+				((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).animRunnig = true;
 			}
 		}
 		else{
-			Util.animRunnig = false;
-			Util.beginingRunning = false;
-			Util.tickRunningLeft = 0;
-			Util.tickRunningRight = 0;
+			((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).animRunnig = false;
+			((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).beginingRunning = false;
+			((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).tickRunningLeft = 0;
+			((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).tickRunningRight = 0;
 		}
-		if(Util.animRunnig){
-			if(Util.tickRunningLeft < 0.5F && !Util.backLeft){
-				Util.tickRunningLeft += (SpeedEvent.speed - 1) * 0.2;
+		if(((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).animRunnig){
+			if(((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).tickRunningLeft < 0.5F && !((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).backLeft){
+				((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).tickRunningLeft += (SpeedEvent.speed - 1) * 0.2;
 			}
-			if(Util.tickRunningLeft >= 0.5F && !Util.backLeft){
-				Util.backLeft = true;
+			if(((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).tickRunningLeft >= 0.5F && !((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).backLeft){
+				((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).backLeft = true;
 			}
-			if(Util.tickRunningLeft > 0 && Util.backLeft){
-				Util.tickRunningLeft -= (SpeedEvent.speed - 1) * 0.2;
+			if(((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).tickRunningLeft > 0 && ((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).backLeft){
+				((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).tickRunningLeft -= (SpeedEvent.speed - 1) * 0.2;
 			}
-			if(Util.tickRunningLeft <= 0 && Util.backLeft){
-				Util.backLeft = false;
+			if(((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).tickRunningLeft <= 0 && ((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).backLeft){
+				((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).backLeft = false;
 			}
-			if(Util.tickRunningRight > 0 && !Util.backRight){
-				Util.tickRunningRight -= (SpeedEvent.speed - 1) * 0.2;
+			if(((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).tickRunningRight > 0 && !((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).backRight){
+				((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).tickRunningRight -= (SpeedEvent.speed - 1) * 0.2;
 			}
-			if(Util.tickRunningRight <= 0 && !Util.backRight){
-				Util.backRight = true;
+			if(((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).tickRunningRight <= 0 && !((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).backRight){
+				((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).backRight = true;
 			}
-			if(Util.tickRunningRight < 0.5F && Util.backRight){
-				Util.tickRunningRight += (SpeedEvent.speed - 1) * 0.2;
+			if(((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).tickRunningRight < 0.5F && ((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).backRight){
+				((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).tickRunningRight += (SpeedEvent.speed - 1) * 0.2;
 			}
-			if(Util.tickRunningRight >= 0.5F && Util.backRight){
-				Util.backRight = false;
+			if(((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).tickRunningRight >= 0.5F && ((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).backRight){
+				((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).backRight = false;
 			}
 		}
 	}
 
-	private void ralenti(){
-		if(KeyHandler.keyPressedRalenti && !Util.ralenti){
+	private void ralenti(EntityPlayer player){
+		if(KeyHandler.keyPressedRalenti && !((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).ralenti){
 			ObfuscationReflectionHelper.setPrivateValue(Timer.class, ((Timer)ObfuscationReflectionHelper.getPrivateValue(Minecraft.class, minecraft, 15)), 5F, 0);
-			Util.ralenti = true;
+			((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).ralenti = true;
 		}
-		if(Util.ralenti){
-			Util.temps++;
+		if(((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).ralenti){
+			((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).temps++;
 		}
-		if(Util.temps == 25 && Util.ralenti){
+		if(((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).temps == 25 && ((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).ralenti){
 			ObfuscationReflectionHelper.setPrivateValue(Timer.class, ((Timer)ObfuscationReflectionHelper.getPrivateValue(Minecraft.class, minecraft, 15)), 20F, 0);
-			Util.temps = 0;
+			((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).temps = 0;
 			minecraft.gameSettings.mouseSensitivity = KeyHandler.defaultSensitivity;
 			KeyHandler.keyPressedRalenti = false;
-			Util.ralenti = false;
+			((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).ralenti = false;
 		}
 	}
 
@@ -259,14 +259,14 @@ public class ClientTickHandler {
 		if(player.fallDistance > 3.0F && player.fallDistance < 15F){
 			if (player.worldObj.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY) - 3, MathHelper.floor_double(player.posZ)).isNormalCube() || player.worldObj.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY) - 4, MathHelper.floor_double(player.posZ)).isNormalCube()){
 				if(player.isSneaking()){
-					Util.prevRolling = true;
+					((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).prevRolling = true;
 				}
 			}
 		}
-		if(Util.prevRolling && player.onGround){
-			Util.isRolling = true;
+		if(((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).prevRolling && player.onGround){
+			((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).isRolling = true;
 		}
-		if(Util.isRolling){
+		if(((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).isRolling){
 			KeyBinding.setKeyBindState(minecraft.gameSettings.keyBindForward.getKeyCode(), true);
 			KeyBinding.setKeyBindState(minecraft.gameSettings.keyBindLeft.getKeyCode(), false);
 			KeyBinding.setKeyBindState(minecraft.gameSettings.keyBindRight.getKeyCode(), false);
@@ -274,17 +274,17 @@ public class ClientTickHandler {
 			KeyBinding.setKeyBindState(minecraft.gameSettings.keyBindSneak.getKeyCode(), false);
 			player.motionZ *= 0.3;
 			player.motionX *= 0.3;
-			if(Util.rollingTime < 27){
+			if(((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).rollingTime < 27){
 				float f2 = player.rotationPitch;
 				player.rotationPitch = (float)((double)player.rotationPitch + 10);
 				player.prevRotationPitch += player.rotationPitch - f2;
-				Util.rollingTime++;
+				((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).rollingTime++;
 			}
-			if(Util.rollingTime == 27){
+			if(((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).rollingTime == 27){
 				player.rotationPitch = 0F;
-				Util.rollingTime = 0;
-				Util.prevRolling = false;
-				Util.isRolling = false;
+				((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).rollingTime = 0;
+				((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).prevRolling = false;
+				((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).isRolling = false;
 				KeyBinding.setKeyBindState(minecraft.gameSettings.keyBindForward.getKeyCode(), false);
 			}
 		}
@@ -293,11 +293,11 @@ public class ClientTickHandler {
 	private void wallJumping(int heading, EntityPlayerSP player){
 		if(!player.onGround && player.motionY <= 0){
 			if((minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX) + 1, MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ)).isNormalCube() || minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX) + 1, MathHelper.floor_double(player.posY) - 1, MathHelper.floor_double(player.posZ)).isNormalCube()) && (( heading == 0) || (heading == 2))){
-				Util.isOnWall = true;
+				((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).isOnWall = true;
 				if(player.moveForward > 0){
-					if(player.movementInput.jump && !Util.wallJump){
-						Util.animRight = false;
-						Util.animLeft = false;
+					if(player.movementInput.jump && !((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).wallJump){
+						((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).animRight = false;
+						((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).animLeft = false;
 						if(heading == 0){
 							player.motionZ = 0.7D;
 							player.motionX = -0.2D;
@@ -307,25 +307,25 @@ public class ClientTickHandler {
 							player.motionX = -0.2D;
 						}
 						player.motionY = 0.41999998688697815D;
-						Util.wallJump = true;
+						((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).wallJump = true;
 					}
 					if(!player.movementInput.jump){
 						if(heading == 2){
-							Util.animRight = true;
+							((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).animRight = true;
 						}
 						if(heading == 0){
-							Util.animLeft = true;
+							((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).animLeft = true;
 
 						}
 					}
 				}
 			}
 			else if((minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX) - 1, MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ)).isNormalCube() || minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX) - 1, MathHelper.floor_double(player.posY) - 1, MathHelper.floor_double(player.posZ)).isNormalCube()) && ((heading == 0) || (heading == 2))){
-				Util.isOnWall = true;
+				((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).isOnWall = true;
 				if(player.moveForward > 0){
-					if(player.movementInput.jump && !Util.wallJump){
-						Util.animRight = false;
-						Util.animLeft = false;
+					if(player.movementInput.jump && !((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).wallJump){
+						((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).animRight = false;
+						((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).animLeft = false;
 						if(heading == 0){
 							player.motionZ = 0.7D;
 							player.motionX = 0.2D;
@@ -335,24 +335,24 @@ public class ClientTickHandler {
 							player.motionX = 0.2D;
 						}
 						player.motionY = 0.41999998688697815D;
-						Util.wallJump = true;
+						((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).wallJump = true;
 					}
 					if(!player.movementInput.jump){
 						if(heading == 2){
-							Util.animLeft = true;
+							((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).animLeft = true;
 						}
 						if(heading == 0){
-							Util.animRight = true;
+							((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).animRight = true;
 						}
 					}
 				}
 			}
 			else if((minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ) + 1).isNormalCube() || minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY) - 1, MathHelper.floor_double(player.posZ) + 1).isNormalCube()) && ((heading == 3) || (heading == 1))){
-				Util.isOnWall = true;
+				((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).isOnWall = true;
 				if(player.moveForward > 0){
-					if(player.movementInput.jump && !Util.wallJump){
-						Util.animRight = false;
-						Util.animLeft = false;
+					if(player.movementInput.jump && !((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).wallJump){
+						((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).animRight = false;
+						((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).animLeft = false;
 						if(heading == 3){
 							player.motionX = 0.7D;
 							player.motionZ = -0.2D;
@@ -362,24 +362,24 @@ public class ClientTickHandler {
 							player.motionZ = -0.2D;
 						}
 						player.motionY = 0.41999998688697815D;
-						Util.wallJump = true;
+						((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).wallJump = true;
 					}
 					if(!player.movementInput.jump){
 						if(heading == 3){
-							Util.animRight = true;
+							((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).animRight = true;
 						}
 						if(heading == 1){
-							Util.animLeft = true;
+							((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).animLeft = true;
 						}
 					}
 				}
 			}
 			else if((minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ) - 1).isNormalCube() || minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX) , MathHelper.floor_double(player.posY) - 1, MathHelper.floor_double(player.posZ) - 1).isNormalCube()) && ((heading == 3) || (heading == 1))){
-				Util.isOnWall = true;
+				((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).isOnWall = true;
 				if(player.moveForward > 0){
-					if(player.movementInput.jump && !Util.wallJump){
-						Util.animRight = false;
-						Util.animLeft = false;
+					if(player.movementInput.jump && !((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).wallJump){
+						((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).animRight = false;
+						((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).animLeft = false;
 						if(heading == 3){
 							player.motionX = 0.7D;
 							player.motionZ = 0.2D;
@@ -389,32 +389,32 @@ public class ClientTickHandler {
 							player.motionZ = 0.2D;
 						}
 						player.motionY = 0.41999998688697815D;
-						Util.wallJump = true;
+						((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).wallJump = true;
 					}
 					if(!player.movementInput.jump){
 						if(heading == 3){
-							Util.animLeft = true;
+							((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).animLeft = true;
 						}
 						if(heading == 1){
-							Util.animRight = true;
+							((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).animRight = true;
 						}
 					}
 				}
 			}
 			else {
-				Util.isOnWall = false;
+				((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).isOnWall = false;
 			}
 			//			if(player.onGround){
-			//				Util.isOnWall = false;
+			//				((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).isOnWall = false;
 			//			}
-			if(Util.isOnWall && player.moveForward > 0){
+			if(((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).isOnWall && player.moveForward > 0){
 				player.motionZ *= 0.95D;
 				player.motionX *= 0.95D;
 				player.motionY *= 0.75D;
 			}
 		}
 		else {
-			Util.isOnWall = false;
+			((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).isOnWall = false;
 		}
 	}
 
@@ -426,61 +426,61 @@ public class ClientTickHandler {
 				}
 			}
 			if((minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ) - 1).isNormalCube() && heading == 2) || (minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ) + 1).isNormalCube() && heading == 0) || (minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX) - 1, MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ)).isNormalCube() && heading == 1) || (minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX) + 1, MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ)).isNormalCube() && heading == 3)){
-				Util.isJumping = 3;
+				((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).isJumping = 3;
 				if((minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY) + 1, MathHelper.floor_double(player.posZ) - 1).isNormalCube() && heading == 2) || (minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY) + 1, MathHelper.floor_double(player.posZ) + 1).isNormalCube() && heading == 0) || (minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX) - 1, MathHelper.floor_double(player.posY) + 1, MathHelper.floor_double(player.posZ)).isNormalCube() && heading == 1) || (minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX) + 1, MathHelper.floor_double(player.posY) + 1, MathHelper.floor_double(player.posZ)).isNormalCube() && heading == 3)){
-					Util.isJumping = 4;
+					((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).isJumping = 4;
 				}
 			}
 		}
 		
 		if(player.fallDistance == 0 && !player.onGround){
-			if(Util.isJumping == 3){
+			if(((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).isJumping == 3){
 				player.motionY *= 0.75D;
 			}
-			if(Util.isJumping == 4){
-				if(Util.jumpTime < 1){
+			if(((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).isJumping == 4){
+				if(((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).jumpTime < 1){
 					player.motionY = 0.41999998688697815D;
-					Util.jumpTime++;
+					((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).jumpTime++;
 				}
 			}
 		}
-		if(player.onGround || Util.isTurning || Util.isGrabbing){
+		if(player.onGround || ((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).isTurning || ((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).isGrabbing){
 			if(!(Boolean)ObfuscationReflectionHelper.getPrivateValue(EntityLivingBase.class, (EntityLivingBase)player, 41)){
-				Util.isJumping = 0;
+				((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).isJumping = 0;
 			}
-			Util.jumpTime = 0;
+			((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).jumpTime = 0;
 		}
 	}
 
 	private void grab(int heading, EntityPlayer player){
 		if(((((minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ) - 1).isNormalCube() && heading == 2) || (minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ) + 1).isNormalCube() && heading == 0) || (minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX) - 1, MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ)).isNormalCube() && heading == 1) || (minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX) + 1, MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ)).isNormalCube() && heading == 3)) && ((!minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY) + 1, MathHelper.floor_double(player.posZ) - 1).isNormalCube() && heading == 2) || (!minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY) + 1, MathHelper.floor_double(player.posZ) + 1).isNormalCube() && heading == 0) || (!minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX) - 1, MathHelper.floor_double(player.posY) + 1, MathHelper.floor_double(player.posZ)).isNormalCube() && heading == 1) || (!minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX) + 1, MathHelper.floor_double(player.posY) + 1, MathHelper.floor_double(player.posZ)).isNormalCube() && heading == 3)) && (!minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY) - 2, MathHelper.floor_double(player.posZ)).isNormalCube()))) && !player.isOnLadder()){
-			Util.isGrabbing = true;
-			Util.grabbingDirections[heading] = true;
+			((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).isGrabbing = true;
+			((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).grabbingDirections[heading] = true;
 			if(heading == 0){
-				Util.grabbingDirections[3] = true;
+				((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).grabbingDirections[3] = true;
 			}
 			else{
-				Util.grabbingDirections[heading - 1] = true;
+				((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).grabbingDirections[heading - 1] = true;
 			}
 
 			if(heading == 3){
-				Util.grabbingDirections[0] = true;
+				((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).grabbingDirections[0] = true;
 			}
 			else{
-				Util.grabbingDirections[heading + 1] = true;
+				((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).grabbingDirections[heading + 1] = true;
 			}
 		}
 		else{
-			Util.isGrabbing = false;
-			Util.grabbingDirections[0] = false;
-			Util.grabbingDirections[1] = false;
-			Util.grabbingDirections[2] = false;
-			Util.grabbingDirections[3] = false;
+			((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).isGrabbing = false;
+			((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).grabbingDirections[0] = false;
+			((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).grabbingDirections[1] = false;
+			((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).grabbingDirections[2] = false;
+			((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).grabbingDirections[3] = false;
 		}
-		if(!player.isSneaking() && !(Boolean)ObfuscationReflectionHelper.getPrivateValue(EntityLivingBase.class, (EntityLivingBase)player, 41) && Util.isGrabbing){
+		if(!player.isSneaking() && !(Boolean)ObfuscationReflectionHelper.getPrivateValue(EntityLivingBase.class, (EntityLivingBase)player, 41) && ((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).isGrabbing){
 			player.motionY = 0.0;
 		}
-		else if((Boolean)ObfuscationReflectionHelper.getPrivateValue(EntityLivingBase.class, (EntityLivingBase)player, 41) && Util.isGrabbing){
+		else if((Boolean)ObfuscationReflectionHelper.getPrivateValue(EntityLivingBase.class, (EntityLivingBase)player, 41) && ((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).isGrabbing){
 			player.motionY = 0.8D;
 		}
 	}

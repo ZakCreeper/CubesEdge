@@ -8,6 +8,7 @@ import net.minecraftforge.client.event.RenderPlayerEvent;
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import fr.zak.cubesedge.Util;
+import fr.zak.cubesedge.entity.EntityPlayerCustom;
 
 public class RenderPlayerEventCustom {
 
@@ -17,7 +18,7 @@ public class RenderPlayerEventCustom {
 	
 	@SubscribeEvent
 	public void onRenderFirstPerson(RenderPlayerEvent.Post event){
-		if(Util.animLeft){
+		if(((EntityPlayerCustom)event.entityPlayer.getExtendedProperties("Player Custom")).animLeft){
 			((ModelBiped)ObfuscationReflectionHelper.getPrivateValue(RenderPlayer.class, event.renderer, 1)).heldItemLeft = 50;
 		}
 		else{

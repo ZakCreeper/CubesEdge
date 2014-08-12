@@ -10,12 +10,13 @@ import net.minecraft.util.Vec3;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import fr.zak.cubesedge.Util;
+import fr.zak.cubesedge.entity.EntityPlayerCustom;
 
 public class PlayerFall {
 
 	@SubscribeEvent
 	public void onFall(LivingFallEvent event){
-		if(Util.isRolling && event.entityLiving instanceof EntityPlayer){
+		if(event.entityLiving instanceof EntityPlayer && ((EntityPlayerCustom)event.entityLiving.getExtendedProperties("Player Custom")).isRolling){
 			event.distance = 0;
 		}
 	}

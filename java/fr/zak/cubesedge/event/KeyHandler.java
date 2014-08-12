@@ -9,6 +9,7 @@ import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
 import fr.zak.cubesedge.Util;
+import fr.zak.cubesedge.entity.EntityPlayerCustom;
 
 public class KeyHandler {
 	
@@ -28,8 +29,8 @@ public class KeyHandler {
 		if(keyPressedRalenti){
 			Minecraft.getMinecraft().gameSettings.mouseSensitivity = 0.1F;
 		}
-		if(turn.isPressed() && !Util.isTurning){
-			Util.isTurning = true;
+		if(turn.isPressed() && !((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).isTurning){
+			((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).isTurning = true;
 		}
 	}
 }
