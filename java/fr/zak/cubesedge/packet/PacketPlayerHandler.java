@@ -5,9 +5,9 @@ import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
 
-public class MessageHandlerPacketPlayer implements IMessageHandler<PacketPlayer, IMessage>{
+public class PacketPlayerHandler implements IMessageHandler<PacketPlayer, IMessage>{
 
-	public MessageHandlerPacketPlayer(){
+	public PacketPlayerHandler(){
 		
 	}
 	
