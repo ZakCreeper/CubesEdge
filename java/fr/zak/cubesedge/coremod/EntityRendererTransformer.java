@@ -19,6 +19,12 @@ public class EntityRendererTransformer implements IClassTransformer{
 
 	@Override
 	public byte[] transform(String name, String transformedName, byte[] basicClass) {
+		if (name.equals("net.minecraft.profiler.IPlayerUsage")){
+			CubesEdgeFMLLoadingPlugin.obfuscation = false;
+		}
+		if(name.equals("px")){
+			CubesEdgeFMLLoadingPlugin.obfuscation = true;
+		}
 		if (transformedName.equals("net.minecraft.client.renderer.EntityRenderer")){
 			System.out.println("Cube\'s Edge Core - Patching class EntityRenderer...");
 			methodName = CubesEdgeFMLLoadingPlugin.obfuscation ? "b" : "renderHand";

@@ -7,6 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -66,6 +67,7 @@ public class ClientTickHandler {
 					Util.wallJump = false;
 					Util.animRight = false;
 					Util.animLeft = false;
+					Util.isJumpingOnWall = false;
 				}
 				if(event.player.capabilities.isFlying){
 					Util.animRight = false;
@@ -88,7 +90,7 @@ public class ClientTickHandler {
 					minecraft.entityRenderer = renderer;
 				}
 				forceSetSize(Entity.class, minecraft.thePlayer, 0.6F, 0.6F);
-			} else if (prevRenderer != null && minecraft.entityRenderer != prevRenderer && !minecraft.thePlayer.isSneaking() && minecraft.theWorld.getBlock(MathHelper.floor_double(minecraft.thePlayer.posX), MathHelper.floor_double(minecraft.thePlayer.posY) + 1, MathHelper.floor_double(minecraft.thePlayer.posZ)) == Blocks.air) {
+			} else if (prevRenderer != null && minecraft.entityRenderer != prevRenderer && !minecraft.thePlayer.isSneaking() && minecraft.theWorld.getBlock(MathHelper.floor_double(minecraft.thePlayer.posX), MathHelper.floor_double(minecraft.thePlayer.posY), MathHelper.floor_double(minecraft.thePlayer.posZ)).equals(Blocks.air)) {
 				// reset the renderer
 				if(EntityRendererCustom.offsetY < 0F){
 					EntityRendererCustom.offsetY += 0.2F;
@@ -143,7 +145,7 @@ public class ClientTickHandler {
 				player.motionX *= 0.95D;
 				player.motionY *= 0.75D;
 				if(player instanceof EntityPlayerSP) {
-					if(((EntityPlayerSP)player).movementInput.jump){
+					if(((EntityPlayerSP)player).movementInput.jump && !Util.isJumpingOnWall){
 						if(heading == 0){
 							player.motionZ = 0.7F;
 						}
@@ -157,6 +159,7 @@ public class ClientTickHandler {
 							player.motionX = 0.7F;
 						}
 						player.motionY = 0.7D;
+						Util.isJumpingOnWall = true;
 					}
 				}
 			}
@@ -170,6 +173,9 @@ public class ClientTickHandler {
 			}
 		}
 		if(Util.isSneaking && player.isSneaking()){
+			if(player.isCollidedHorizontally){
+				Util.sneakTime = 16;
+			}
 			if(Util.sneakTime < 16){
 				player.motionX *= (0.98F * 0.91F) + 1;
 				player.motionZ *= (0.98F * 0.91F) + 1;
@@ -414,7 +420,7 @@ public class ClientTickHandler {
 
 	private void jump(int heading, EntityPlayer player){
 		if((minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY) - 1, MathHelper.floor_double(player.posZ) - 1).isNormalCube() && heading == 2) || (minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY) - 1, MathHelper.floor_double(player.posZ) + 1).isNormalCube() && heading == 0) || (minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX) - 1, MathHelper.floor_double(player.posY) - 1, MathHelper.floor_double(player.posZ)).isNormalCube() && heading == 1) || (minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX) + 1, MathHelper.floor_double(player.posY) - 1, MathHelper.floor_double(player.posZ)).isNormalCube() && heading == 3)){
-			if((minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ) - 1) == Blocks.air && heading == 2) || (minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ) + 1) == Blocks.air && heading == 0) || (minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX) - 1, MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ)) == Blocks.air && heading == 1) || (minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX) + 1, MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ)) == Blocks.air && heading == 3)){
+			if((!minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ) - 1).isNormalCube() && heading == 2) || (!minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ) + 1).isNormalCube() && heading == 0) || (!minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX) - 1, MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ)).isNormalCube() && heading == 1) || (!minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX) + 1, MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ)).isNormalCube() && heading == 3)){
 				if(ObfuscationReflectionHelper.getPrivateValue(EntityLivingBase.class, (EntityLivingBase)player, 41)){
 					player.motionY = 0.41999998688697815D;
 				}
@@ -426,6 +432,7 @@ public class ClientTickHandler {
 				}
 			}
 		}
+		
 		if(player.fallDistance == 0 && !player.onGround){
 			if(Util.isJumping == 3){
 				player.motionY *= 0.75D;
@@ -433,7 +440,6 @@ public class ClientTickHandler {
 			if(Util.isJumping == 4){
 				if(Util.jumpTime < 1){
 					player.motionY = 0.41999998688697815D;
-					System.out.println(Util.jumpTime);
 					Util.jumpTime++;
 				}
 			}
@@ -447,7 +453,7 @@ public class ClientTickHandler {
 	}
 
 	private void grab(int heading, EntityPlayer player){
-		if((((minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ) - 1).isNormalCube() && heading == 2) || (minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ) + 1).isNormalCube() && heading == 0) || (minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX) - 1, MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ)).isNormalCube() && heading == 1) || (minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX) + 1, MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ)).isNormalCube() && heading == 3)) && ((minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY) + 1, MathHelper.floor_double(player.posZ) - 1) == Blocks.air && heading == 2) || (minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY) + 1, MathHelper.floor_double(player.posZ) + 1) == Blocks.air && heading == 0) || (minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX) - 1, MathHelper.floor_double(player.posY) + 1, MathHelper.floor_double(player.posZ)) == Blocks.air && heading == 1) || (minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX) + 1, MathHelper.floor_double(player.posY) + 1, MathHelper.floor_double(player.posZ)) == Blocks.air && heading == 3)) && (minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY) - 2, MathHelper.floor_double(player.posZ)) == Blocks.air))){
+		if(((((minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ) - 1).isNormalCube() && heading == 2) || (minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ) + 1).isNormalCube() && heading == 0) || (minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX) - 1, MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ)).isNormalCube() && heading == 1) || (minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX) + 1, MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ)).isNormalCube() && heading == 3)) && ((!minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY) + 1, MathHelper.floor_double(player.posZ) - 1).isNormalCube() && heading == 2) || (!minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY) + 1, MathHelper.floor_double(player.posZ) + 1).isNormalCube() && heading == 0) || (!minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX) - 1, MathHelper.floor_double(player.posY) + 1, MathHelper.floor_double(player.posZ)).isNormalCube() && heading == 1) || (!minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX) + 1, MathHelper.floor_double(player.posY) + 1, MathHelper.floor_double(player.posZ)).isNormalCube() && heading == 3)) && (!minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY) - 2, MathHelper.floor_double(player.posZ)).isNormalCube()))) && !player.isOnLadder()){
 			Util.isGrabbing = true;
 			Util.grabbingDirections[heading] = true;
 			if(heading == 0){
@@ -471,10 +477,10 @@ public class ClientTickHandler {
 			Util.grabbingDirections[2] = false;
 			Util.grabbingDirections[3] = false;
 		}
-		if(!player.isSneaking() && !(Boolean)ObfuscationReflectionHelper.getPrivateValue(EntityLivingBase.class, (EntityLivingBase)player, 41) && Util.isGrabbing && !player.isOnLadder()){
+		if(!player.isSneaking() && !(Boolean)ObfuscationReflectionHelper.getPrivateValue(EntityLivingBase.class, (EntityLivingBase)player, 41) && Util.isGrabbing){
 			player.motionY = 0.0;
 		}
-		else if((Boolean)ObfuscationReflectionHelper.getPrivateValue(EntityLivingBase.class, (EntityLivingBase)player, 41) && Util.isGrabbing && !player.isOnLadder()){
+		else if((Boolean)ObfuscationReflectionHelper.getPrivateValue(EntityLivingBase.class, (EntityLivingBase)player, 41) && Util.isGrabbing){
 			player.motionY = 0.8D;
 		}
 	}

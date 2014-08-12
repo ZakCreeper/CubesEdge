@@ -894,11 +894,10 @@ public class Patch {
             }
             else{
             	if(ent instanceof EntityPlayer){
-            		k = MathHelper.floor_double(ent.posY + (-0.88) + (double)f1);
+            		k = MathHelper.floor_double(ent.posY + (double)ent.getEyeHeight() + (double)f1) - 1;
             	}
             }
             int l = MathHelper.floor_double(ent.posZ + (double)f2);
-
             if (ent.worldObj.getBlock(j, k, l).isNormalCube())
             {
                 return true;

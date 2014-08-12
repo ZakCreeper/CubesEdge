@@ -1,5 +1,8 @@
 package fr.zak.cubesedge;
 
+import java.util.Iterator;
+
+import net.minecraft.block.Block;
 import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -18,7 +21,7 @@ import fr.zak.cubesedge.proxys.CommonProxy;
  * @author Zak (alex.ulysse@gmail.com)
  * 
  */
-@Mod(modid = "cubesedge", name = "Cube's Edge", version = "Alpha 0.1.6")
+@Mod(modid = "cubesedge", name = "Cube's Edge", version = Util.VERSION)
 public class CubesEdge {
 
 	@Instance("cubesedge")
@@ -42,6 +45,12 @@ public class CubesEdge {
 
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
-
+		Iterator<Block> i = Block.blockRegistry.iterator();
+		while(i.hasNext()){
+			Block block = i.next();
+			if(block.getBlockBoundsMaxX() == 1.0D && block.getBlockBoundsMaxY() == 1.0D && block.getBlockBoundsMaxZ() == 1.0D && block.getBlockBoundsMinX() == 0.0D && block.getBlockBoundsMinY() == 0.0D && block.getBlockBoundsMinZ() == 0.0D){
+				Util.cubes.add(block);
+			}
+		}
 	}
 }

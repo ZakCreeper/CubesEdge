@@ -1,12 +1,22 @@
 package fr.zak.cubesedge;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
+
+import net.minecraft.block.Block;
 
 public class Util {
+	
 	public static boolean obfuscation;
+	
+	public static final String VERSION = "Alpha 0.1.7";
+	
+	public static List<Block> cubes = new ArrayList<Block>();
 
 	public static int isJumping = 0;
 	public static int jumpTime = 0;
+	public static boolean isJumpingOnWall = false;
 	
 	public static boolean prevRolling = false;
 	public static int rollingTime = 0;

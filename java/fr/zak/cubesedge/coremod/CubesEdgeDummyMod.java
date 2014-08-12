@@ -7,6 +7,7 @@ import com.google.common.eventbus.EventBus;
 import cpw.mods.fml.common.DummyModContainer;
 import cpw.mods.fml.common.LoadController;
 import cpw.mods.fml.common.ModMetadata;
+import fr.zak.cubesedge.Util;
 
 public class CubesEdgeDummyMod extends DummyModContainer{
 
@@ -16,7 +17,7 @@ public class CubesEdgeDummyMod extends DummyModContainer{
 		ModMetadata meta = getMetadata();
 		meta.modId = "cubesedgecore";
 		meta.name = "Cube's Edge Core";
-		meta.version = "Alpha 0.1.6"; //String.format("%d.%d.%d.%d", majorVersion, minorVersion, revisionVersion, buildVersion);
+		meta.version = Util.VERSION; //String.format("%d.%d.%d.%d", majorVersion, minorVersion, revisionVersion, buildVersion);
 		meta.authorList = Arrays.asList("Zak");
 		meta.description = "";
 		meta.updateUrl = "";
