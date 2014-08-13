@@ -17,8 +17,7 @@ import fr.zak.cubesedge.event.ConstructEvent;
 import fr.zak.cubesedge.event.PlayerFall;
 import fr.zak.cubesedge.event.PlayerJump;
 import fr.zak.cubesedge.event.SpeedEvent;
-import fr.zak.cubesedge.packet.PacketPlayer;
-import fr.zak.cubesedge.packet.PacketPlayerHandler;
+import fr.zak.cubesedge.packet.CPacketPlayer;
 import fr.zak.cubesedge.proxys.CommonProxy;
 
 /**
@@ -48,7 +47,8 @@ public class CubesEdge {
 		MinecraftForge.EVENT_BUS.register(new PlayerJump());
 		MinecraftForge.EVENT_BUS.register(new ConstructEvent());
 		Util.channel = NetworkRegistry.INSTANCE.newSimpleChannel("cubesedge");
-		Util.channel.registerMessage(PacketPlayerHandler.class, PacketPlayer.class, 0, Side.SERVER);
+		Util.channel.registerMessage(CPacketPlayer.CPacketPlayerSneak.CPacketPlayerHandler.class, CPacketPlayer.CPacketPlayerSneak.class, 0, Side.SERVER);
+		Util.channel.registerMessage(CPacketPlayer.CPacketPlayerBounds.CPacketPlayerHandler.class, CPacketPlayer.CPacketPlayerBounds.class, 1, Side.CLIENT);
 	}
 
 	@EventHandler
@@ -57,6 +57,7 @@ public class CubesEdge {
 		while(i.hasNext()){
 			Block block = i.next();
 			if(block.getBlockBoundsMaxX() == 1.0D && block.getBlockBoundsMaxY() == 1.0D && block.getBlockBoundsMaxZ() == 1.0D && block.getBlockBoundsMinX() == 0.0D && block.getBlockBoundsMinY() == 0.0D && block.getBlockBoundsMinZ() == 0.0D){
+				System.out.println(block.getUnlocalizedName());
 				Util.cubes.add(block);
 			}
 		}

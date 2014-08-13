@@ -24,13 +24,13 @@ import fr.zak.cubesedge.Util;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
 import fr.zak.cubesedge.event.KeyHandler;
 import fr.zak.cubesedge.event.SpeedEvent;
-import fr.zak.cubesedge.packet.PacketPlayer;
+import fr.zak.cubesedge.packet.CPacketPlayer;
 import fr.zak.cubesedge.renderer.EntityRendererCustom;
 
 public class ClientTickHandler {
 
 	Minecraft minecraft = Minecraft.getMinecraft();
-
+	private boolean wasSneaking;
 	private EntityRenderer renderer, prevRenderer;
 
 	@SubscribeEvent
@@ -45,6 +45,15 @@ public class ClientTickHandler {
 					damageEntity(EntityLivingBase.class, event.player, DamageSource.fall, (float)i);
 				}
 				event.player.fallDistance = 0;
+			}
+			if(event.side == Side.SERVER){
+				if(((EntityPlayerCustom)event.player.getExtendedProperties("Player Custom")).isSneaking && !wasSneaking){
+					Util.channel.sendToAll(new CPacketPlayer.CPacketPlayerBounds(0.6F, 0.6F, event.player.getEntityId()));
+				}
+				else if(!((EntityPlayerCustom)event.player.getExtendedProperties("Player Custom")).isSneaking && wasSneaking){
+					Util.channel.sendToAll(new CPacketPlayer.CPacketPlayerBounds(0.6F, 1.8F, event.player.getEntityId()));
+				}
+				wasSneaking = ((EntityPlayerCustom)event.player.getExtendedProperties("Player Custom")).isSneaking;
 			}
 			if(event.side == Side.CLIENT){
 				sprintAnimation(event.player);
@@ -90,7 +99,7 @@ public class ClientTickHandler {
 					prevRenderer = minecraft.entityRenderer;
 					minecraft.entityRenderer = renderer;
 				}
-				forceSetSize(Entity.class, minecraft.thePlayer, 0.6F, 0.6F);
+				Util.forceSetSize(Entity.class, minecraft.thePlayer, 0.6F, 0.6F);
 			} else if (prevRenderer != null && minecraft.entityRenderer != prevRenderer && !minecraft.thePlayer.isSneaking() && minecraft.theWorld.getBlock(MathHelper.floor_double(minecraft.thePlayer.posX), MathHelper.floor_double(minecraft.thePlayer.posY), MathHelper.floor_double(minecraft.thePlayer.posZ)).equals(Blocks.air)) {
 				// reset the renderer
 				if(EntityRendererCustom.offsetY < 0F){
@@ -102,7 +111,7 @@ public class ClientTickHandler {
 				if(EntityRendererCustom.offsetY == 0){
 					minecraft.entityRenderer = prevRenderer;
 				}
-				forceSetSize(Entity.class, minecraft.thePlayer, 0.6F, 1.8F);
+				Util.forceSetSize(Entity.class, minecraft.thePlayer, 0.6F, 1.8F);
 				((EntityPlayerCustom)minecraft.thePlayer.getExtendedProperties("Player Custom")).sneakTime = 0;
 			}
 		}
@@ -170,7 +179,7 @@ public class ClientTickHandler {
 		if(!player.isSprinting() && ((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).wasSprinting){
 			if(player.isSneaking() && player.onGround && !((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).isRolling){
 				((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).isSneaking = true;
-				Util.channel.sendToServer(new PacketPlayer(true));
+				Util.channel.sendToServer(new CPacketPlayer.CPacketPlayerSneak(true));
 			}
 		}
 		if(((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).isSneaking && player.isSneaking()){
@@ -188,7 +197,7 @@ public class ClientTickHandler {
 		}
 		if(((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).isSneaking && !player.isSneaking()){
 			((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).isSneaking = false;
-			Util.channel.sendToServer(new PacketPlayer(false));
+			Util.channel.sendToServer(new CPacketPlayer.CPacketPlayerSneak(false));
 			((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).sneakTime = 0;
 		}
 		((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).wasSprinting = player.isSprinting();
@@ -485,31 +494,6 @@ public class ClientTickHandler {
 		else if((Boolean)ObfuscationReflectionHelper.getPrivateValue(EntityLivingBase.class, (EntityLivingBase)player, 41) && ((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).isGrabbing){
 			player.motionY = 0.8D;
 		}
-	}
-
-	private void forceSetSize(Class clz, Entity ent, float width, float height)
-	{
-		try
-		{
-			Method m = clz.getDeclaredMethod(Util.obfuscation ? "func_70105_a" : "setSize", float.class, float.class);
-			m.setAccessible(true);
-			m.invoke(ent, width, height);
-		}
-		catch(IllegalAccessException e)
-		{
-			e.printStackTrace();
-		}
-		catch (InvocationTargetException e) 
-		{
-			e.printStackTrace();
-		} 
-		catch (NoSuchMethodException e)
-		{
-			e.printStackTrace();
-		} catch (SecurityException e) 
-		{
-			e.printStackTrace();
-		} 
 	}
 
 	private void damageEntity(Class c, EntityPlayer p, DamageSource d, float f){
