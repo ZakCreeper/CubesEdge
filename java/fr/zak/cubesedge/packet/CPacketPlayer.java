@@ -34,9 +34,9 @@ public class CPacketPlayer{
 			buf.writeBoolean(isSneaking);
 		}
 
-		public static class CPacketPlayerHandler implements IMessageHandler<CPacketPlayerSneak, IMessage>{
+		public static class Handler implements IMessageHandler<CPacketPlayerSneak, IMessage>{
 
-			public CPacketPlayerHandler(){
+			public Handler(){
 
 			}
 
@@ -53,48 +53,4 @@ public class CPacketPlayer{
 				return null;
 			}
 		}
-	}
-
-	public static class CPacketPlayerBounds implements IMessage{
-
-		public float height, width;
-		public int entityId;
-
-		public CPacketPlayerBounds() {
-
-		}
-
-		public CPacketPlayerBounds(float height, float width, int id) {
-			this.height = height;
-			this.width = width;
-			this.entityId = id;
-		}
-
-		@Override
-		public void fromBytes(ByteBuf buf) {
-			this.height = buf.readFloat();
-			this.width = buf.readFloat();
-			this.entityId = buf.readInt();
-		}
-
-		@Override
-		public void toBytes(ByteBuf buf) {
-			buf.writeFloat(this.height);
-			buf.writeFloat(this.width);
-			buf.writeInt(this.entityId);
-		}
-
-		public static class CPacketPlayerHandler implements IMessageHandler<CPacketPlayerBounds, IMessage>{
-
-			public CPacketPlayerHandler(){
-
-			}
-
-			@Override
-			public IMessage onMessage(CPacketPlayerBounds message, MessageContext ctx) {
-				
-				return null;
-			}
-		}
-	}
-}
+	}}

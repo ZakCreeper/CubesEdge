@@ -15,7 +15,7 @@ public class Util {
 	public static boolean obfuscation;
 	
 	public static SimpleNetworkWrapper channel;
-	
+		
 	public static final String VERSION = "Alpha 0.1.12";
 	
 	public static List<Block> cubes = new ArrayList<Block>();

@@ -7,12 +7,19 @@ import net.minecraftforge.common.IExtendedEntityProperties;
 
 public class EntityPlayerCustom implements IExtendedEntityProperties {
 	
-	public int isJumping = 0;
-	public int jumpTime = 0;
+	public boolean wasSneaking = false;
+	
+	public float prevRotationYaw = 0;
+	public float prevRotationPitch = 0;
+	public float rotationYaw = 0;
+	public float rotationPitch = 0;
+	
+	public byte isJumping = 0;
+	public byte jumpTime = 0;
 	public boolean isJumpingOnWall = false;
 	
 	public boolean prevRolling = false;
-	public int rollingTime = 0;
+	public byte rollingTime = 0;
 	public boolean isRolling = false;
 
 	public boolean isGrabbing = false;
@@ -27,7 +34,7 @@ public class EntityPlayerCustom implements IExtendedEntityProperties {
 	public boolean backLeft = false;
 	public boolean backRight = false;
 
-	public int temps = 0;
+	public byte temps = 0;
 	public boolean ralenti = false;
 
 	public boolean isOnWall = false;
@@ -36,20 +43,25 @@ public class EntityPlayerCustom implements IExtendedEntityProperties {
 	public boolean animLeft = false;
 	
 	public boolean isSneaking = false;
-	public int sneakTime = 0; 
+	public byte sneakTime = 0; 
 	public boolean wasSprinting = false;
 	
 	public boolean isTurning = false;
 	public boolean isTurningOnWall = false;
-	public int turningTime = 0;
+	public byte turningTime = 0;
 	
 	@Override
 	public void saveNBTData(NBTTagCompound compound) {
-		compound.setInteger("isJumping", this.isJumping);
-		compound.setInteger("jumpTime", this.jumpTime);
+		compound.setBoolean("wasSneaking", this.wasSneaking);
+		compound.setFloat("prevRotationYaw", this.prevRotationYaw);
+		compound.setFloat("prevRotationPitch", this.prevRotationPitch);
+		compound.setFloat("rotationYaw", this.rotationYaw);
+		compound.setFloat("rotationPitch", this.rotationPitch);
+		compound.setByte("isJumping", this.isJumping);
+		compound.setByte("jumpTime", this.jumpTime);
 		compound.setBoolean("isJumpingOnWall", this.isJumpingOnWall);
 		compound.setBoolean("prevRolling", this.prevRolling);
-		compound.setInteger("rollingTime", this.rollingTime);
+		compound.setByte("rollingTime", this.rollingTime);
 		compound.setBoolean("isRolling", this.isRolling);
 		compound.setBoolean("isGrabbing", this.isGrabbing);
 		compound.setBoolean("grabbingDamage", this.grabbingDamage);
@@ -68,27 +80,32 @@ public class EntityPlayerCustom implements IExtendedEntityProperties {
 		compound.setBoolean("animRunning", this.animRunnig);
 		compound.setBoolean("backLeft", this.backLeft);
 		compound.setBoolean("backRight", this.backRight);
-		compound.setInteger("temps", this.temps);
+		compound.setByte("temps", this.temps);
 		compound.setBoolean("ralenti", this.ralenti);
 		compound.setBoolean("isOnWall", this.isOnWall);
 		compound.setBoolean("wallJump", this.wallJump);
 		compound.setBoolean("animLeft", this.animLeft);
 		compound.setBoolean("animRight", this.animRight);
 		compound.setBoolean("isSneaking", this.isSneaking);
-		compound.setInteger("sneakTime", this.sneakTime);
+		compound.setByte("sneakTime", this.sneakTime);
 		compound.setBoolean("wasSprinting", this.wasSprinting);
 		compound.setBoolean("isTurning", this.isTurning);
 		compound.setBoolean("isTurningOnWall", this.isTurningOnWall);
-		compound.setInteger("turningTime", this.turningTime);
+		compound.setByte("turningTime", this.turningTime);
 	}
 
 	@Override
 	public void loadNBTData(NBTTagCompound compound) {
-		this.isJumping = compound.getInteger("isJumping");
-		this.jumpTime = compound.getInteger("jumpTime");
+		this.wasSneaking = compound.getBoolean("wasSprinting");
+		this.prevRotationYaw = compound.getFloat("prevRotationYaw");
+		this.prevRotationPitch = compound.getFloat("prevRotationPitch");
+		this.rotationYaw = compound.getFloat("rotationYaw");
+		this.rotationPitch = compound.getFloat("rotationPitch");
+		this.isJumping = compound.getByte("isJumping");
+		this.jumpTime = compound.getByte("jumpTime");
 		this.isJumpingOnWall = compound.getBoolean("isJumpingOnWall");
 		this.prevRolling = compound.getBoolean("prevRolling");
-		this.rollingTime = compound.getInteger("rollingTime");
+		this.rollingTime = compound.getByte("rollingTime");
 		this.isRolling = compound.getBoolean("isRolling");
 		this.isGrabbing = compound.getBoolean("isGrabbing");
 		this.grabbingDamage = compound.getBoolean("grabbingDamage");
@@ -106,18 +123,18 @@ public class EntityPlayerCustom implements IExtendedEntityProperties {
 		this.animRunnig = compound.getBoolean("animRunning");
 		this.backLeft = compound.getBoolean("backLeft");
 		this.backRight = compound.getBoolean("backRight");
-		this.temps = compound.getInteger("temps");
+		this.temps = compound.getByte("temps");
 		this.ralenti = compound.getBoolean("ralenti");
 		this.isOnWall = compound.getBoolean("isOnWall");
 		this.wallJump = compound.getBoolean("wallJump");
 		this.animLeft = compound.getBoolean("animLeft");
 		this.animRight = compound.getBoolean("animRight");
 		this.isSneaking = compound.getBoolean("isSneaking");
-		this.sneakTime = compound.getInteger("sneakTime");
+		this.sneakTime = compound.getByte("sneakTime");
 		this.wasSprinting = compound.getBoolean("wasSprinting");
 		this.isTurning = compound.getBoolean("isTurning");
 		this.isTurningOnWall = compound.getBoolean("isTurningOnWall");
-		this.turningTime = compound.getInteger("turningTime");
+		this.turningTime = compound.getByte("turningTime");
 	}
 
 	@Override

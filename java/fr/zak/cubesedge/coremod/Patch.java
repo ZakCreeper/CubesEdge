@@ -5,11 +5,11 @@ import static net.minecraftforge.client.IItemRenderer.ItemRenderType.FIRST_PERSO
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.text.DecimalFormat;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -103,14 +103,14 @@ public class Patch {
 				}
 			}
 
-			if (entity.rotationPitch > 0.0F)
-			{
-				entity.rotationPitch = 0.0F;
-			}
-
-			if (entity.rotationPitch < -20.0F)
+			if (entity.rotationPitch > -20.0F)
 			{
 				entity.rotationPitch = -20.0F;
+			}
+
+			if (entity.rotationPitch < -50.0F)
+			{
+				entity.rotationPitch = -50.0F;
 			}
 
 			entity.prevRotationPitch += entity.rotationPitch - f2;
@@ -256,19 +256,26 @@ public class Patch {
 		float f1 = (Float)ObfuscationReflectionHelper.getPrivateValue(ItemRenderer.class, renderer, 6) + ((Float)ObfuscationReflectionHelper.getPrivateValue(ItemRenderer.class, renderer, 5) - (Float)ObfuscationReflectionHelper.getPrivateValue(ItemRenderer.class, renderer, 6)) * par1;
 		EntityClientPlayerMP entityclientplayermp = ((Minecraft)ObfuscationReflectionHelper.getPrivateValue(ItemRenderer.class, renderer, 3)).thePlayer;
 		float f2 = entityclientplayermp.prevRotationPitch + (entityclientplayermp.rotationPitch - entityclientplayermp.prevRotationPitch) * par1;
-		if(!((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).isGrabbing){
-				GL11.glPushMatrix();
-				GL11.glRotatef(f2, 1.0F, 0.0F, 0.0F);
-				GL11.glRotatef(entityclientplayermp.prevRotationYaw + (entityclientplayermp.rotationYaw - entityclientplayermp.prevRotationYaw) * par1, 0.0F, 1.0F, 0.0F);
-				RenderHelper.enableStandardItemLighting();
-				GL11.glPopMatrix();
+		if(((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).isGrabbing && !((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).wasSneaking){
+			GL11.glPushMatrix();
+			GL11.glRotatef(((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).prevRotationPitch + (((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).rotationPitch - ((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).prevRotationPitch) * par1, 1.0F, 0.0F, 0.0F);
+			GL11.glRotatef(((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).prevRotationYaw + (((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).rotationYaw - ((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).prevRotationYaw) * par1, 0.0F, 1.0F, 0.0F);
+			RenderHelper.enableStandardItemLighting();
+			GL11.glPopMatrix();
+		}
+		else{
+			GL11.glPushMatrix();
+			GL11.glRotatef(f2, 1.0F, 0.0F, 0.0F);
+			GL11.glRotatef(entityclientplayermp.prevRotationYaw + (entityclientplayermp.rotationYaw - entityclientplayermp.prevRotationYaw) * par1, 0.0F, 1.0F, 0.0F);
+			RenderHelper.enableStandardItemLighting();
+			GL11.glPopMatrix();
 		}
 		EntityPlayerSP entityplayersp = (EntityPlayerSP)entityclientplayermp;
 		float f3 = entityplayersp.prevRenderArmPitch + (entityplayersp.renderArmPitch - entityplayersp.prevRenderArmPitch) * par1;
 		float f4 = entityplayersp.prevRenderArmYaw + (entityplayersp.renderArmYaw - entityplayersp.prevRenderArmYaw) * par1;
 		if(!((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).isGrabbing){
-				GL11.glRotatef((entityclientplayermp.rotationPitch - f3) * 0.1F, 1.0F, 0.0F, 0.0F);
-				GL11.glRotatef((entityclientplayermp.rotationYaw - f4) * 0.1F, 0.0F, 1.0F, 0.0F);
+			GL11.glRotatef((entityclientplayermp.rotationPitch - f3) * 0.1F, 1.0F, 0.0F, 0.0F);
+			GL11.glRotatef((entityclientplayermp.rotationYaw - f4) * 0.1F, 0.0F, 1.0F, 0.0F);
 		}
 		ItemStack itemstack = (ItemStack)ObfuscationReflectionHelper.getPrivateValue(ItemRenderer.class, renderer, 4);
 
@@ -542,6 +549,9 @@ public class Patch {
 		else if (!entityclientplayermp.isInvisible())
 		{
 			GL11.glPushMatrix();
+			if(((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).isGrabbing && !((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).wasSneaking){
+				GL11.glRotatef(30, 1, 0, 0);
+			}
 			if(Minecraft.getMinecraft().gameSettings.viewBobbing){
 				EntityPlayer entityplayer = (EntityPlayer)((Minecraft)ObfuscationReflectionHelper.getPrivateValue(ItemRenderer.class, renderer, 3)).renderViewEntity;
 				float bf4 = entityplayer.prevCameraPitch + (entityplayer.cameraPitch - entityplayer.prevCameraPitch) * par1;
@@ -586,7 +596,7 @@ public class Patch {
 					}
 				}
 			}
-			if(((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).isGrabbing){
+			if(((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).isGrabbing && !((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).wasSneaking){
 				GL11.glRotatef(-20, 1, 0, 1);
 			}
 			renderplayer.renderFirstPersonArm(((Minecraft)ObfuscationReflectionHelper.getPrivateValue(ItemRenderer.class, renderer, 3)).thePlayer);
@@ -600,6 +610,9 @@ public class Patch {
 
 		if(!entityclientplayermp.isInvisible() && ((itemstack != null && !(itemstack.getItem() instanceof ItemMap) || itemstack == null))){
 			GL11.glPushMatrix();
+			if(((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).isGrabbing && !((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).wasSneaking){
+				GL11.glRotatef(30, 1, 0, 0);
+			}
 			if(Minecraft.getMinecraft().gameSettings.viewBobbing){
 				EntityPlayer entityplayer = (EntityPlayer)((Minecraft)ObfuscationReflectionHelper.getPrivateValue(ItemRenderer.class, renderer, 3)).renderViewEntity;
 				float bf4 = entityplayer.prevCameraPitch + (entityplayer.cameraPitch - entityplayer.prevCameraPitch) * par1;
@@ -641,7 +654,7 @@ public class Patch {
 					}
 				}
 			}
-			if(((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).isGrabbing){
+			if(((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).isGrabbing && !((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).wasSneaking){
 				GL11.glRotatef(15, 1, 0, 1);
 				GL11.glTranslatef(0.1F, 0.22F, 0);
 			}
@@ -650,273 +663,273 @@ public class Patch {
 			GL11.glRotatef(90, 0, 1, 0);
 			GL11.glRotatef(5, 0, 0, 1);
 			float f = 1.0F;
-	        GL11.glColor3f(f, f, f);
-	        ((ModelBiped)ObfuscationReflectionHelper.getPrivateValue(RenderPlayer.class, renderplayer, 1)).onGround = 0.0F;
-	        ((ModelBiped)ObfuscationReflectionHelper.getPrivateValue(RenderPlayer.class, renderplayer, 1)).setRotationAngles(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F, Minecraft.getMinecraft().thePlayer);
-	        ((ModelBiped)ObfuscationReflectionHelper.getPrivateValue(RenderPlayer.class, renderplayer, 1)).bipedLeftArm.render(0.0625F);
+			GL11.glColor3f(f, f, f);
+			renderplayer.modelBipedMain.onGround = 0.0F;
+			renderplayer.modelBipedMain.setRotationAngles(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F, Minecraft.getMinecraft().thePlayer);
+			renderplayer.modelBipedMain.bipedLeftArm.render(0.0625F);
 			GL11.glPopMatrix();
 		}
 
 		GL11.glDisable(GL12.GL_RESCALE_NORMAL);
 		RenderHelper.disableStandardItemLighting();
 	}
-	
+
 	public static void processPlayerPatch(NetHandlerPlayServer net, C03PacketPlayer packet){
 		WorldServer worldserver = ((MinecraftServer) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 2)).worldServerForDimension(net.playerEntity.dimension);
 		ObfuscationReflectionHelper.setPrivateValue(NetHandlerPlayServer.class, net, true, 6);
 
-        if (!net.playerEntity.playerConqueredTheEnd)
-        {
-            double d0;
+		if (!net.playerEntity.playerConqueredTheEnd)
+		{
+			double d0;
 
-            if (!((Boolean) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 17)))
-            {
-                d0 = packet.func_149467_d() - ((Double) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 15));
+			if (!((Boolean) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 17)))
+			{
+				d0 = packet.func_149467_d() - ((Double) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 15));
 
-                if (packet.func_149464_c() == ((Double) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 14)) && d0 * d0 < 0.01D && packet.func_149472_e() == ((Double) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 16)))
-                {
-                	ObfuscationReflectionHelper.setPrivateValue(NetHandlerPlayServer.class, net, true, 17);                }
-            }
+				if (packet.func_149464_c() == ((Double) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 14)) && d0 * d0 < 0.01D && packet.func_149472_e() == ((Double) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 16)))
+				{
+					ObfuscationReflectionHelper.setPrivateValue(NetHandlerPlayServer.class, net, true, 17);                }
+			}
 
-            if (((Boolean) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 17)))
-            {
-                double d1;
-                double d2;
-                double d3;
+			if (((Boolean) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 17)))
+			{
+				double d1;
+				double d2;
+				double d3;
 
-                if (net.playerEntity.ridingEntity != null)
-                {
-                    float f4 = net.playerEntity.rotationYaw;
-                    float f = net.playerEntity.rotationPitch;
-                    net.playerEntity.ridingEntity.updateRiderPosition();
-                    d1 = net.playerEntity.posX;
-                    d2 = net.playerEntity.posY;
-                    d3 = net.playerEntity.posZ;
+				if (net.playerEntity.ridingEntity != null)
+				{
+					float f4 = net.playerEntity.rotationYaw;
+					float f = net.playerEntity.rotationPitch;
+					net.playerEntity.ridingEntity.updateRiderPosition();
+					d1 = net.playerEntity.posX;
+					d2 = net.playerEntity.posY;
+					d3 = net.playerEntity.posZ;
 
-                    if (packet.func_149463_k())
-                    {
-                        f4 = packet.func_149462_g();
-                        f = packet.func_149470_h();
-                    }
+					if (packet.func_149463_k())
+					{
+						f4 = packet.func_149462_g();
+						f = packet.func_149470_h();
+					}
 
-                    net.playerEntity.onGround = packet.func_149465_i();
-                    net.playerEntity.onUpdateEntity();
-                    net.playerEntity.ySize = 0.0F;
-                    net.playerEntity.setPositionAndRotation(d1, d2, d3, f4, f);
+					net.playerEntity.onGround = packet.func_149465_i();
+					net.playerEntity.onUpdateEntity();
+					net.playerEntity.ySize = 0.0F;
+					net.playerEntity.setPositionAndRotation(d1, d2, d3, f4, f);
 
-                    if (net.playerEntity.ridingEntity != null)
-                    {
-                        net.playerEntity.ridingEntity.updateRiderPosition();
-                    }
+					if (net.playerEntity.ridingEntity != null)
+					{
+						net.playerEntity.ridingEntity.updateRiderPosition();
+					}
 
-                    if (!((Boolean) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 17))) //Fixes teleportation kick while riding entities
-                    {
-                        return;
-                    }
+					if (!((Boolean) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 17))) //Fixes teleportation kick while riding entities
+					{
+						return;
+					}
 
-                    ((MinecraftServer) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 2)).getConfigurationManager().updatePlayerPertinentChunks(net.playerEntity);
+					((MinecraftServer) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 2)).getConfigurationManager().updatePlayerPertinentChunks(net.playerEntity);
 
-                    if (((Boolean) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 17)))
-                    {
-                        ObfuscationReflectionHelper.setPrivateValue(NetHandlerPlayServer.class, net, net.playerEntity.posX, 14);
-                        ObfuscationReflectionHelper.setPrivateValue(NetHandlerPlayServer.class, net, net.playerEntity.posY, 15);
-                        ObfuscationReflectionHelper.setPrivateValue(NetHandlerPlayServer.class, net, net.playerEntity.posZ, 16);
-                    }
+					if (((Boolean) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 17)))
+					{
+						ObfuscationReflectionHelper.setPrivateValue(NetHandlerPlayServer.class, net, net.playerEntity.posX, 14);
+						ObfuscationReflectionHelper.setPrivateValue(NetHandlerPlayServer.class, net, net.playerEntity.posY, 15);
+						ObfuscationReflectionHelper.setPrivateValue(NetHandlerPlayServer.class, net, net.playerEntity.posZ, 16);
+					}
 
-                    worldserver.updateEntity(net.playerEntity);
-                    return;
-                }
+					worldserver.updateEntity(net.playerEntity);
+					return;
+				}
 
-                if (net.playerEntity.isPlayerSleeping())
-                {
-                    net.playerEntity.onUpdateEntity();
-                    net.playerEntity.setPositionAndRotation(((Double) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 14)), ((Double) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 15)), ((Double) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 16)), net.playerEntity.rotationYaw, net.playerEntity.rotationPitch);
-                    worldserver.updateEntity(net.playerEntity);
-                    return;
-                }
+				if (net.playerEntity.isPlayerSleeping())
+				{
+					net.playerEntity.onUpdateEntity();
+					net.playerEntity.setPositionAndRotation(((Double) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 14)), ((Double) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 15)), ((Double) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 16)), net.playerEntity.rotationYaw, net.playerEntity.rotationPitch);
+					worldserver.updateEntity(net.playerEntity);
+					return;
+				}
 
-                d0 = net.playerEntity.posY;
-                ObfuscationReflectionHelper.setPrivateValue(NetHandlerPlayServer.class, net, net.playerEntity.posX, 14);
-                ObfuscationReflectionHelper.setPrivateValue(NetHandlerPlayServer.class, net, net.playerEntity.posY, 15);
-                ObfuscationReflectionHelper.setPrivateValue(NetHandlerPlayServer.class, net, net.playerEntity.posZ, 16);
-                d1 = net.playerEntity.posX;
-                d2 = net.playerEntity.posY;
-                d3 = net.playerEntity.posZ;
-                float f1 = net.playerEntity.rotationYaw;
-                float f2 = net.playerEntity.rotationPitch;
+				d0 = net.playerEntity.posY;
+				ObfuscationReflectionHelper.setPrivateValue(NetHandlerPlayServer.class, net, net.playerEntity.posX, 14);
+				ObfuscationReflectionHelper.setPrivateValue(NetHandlerPlayServer.class, net, net.playerEntity.posY, 15);
+				ObfuscationReflectionHelper.setPrivateValue(NetHandlerPlayServer.class, net, net.playerEntity.posZ, 16);
+				d1 = net.playerEntity.posX;
+				d2 = net.playerEntity.posY;
+				d3 = net.playerEntity.posZ;
+				float f1 = net.playerEntity.rotationYaw;
+				float f2 = net.playerEntity.rotationPitch;
 
-                if (packet.func_149466_j() && packet.func_149467_d() == -999.0D && packet.func_149471_f() == -999.0D)
-                {
-                    packet.func_149469_a(false);
-                }
+				if (packet.func_149466_j() && packet.func_149467_d() == -999.0D && packet.func_149471_f() == -999.0D)
+				{
+					packet.func_149469_a(false);
+				}
 
-                double d4;
+				double d4;
 
-                if (packet.func_149466_j())
-                {
-                    d1 = packet.func_149464_c();
-                    d2 = packet.func_149467_d();
-                    d3 = packet.func_149472_e();
-                    d4 = packet.func_149471_f() - packet.func_149467_d();
+				if (packet.func_149466_j())
+				{
+					d1 = packet.func_149464_c();
+					d2 = packet.func_149467_d();
+					d3 = packet.func_149472_e();
+					d4 = packet.func_149471_f() - packet.func_149467_d();
 
-                    if (!net.playerEntity.isPlayerSleeping() && (d4 > 1.65D || d4 < 0.1D))
-                    {
-                        net.kickPlayerFromServer("Illegal stance");
-                        ((Logger)ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 0)).warn(net.playerEntity.getCommandSenderName() + " had an illegal stance: " + d4);
-                        return;
-                    }
+					if (!net.playerEntity.isPlayerSleeping() && (d4 > 1.65D || d4 < 0.1D))
+					{
+						net.kickPlayerFromServer("Illegal stance");
+						((Logger)ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 0)).warn(net.playerEntity.getCommandSenderName() + " had an illegal stance: " + d4);
+						return;
+					}
 
-                    if (Math.abs(packet.func_149464_c()) > 3.2E7D || Math.abs(packet.func_149472_e()) > 3.2E7D)
-                    {
-                        net.kickPlayerFromServer("Illegal position");
-                        return;
-                    }
-                }
+					if (Math.abs(packet.func_149464_c()) > 3.2E7D || Math.abs(packet.func_149472_e()) > 3.2E7D)
+					{
+						net.kickPlayerFromServer("Illegal position");
+						return;
+					}
+				}
 
-                if (packet.func_149463_k())
-                {
-                    f1 = packet.func_149462_g();
-                    f2 = packet.func_149470_h();
-                }
+				if (packet.func_149463_k())
+				{
+					f1 = packet.func_149462_g();
+					f2 = packet.func_149470_h();
+				}
 
-                net.playerEntity.onUpdateEntity();
-                net.playerEntity.ySize = 0.0F;
-                net.playerEntity.setPositionAndRotation(((Double) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 14)), ((Double) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 15)), ((Double) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 16)), f1, f2);
+				net.playerEntity.onUpdateEntity();
+				net.playerEntity.ySize = 0.0F;
+				net.playerEntity.setPositionAndRotation(((Double) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 14)), ((Double) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 15)), ((Double) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 16)), f1, f2);
 
-                if (!((Boolean) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 17)))
-                {
-                    return;
-                }
+				if (!((Boolean) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 17)))
+				{
+					return;
+				}
 
-                d4 = d1 - net.playerEntity.posX;
-                double d5 = d2 - net.playerEntity.posY;
-                double d6 = d3 - net.playerEntity.posZ;
-                //BUGFIX: min -> max, grabs the highest distance
-                double d7 = Math.max(Math.abs(d4), Math.abs(net.playerEntity.motionX));
-                double d8 = Math.max(Math.abs(d5), Math.abs(net.playerEntity.motionY));
-                double d9 = Math.max(Math.abs(d6), Math.abs(net.playerEntity.motionZ));
-                double d10 = d7 * d7 + d8 * d8 + d9 * d9;
+				d4 = d1 - net.playerEntity.posX;
+				double d5 = d2 - net.playerEntity.posY;
+				double d6 = d3 - net.playerEntity.posZ;
+				//BUGFIX: min -> max, grabs the highest distance
+				double d7 = Math.max(Math.abs(d4), Math.abs(net.playerEntity.motionX));
+				double d8 = Math.max(Math.abs(d5), Math.abs(net.playerEntity.motionY));
+				double d9 = Math.max(Math.abs(d6), Math.abs(net.playerEntity.motionZ));
+				double d10 = d7 * d7 + d8 * d8 + d9 * d9;
 
-                if (d10 > 100.0D && (!((MinecraftServer) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 2)).isSinglePlayer() || !((MinecraftServer) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 2)).getServerOwner().equals(net.playerEntity.getCommandSenderName())))
-                {
-                    ((Logger)ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 0)).warn(net.playerEntity.getCommandSenderName() + " moved too quickly! " + d4 + "," + d5 + "," + d6 + " (" + d7 + ", " + d8 + ", " + d9 + ")");
-                    net.setPlayerLocation(((Double) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 14)), ((Double) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 15)), ((Double) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 16)), net.playerEntity.rotationYaw, net.playerEntity.rotationPitch);
-                    return;
-                }
+				if (d10 > 100.0D && (!((MinecraftServer) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 2)).isSinglePlayer() || !((MinecraftServer) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 2)).getServerOwner().equals(net.playerEntity.getCommandSenderName())))
+				{
+					((Logger)ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 0)).warn(net.playerEntity.getCommandSenderName() + " moved too quickly! " + d4 + "," + d5 + "," + d6 + " (" + d7 + ", " + d8 + ", " + d9 + ")");
+					net.setPlayerLocation(((Double) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 14)), ((Double) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 15)), ((Double) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 16)), net.playerEntity.rotationYaw, net.playerEntity.rotationPitch);
+					return;
+				}
 
-                float f3 = 0.0625F;
-                boolean flag = worldserver.getCollidingBoundingBoxes(net.playerEntity, net.playerEntity.boundingBox.copy().contract((double)f3, (double)f3, (double)f3)).isEmpty();
+				float f3 = 0.0625F;
+				boolean flag = worldserver.getCollidingBoundingBoxes(net.playerEntity, net.playerEntity.boundingBox.copy().contract((double)f3, (double)f3, (double)f3)).isEmpty();
 
-                if (net.playerEntity.onGround && !packet.func_149465_i() && d5 > 0.0D)
-                {
-                    net.playerEntity.jump();
-                }
+				if (net.playerEntity.onGround && !packet.func_149465_i() && d5 > 0.0D)
+				{
+					net.playerEntity.jump();
+				}
 
-                if (!((Boolean) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 17))) //Fixes "Moved Too Fast" kick when being teleported while moving
-                {
-                    return;
-                }
+				if (!((Boolean) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 17))) //Fixes "Moved Too Fast" kick when being teleported while moving
+				{
+					return;
+				}
 
-                net.playerEntity.moveEntity(d4, d5, d6);
-                net.playerEntity.onGround = packet.func_149465_i();
-                net.playerEntity.addMovementStat(d4, d5, d6);
-                double d11 = d5;
-                d4 = d1 - net.playerEntity.posX;
-                d5 = d2 - net.playerEntity.posY;
+				net.playerEntity.moveEntity(d4, d5, d6);
+				net.playerEntity.onGround = packet.func_149465_i();
+				net.playerEntity.addMovementStat(d4, d5, d6);
+				double d11 = d5;
+				d4 = d1 - net.playerEntity.posX;
+				d5 = d2 - net.playerEntity.posY;
 
-                if (d5 > -0.5D || d5 < 0.5D)
-                {
-                    d5 = 0.0D;
-                }
+				if (d5 > -0.5D || d5 < 0.5D)
+				{
+					d5 = 0.0D;
+				}
 
-                d6 = d3 - net.playerEntity.posZ;
-                d10 = d4 * d4 + d5 * d5 + d6 * d6;
-                boolean flag1 = false;
+				d6 = d3 - net.playerEntity.posZ;
+				d10 = d4 * d4 + d5 * d5 + d6 * d6;
+				boolean flag1 = false;
 
-                if (d10 > 0.0625D && !net.playerEntity.isPlayerSleeping() && !net.playerEntity.theItemInWorldManager.isCreative())
-                {
-                    flag1 = true;
-                    ((Logger)ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 0)).warn(net.playerEntity.getCommandSenderName() + " moved wrongly!");
-                }
+				if (d10 > 0.0625D && !net.playerEntity.isPlayerSleeping() && !net.playerEntity.theItemInWorldManager.isCreative())
+				{
+					flag1 = true;
+					((Logger)ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 0)).warn(net.playerEntity.getCommandSenderName() + " moved wrongly!");
+				}
 
-                if (!((Boolean) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 17))) //Fixes "Moved Too Fast" kick when being teleported while moving
-                {
-                    return;
-                }
+				if (!((Boolean) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 17))) //Fixes "Moved Too Fast" kick when being teleported while moving
+				{
+					return;
+				}
 
-                net.playerEntity.setPositionAndRotation(d1, d2, d3, f1, f2);
-                boolean flag2 = worldserver.getCollidingBoundingBoxes(net.playerEntity, net.playerEntity.boundingBox.copy().contract((double)f3, (double)f3, (double)f3)).isEmpty();
+				net.playerEntity.setPositionAndRotation(d1, d2, d3, f1, f2);
+				boolean flag2 = worldserver.getCollidingBoundingBoxes(net.playerEntity, net.playerEntity.boundingBox.copy().contract((double)f3, (double)f3, (double)f3)).isEmpty();
 
-                if (flag && (flag1 || !flag2) && !net.playerEntity.isPlayerSleeping() && !net.playerEntity.noClip && (EntityPlayerCustom)net.playerEntity.getExtendedProperties("Player Custom") != null && !((EntityPlayerCustom)net.playerEntity.getExtendedProperties("Player Custom")).isSneaking)
-                {
-                	System.out.println(((EntityPlayerCustom)net.playerEntity.getExtendedProperties("Player Custom")).isSneaking);
-                    net.setPlayerLocation(((Double) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 14)), ((Double) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 15)), ((Double) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 16)), f1, f2);
-                    return;
-                }
+				if (flag && (flag1 || !flag2) && !net.playerEntity.isPlayerSleeping() && !net.playerEntity.noClip && (EntityPlayerCustom)net.playerEntity.getExtendedProperties("Player Custom") != null && !((EntityPlayerCustom)net.playerEntity.getExtendedProperties("Player Custom")).isSneaking)
+				{
+					System.out.println(((EntityPlayerCustom)net.playerEntity.getExtendedProperties("Player Custom")).isSneaking);
+					net.setPlayerLocation(((Double) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 14)), ((Double) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 15)), ((Double) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 16)), f1, f2);
+					return;
+				}
 
-                AxisAlignedBB axisalignedbb = net.playerEntity.boundingBox.copy().expand((double)f3, (double)f3, (double)f3).addCoord(0.0D, -0.55D, 0.0D);
+				AxisAlignedBB axisalignedbb = net.playerEntity.boundingBox.copy().expand((double)f3, (double)f3, (double)f3).addCoord(0.0D, -0.55D, 0.0D);
 
-                if (!((MinecraftServer) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 2)).isFlightAllowed() && !net.playerEntity.theItemInWorldManager.isCreative() && !worldserver.checkBlockCollision(axisalignedbb) && !net.playerEntity.capabilities.allowFlying)
-                {
-                    if (d11 >= -0.03125D)
-                    {
-                        ObfuscationReflectionHelper.setPrivateValue(NetHandlerPlayServer.class, net, ((Integer)ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 5)) + 1, 5);
+				if (!((MinecraftServer) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 2)).isFlightAllowed() && !net.playerEntity.theItemInWorldManager.isCreative() && !worldserver.checkBlockCollision(axisalignedbb) && !net.playerEntity.capabilities.allowFlying)
+				{
+					if (d11 >= -0.03125D)
+					{
+						ObfuscationReflectionHelper.setPrivateValue(NetHandlerPlayServer.class, net, ((Integer)ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 5)) + 1, 5);
 
-                        if (((Integer)ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 5)) > 80)
-                        {
-                            ((Logger)ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 0)).warn(net.playerEntity.getCommandSenderName() + " was kicked for floating too long!");
-                            net.kickPlayerFromServer("Flying is not enabled on net server");
-                            return;
-                        }
-                    }
-                }
-                else
-                {
-                	ObfuscationReflectionHelper.setPrivateValue(NetHandlerPlayServer.class, net, 0, 5);
-                }
+						if (((Integer)ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 5)) > 80)
+						{
+							((Logger)ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 0)).warn(net.playerEntity.getCommandSenderName() + " was kicked for floating too long!");
+									net.kickPlayerFromServer("Flying is not enabled on net server");
+									return;
+						}
+					}
+				}
+				else
+				{
+					ObfuscationReflectionHelper.setPrivateValue(NetHandlerPlayServer.class, net, 0, 5);
+				}
 
-                if (!((Boolean) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 17))) //Fixes "Moved Too Fast" kick when being teleported while moving
-                {
-                    return;
-                }
+				if (!((Boolean) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 17))) //Fixes "Moved Too Fast" kick when being teleported while moving
+				{
+					return;
+				}
 
-                net.playerEntity.onGround = packet.func_149465_i();
-                ((MinecraftServer) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 2)).getConfigurationManager().updatePlayerPertinentChunks(net.playerEntity);
-                net.playerEntity.handleFalling(net.playerEntity.posY - d0, packet.func_149465_i());
-            }
-            else if (((Integer)ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 4)) % 20 == 0)
-            {
-                net.setPlayerLocation(((Double) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 14)), ((Double) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 15)), ((Double) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 16)), net.playerEntity.rotationYaw, net.playerEntity.rotationPitch);
-            }
-        }
+				net.playerEntity.onGround = packet.func_149465_i();
+				((MinecraftServer) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 2)).getConfigurationManager().updatePlayerPertinentChunks(net.playerEntity);
+				net.playerEntity.handleFalling(net.playerEntity.posY - d0, packet.func_149465_i());
+			}
+			else if (((Integer)ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 4)) % 20 == 0)
+			{
+				net.setPlayerLocation(((Double) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 14)), ((Double) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 15)), ((Double) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 16)), net.playerEntity.rotationYaw, net.playerEntity.rotationPitch);
+			}
+		}
 	}
-	
+
 	public static boolean isEntityInsideOpaqueBlockPatch(Entity ent){
 		for (int i = 0; i < 8; ++i)
-        {
-            float f = ((float)((i >> 0) % 2) - 0.5F) * ent.width * 0.8F;
-            float f1 = ((float)((i >> 1) % 2) - 0.5F) * 0.1F;
-            float f2 = ((float)((i >> 2) % 2) - 0.5F) * ent.width * 0.8F;
-            int j = MathHelper.floor_double(ent.posX + (double)f);
-            int k = 0;
-            int l = MathHelper.floor_double(ent.posZ + (double)f2);
-            if(!(ent instanceof EntityPlayer)){
-            	k = MathHelper.floor_double(ent.posY + (double)ent.getEyeHeight() + (double)f1);
-            }
-            else{
-            	if(((EntityPlayerCustom)ent.getExtendedProperties("Player Custom")).isSneaking){
-            		k = MathHelper.floor_double(ent.posY + (double)ent.getEyeHeight() + (double)f1) - 1;
-            	}
-            	else{
-            		k = MathHelper.floor_double(ent.posY + (double)ent.getEyeHeight() + (double)f1);
-            	}
-            }
-            if (ent.worldObj.getBlock(j, k, l).isNormalCube())
-            {
-                return true;
-            }
-        }
+		{
+			float f = ((float)((i >> 0) % 2) - 0.5F) * ent.width * 0.8F;
+			float f1 = ((float)((i >> 1) % 2) - 0.5F) * 0.1F;
+			float f2 = ((float)((i >> 2) % 2) - 0.5F) * ent.width * 0.8F;
+			int j = MathHelper.floor_double(ent.posX + (double)f);
+			int k = 0;
+			int l = MathHelper.floor_double(ent.posZ + (double)f2);
+			if(!(ent instanceof EntityPlayer)){
+				k = MathHelper.floor_double(ent.posY + (double)ent.getEyeHeight() + (double)f1);
+			}
+			else{
+				if(((EntityPlayerCustom)ent.getExtendedProperties("Player Custom")).isSneaking){
+					k = MathHelper.floor_double(ent.posY + (double)ent.getEyeHeight() + (double)f1) - 1;
+				}
+				else{
+					k = MathHelper.floor_double(ent.posY + (double)ent.getEyeHeight() + (double)f1);
+				}
+			}
+			if (ent.worldObj.getBlock(j, k, l).isNormalCube())
+			{
+				return true;
+			}
+		}
 
-        return false;
+		return false;
 	}
 }

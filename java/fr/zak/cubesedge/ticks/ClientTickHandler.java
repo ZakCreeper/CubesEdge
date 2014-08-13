@@ -16,6 +16,7 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Timer;
+import net.minecraft.world.WorldSettings.GameType;
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
@@ -45,15 +46,6 @@ public class ClientTickHandler {
 					damageEntity(EntityLivingBase.class, event.player, DamageSource.fall, (float)i);
 				}
 				event.player.fallDistance = 0;
-			}
-			if(event.side == Side.SERVER){
-				if(((EntityPlayerCustom)event.player.getExtendedProperties("Player Custom")).isSneaking && !wasSneaking){
-					Util.channel.sendToAll(new CPacketPlayer.CPacketPlayerBounds(0.6F, 0.6F, event.player.getEntityId()));
-				}
-				else if(!((EntityPlayerCustom)event.player.getExtendedProperties("Player Custom")).isSneaking && wasSneaking){
-					Util.channel.sendToAll(new CPacketPlayer.CPacketPlayerBounds(0.6F, 1.8F, event.player.getEntityId()));
-				}
-				wasSneaking = ((EntityPlayerCustom)event.player.getExtendedProperties("Player Custom")).isSneaking;
 			}
 			if(event.side == Side.CLIENT){
 				sprintAnimation(event.player);
@@ -464,8 +456,12 @@ public class ClientTickHandler {
 	}
 
 	private void grab(int heading, EntityPlayer player){
-		if(((((minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ) - 1).isNormalCube() && heading == 2) || (minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ) + 1).isNormalCube() && heading == 0) || (minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX) - 1, MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ)).isNormalCube() && heading == 1) || (minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX) + 1, MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ)).isNormalCube() && heading == 3)) && ((!minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY) + 1, MathHelper.floor_double(player.posZ) - 1).isNormalCube() && heading == 2) || (!minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY) + 1, MathHelper.floor_double(player.posZ) + 1).isNormalCube() && heading == 0) || (!minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX) - 1, MathHelper.floor_double(player.posY) + 1, MathHelper.floor_double(player.posZ)).isNormalCube() && heading == 1) || (!minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX) + 1, MathHelper.floor_double(player.posY) + 1, MathHelper.floor_double(player.posZ)).isNormalCube() && heading == 3)) && (!minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY) - 2, MathHelper.floor_double(player.posZ)).isNormalCube()))) && !player.isOnLadder()){
+		if(((((minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ) - 1).isNormalCube() && heading == 2) || (minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ) + 1).isNormalCube() && heading == 0) || (minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX) - 1, MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ)).isNormalCube() && heading == 1) || (minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX) + 1, MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ)).isNormalCube() && heading == 3)) && ((!minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY) + 1, MathHelper.floor_double(player.posZ) - 1).isNormalCube() && heading == 2) || (!minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY) + 1, MathHelper.floor_double(player.posZ) + 1).isNormalCube() && heading == 0) || (!minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX) - 1, MathHelper.floor_double(player.posY) + 1, MathHelper.floor_double(player.posZ)).isNormalCube() && heading == 1) || (!minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX) + 1, MathHelper.floor_double(player.posY) + 1, MathHelper.floor_double(player.posZ)).isNormalCube() && heading == 3)) && (!minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY) - 2, MathHelper.floor_double(player.posZ)).isNormalCube()))) && minecraft.theWorld.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ)) != Blocks.ladder && player.getCurrentEquippedItem() == null){
 			((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).isGrabbing = true;
+			((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).rotationYaw = player.rotationYaw;
+			((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).rotationPitch = player.rotationPitch;
+			((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).prevRotationPitch = player.prevRotationPitch;
+			((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).prevRotationYaw = player.prevRotationYaw;
 			((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).grabbingDirections[heading] = true;
 			if(heading == 0){
 				((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).grabbingDirections[3] = true;
@@ -483,12 +479,35 @@ public class ClientTickHandler {
 		}
 		else{
 			((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).isGrabbing = false;
+			((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).rotationYaw = 0;
+			((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).rotationPitch = 0;
+			((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).prevRotationPitch = 0;
+			((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).prevRotationYaw = 0;
 			((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).grabbingDirections[0] = false;
 			((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).grabbingDirections[1] = false;
 			((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).grabbingDirections[2] = false;
 			((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).grabbingDirections[3] = false;
 		}
+		if(((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).isGrabbing && !((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).wasSneaking && player.isSneaking()){
+			((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).wasSneaking = true;
+		}
+		if(!((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).isGrabbing){
+			((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).wasSneaking = false;
+		}
+		if(((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).wasSneaking){
+			return;
+		}
 		if(!player.isSneaking() && !(Boolean)ObfuscationReflectionHelper.getPrivateValue(EntityLivingBase.class, (EntityLivingBase)player, 41) && ((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).isGrabbing){
+			if(heading == 1 || heading == 3){
+				player.setPosition(MathHelper.floor_double(player.posX) + 0.5F, MathHelper.floor_double(player.posY) + 0.9F, player.posZ);
+				player.motionX = 0;
+			}
+			if(heading == 2 || heading == 0){
+				player.setPosition(player.posX, MathHelper.floor_double(player.posY) + 0.9F, MathHelper.floor_double(player.posZ) + 0.5F);
+				player.motionZ = 0;
+			}
+			player.isSwingInProgress = false;
+//			player.set
 			player.motionY = 0.0;
 		}
 		else if((Boolean)ObfuscationReflectionHelper.getPrivateValue(EntityLivingBase.class, (EntityLivingBase)player, 41) && ((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).isGrabbing){

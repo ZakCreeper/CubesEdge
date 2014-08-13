@@ -47,8 +47,7 @@ public class CubesEdge {
 		MinecraftForge.EVENT_BUS.register(new PlayerJump());
 		MinecraftForge.EVENT_BUS.register(new ConstructEvent());
 		Util.channel = NetworkRegistry.INSTANCE.newSimpleChannel("cubesedge");
-		Util.channel.registerMessage(CPacketPlayer.CPacketPlayerSneak.CPacketPlayerHandler.class, CPacketPlayer.CPacketPlayerSneak.class, 0, Side.SERVER);
-		Util.channel.registerMessage(CPacketPlayer.CPacketPlayerBounds.CPacketPlayerHandler.class, CPacketPlayer.CPacketPlayerBounds.class, 1, Side.CLIENT);
+		Util.channel.registerMessage(CPacketPlayer.CPacketPlayerSneak.Handler.class, CPacketPlayer.CPacketPlayerSneak.class, 0, Side.SERVER);
 	}
 
 	@EventHandler
