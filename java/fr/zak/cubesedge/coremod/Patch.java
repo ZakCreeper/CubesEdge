@@ -860,9 +860,8 @@ public class Patch {
 				net.playerEntity.setPositionAndRotation(d1, d2, d3, f1, f2);
 				boolean flag2 = worldserver.getCollidingBoundingBoxes(net.playerEntity, net.playerEntity.boundingBox.copy().contract((double)f3, (double)f3, (double)f3)).isEmpty();
 
-				if (flag && (flag1 || !flag2) && !net.playerEntity.isPlayerSleeping() && !net.playerEntity.noClip && (EntityPlayerCustom)net.playerEntity.getExtendedProperties("Player Custom") != null && !((EntityPlayerCustom)net.playerEntity.getExtendedProperties("Player Custom")).isSneaking)
+				if (flag && (flag1 || !flag2) && !net.playerEntity.isPlayerSleeping() && !net.playerEntity.noClip && ((EntityPlayerCustom)net.playerEntity.getExtendedProperties("Player Custom") != null && !((EntityPlayerCustom)net.playerEntity.getExtendedProperties("Player Custom")).isSneaking || (EntityPlayerCustom)net.playerEntity.getExtendedProperties("Player Custom") != null && !((EntityPlayerCustom)net.playerEntity.getExtendedProperties("Player Custom")).isRolling))
 				{
-					System.out.println(((EntityPlayerCustom)net.playerEntity.getExtendedProperties("Player Custom")).isSneaking);
 					net.setPlayerLocation(((Double) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 14)), ((Double) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 15)), ((Double) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 16)), f1, f2);
 					return;
 				}
@@ -917,7 +916,7 @@ public class Patch {
 				k = MathHelper.floor_double(ent.posY + (double)ent.getEyeHeight() + (double)f1);
 			}
 			else{
-				if(((EntityPlayerCustom)ent.getExtendedProperties("Player Custom")).isSneaking){
+				if(((EntityPlayerCustom)ent.getExtendedProperties("Player Custom")).isSneaking || ((EntityPlayerCustom)ent.getExtendedProperties("Player Custom")).isRolling){
 					k = MathHelper.floor_double(ent.posY + (double)ent.getEyeHeight() + (double)f1) - 1;
 				}
 				else{

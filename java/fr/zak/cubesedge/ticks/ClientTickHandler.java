@@ -16,7 +16,6 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Timer;
-import net.minecraft.world.WorldSettings.GameType;
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
@@ -25,7 +24,7 @@ import fr.zak.cubesedge.Util;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
 import fr.zak.cubesedge.event.KeyHandler;
 import fr.zak.cubesedge.event.SpeedEvent;
-import fr.zak.cubesedge.packet.CPacketPlayer;
+import fr.zak.cubesedge.packet.PacketPlayer;
 import fr.zak.cubesedge.renderer.EntityRendererCustom;
 
 public class ClientTickHandler {
@@ -171,7 +170,7 @@ public class ClientTickHandler {
 		if(!player.isSprinting() && ((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).wasSprinting){
 			if(player.isSneaking() && player.onGround && !((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).isRolling){
 				((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).isSneaking = true;
-				Util.channel.sendToServer(new CPacketPlayer.CPacketPlayerSneak(true));
+				Util.channel.sendToServer(new PacketPlayer.CPacketPlayerSneak(true));
 			}
 		}
 		if(((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).isSneaking && player.isSneaking()){
@@ -189,7 +188,7 @@ public class ClientTickHandler {
 		}
 		if(((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).isSneaking && !player.isSneaking()){
 			((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).isSneaking = false;
-			Util.channel.sendToServer(new CPacketPlayer.CPacketPlayerSneak(false));
+			Util.channel.sendToServer(new PacketPlayer.CPacketPlayerSneak(false));
 			((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).sneakTime = 0;
 		}
 		((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).wasSprinting = player.isSprinting();
@@ -268,8 +267,12 @@ public class ClientTickHandler {
 		}
 		if(((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).prevRolling && player.onGround){
 			((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).isRolling = true;
+			Util.channel.sendToServer(new PacketPlayer.CPacketPlayerRoll(true));
 		}
 		if(((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).isRolling){
+			if(EntityRendererCustom.offsetY > -1F){
+				EntityRendererCustom.offsetY -= 0.2F;
+			}
 			KeyBinding.setKeyBindState(minecraft.gameSettings.keyBindForward.getKeyCode(), true);
 			KeyBinding.setKeyBindState(minecraft.gameSettings.keyBindLeft.getKeyCode(), false);
 			KeyBinding.setKeyBindState(minecraft.gameSettings.keyBindRight.getKeyCode(), false);
@@ -288,6 +291,7 @@ public class ClientTickHandler {
 				((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).rollingTime = 0;
 				((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).prevRolling = false;
 				((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).isRolling = false;
+				Util.channel.sendToServer(new PacketPlayer.CPacketPlayerRoll(false));
 				KeyBinding.setKeyBindState(minecraft.gameSettings.keyBindForward.getKeyCode(), false);
 			}
 		}
