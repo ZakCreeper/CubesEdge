@@ -44,6 +44,12 @@ public class CPacketPlayer{
 			public IMessage onMessage(CPacketPlayerSneak message, MessageContext ctx) {
 				System.out.println("Sneaking is : " + message.isSneaking);
 				((EntityPlayerCustom)ctx.getServerHandler().playerEntity.getExtendedProperties("Player Custom")).isSneaking = message.isSneaking;
+				if(message.isSneaking){
+					Util.forceSetSize(Entity.class, ctx.getServerHandler().playerEntity, 0.6F, 0.6F);
+				}
+				else {
+					Util.forceSetSize(Entity.class, ctx.getServerHandler().playerEntity, 0.6F, 1.8F);
+				}
 				return null;
 			}
 		}
@@ -86,7 +92,7 @@ public class CPacketPlayer{
 
 			@Override
 			public IMessage onMessage(CPacketPlayerBounds message, MessageContext ctx) {
-				Util.forceSetSize(Entity.class, Minecraft.getMinecraft().theWorld.getEntityByID(message.entityId), message.width, message.height);
+				
 				return null;
 			}
 		}
