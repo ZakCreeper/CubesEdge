@@ -177,7 +177,7 @@ public class ClientTickHandler {
 			if(player.isCollidedHorizontally){
 				((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).sneakTime = 16;
 			}
-			if(((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).sneakTime < 16){
+			if(((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).sneakTime < 16 && player.onGround){
 				player.motionX *= (0.98F * 0.91F) + 1;
 				player.motionZ *= (0.98F * 0.91F) + 1;
 				((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).sneakTime++;

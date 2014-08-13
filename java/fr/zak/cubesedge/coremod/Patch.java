@@ -9,6 +9,7 @@ import java.lang.reflect.Method;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -644,7 +645,15 @@ public class Patch {
 				GL11.glRotatef(15, 1, 0, 1);
 				GL11.glTranslatef(0.1F, 0.22F, 0);
 			}
-			renderplayer.renderFirstPersonArm(((Minecraft)ObfuscationReflectionHelper.getPrivateValue(ItemRenderer.class, renderer, 3)).thePlayer);
+			GL11.glRotatef(10, 0, 0, 1);
+			GL11.glTranslatef(-0.35F, 0.05F, 0.4F);
+			GL11.glRotatef(90, 0, 1, 0);
+			GL11.glRotatef(5, 0, 0, 1);
+			float f = 1.0F;
+	        GL11.glColor3f(f, f, f);
+	        ((ModelBiped)ObfuscationReflectionHelper.getPrivateValue(RenderPlayer.class, renderplayer, 1)).onGround = 0.0F;
+	        ((ModelBiped)ObfuscationReflectionHelper.getPrivateValue(RenderPlayer.class, renderplayer, 1)).setRotationAngles(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F, Minecraft.getMinecraft().thePlayer);
+	        ((ModelBiped)ObfuscationReflectionHelper.getPrivateValue(RenderPlayer.class, renderplayer, 1)).bipedLeftArm.render(0.0625F);
 			GL11.glPopMatrix();
 		}
 
