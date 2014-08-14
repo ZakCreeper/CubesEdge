@@ -6,7 +6,6 @@ import net.minecraft.block.Block;
 import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -17,6 +16,14 @@ import fr.zak.cubesedge.event.ConstructEvent;
 import fr.zak.cubesedge.event.PlayerFall;
 import fr.zak.cubesedge.event.PlayerJump;
 import fr.zak.cubesedge.event.SpeedEvent;
+import fr.zak.cubesedge.movement.MovementGrab;
+import fr.zak.cubesedge.movement.MovementJump;
+import fr.zak.cubesedge.movement.MovementRoll;
+import fr.zak.cubesedge.movement.MovementSlide;
+import fr.zak.cubesedge.movement.MovementSlow;
+import fr.zak.cubesedge.movement.MovementSprintAnimation;
+import fr.zak.cubesedge.movement.MovementTurn;
+import fr.zak.cubesedge.movement.MovementWallJump;
 import fr.zak.cubesedge.packet.PacketPlayer;
 import fr.zak.cubesedge.proxys.CommonProxy;
 
@@ -28,9 +35,6 @@ import fr.zak.cubesedge.proxys.CommonProxy;
 @Mod(modid = "cubesedge", name = "Cube's Edge", version = Util.VERSION)
 public class CubesEdge {
 
-	@Instance("cubesedge")
-	public static CubesEdge cubesEdgeInstance;
-
 	@SidedProxy(clientSide = "fr.zak.cubesedge.proxys.ClientProxy", serverSide = "fr.zak.cubesedge.proxys.CommonProxy")
 	public static CommonProxy proxy;
 
@@ -41,6 +45,14 @@ public class CubesEdge {
 
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
+		Util.registerMovement(new MovementTurn());
+		Util.registerMovement(new MovementRoll());
+		Util.registerMovement(new MovementGrab());
+		Util.registerMovement(new MovementWallJump());
+		Util.registerMovement(new MovementJump());
+		Util.registerMovement(new MovementSlide());
+		Util.registerMovement(new MovementSlow());
+		Util.registerMovement(new MovementSprintAnimation());
 		proxy.registerRenderThings();
 		MinecraftForge.EVENT_BUS.register(new SpeedEvent());
 		MinecraftForge.EVENT_BUS.register(new PlayerFall());

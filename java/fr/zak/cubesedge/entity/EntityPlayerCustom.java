@@ -37,8 +37,8 @@ public class EntityPlayerCustom implements IExtendedEntityProperties {
 	public boolean backLeft = false;
 	public boolean backRight = false;
 
-	public byte temps = 0;
-	public boolean ralenti = false;
+	public byte slowTime = 0;
+	public boolean slow = false;
 
 	public boolean isOnWall = false;
 	public boolean wallJump = false;
@@ -86,8 +86,8 @@ public class EntityPlayerCustom implements IExtendedEntityProperties {
 		compound.setBoolean("animRunning", this.animRunnig);
 		compound.setBoolean("backLeft", this.backLeft);
 		compound.setBoolean("backRight", this.backRight);
-		compound.setByte("temps", this.temps);
-		compound.setBoolean("ralenti", this.ralenti);
+		compound.setByte("slowTime", this.slowTime);
+		compound.setBoolean("slow", this.slow);
 		compound.setBoolean("isOnWall", this.isOnWall);
 		compound.setBoolean("wallJump", this.wallJump);
 		compound.setBoolean("animLeft", this.animLeft);
@@ -132,8 +132,8 @@ public class EntityPlayerCustom implements IExtendedEntityProperties {
 		this.animRunnig = compound.getBoolean("animRunning");
 		this.backLeft = compound.getBoolean("backLeft");
 		this.backRight = compound.getBoolean("backRight");
-		this.temps = compound.getByte("temps");
-		this.ralenti = compound.getBoolean("ralenti");
+		this.slowTime = compound.getByte("slowTime");
+		this.slow = compound.getBoolean("slow");
 		this.isOnWall = compound.getBoolean("isOnWall");
 		this.wallJump = compound.getBoolean("wallJump");
 		this.animLeft = compound.getBoolean("animLeft");

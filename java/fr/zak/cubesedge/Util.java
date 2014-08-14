@@ -1,5 +1,6 @@
 package fr.zak.cubesedge;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -12,6 +13,8 @@ import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 
 public class Util {
 	
+	private static List movements = new ArrayList();
+	
 	public static boolean obfuscation;
 	
 	public static SimpleNetworkWrapper channel;
@@ -19,7 +22,7 @@ public class Util {
 	public static final String VERSION = "Alpha 0.1.12";
 	
 	public static List<Block> cubes = new ArrayList<Block>();
-	
+		
 	public static void detectObfuscation() {
 		obfuscation = true;
 		try {
@@ -59,5 +62,15 @@ public class Util {
 		{
 			e.printStackTrace();
 		} 
+	}
+	
+	public static void registerMovement(Object target){
+		if(target.getClass().isAnnotationPresent(Movement.class)){
+			movements.add(target);
+		}
+	}
+	
+	public static Object[] getMovements(){
+		return movements.toArray();
 	}
 }
