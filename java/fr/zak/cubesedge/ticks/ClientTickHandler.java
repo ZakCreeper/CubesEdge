@@ -16,6 +16,8 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Timer;
+import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
@@ -78,10 +80,23 @@ public class ClientTickHandler {
 		}
 	}
 
+	byte lastLightValue;
+	
 	@SubscribeEvent
 	public void tick(TickEvent.RenderTickEvent event) {
 		if(event.phase == TickEvent.Phase.START && minecraft.theWorld != null){
 			if(((EntityPlayerCustom)minecraft.thePlayer.getExtendedProperties("Player Custom")).isSneaking || ((EntityPlayerCustom)minecraft.thePlayer.getExtendedProperties("Player Custom")).isRolling){
+				int x1 = MathHelper.floor_double(minecraft.thePlayer.posX);
+				int y1 = MathHelper.floor_double(minecraft.thePlayer.posY);
+				int z1 = MathHelper.floor_double(minecraft.thePlayer.posZ);
+				ExtendedBlockStorage ebs = ((ExtendedBlockStorage[])ObfuscationReflectionHelper.getPrivateValue(Chunk.class, minecraft.thePlayer.worldObj.getChunkFromBlockCoords(x1, z1), 2))[y1 >> 4];
+//				System.out.println(ebs.getExtSkylightValue((x1 & 15) + 1, y1 & 15, (z1 & 15)));
+				if(ebs.getExtSkylightValue((x1 & 15), y1 & 15, (z1 & 15)) == 0){
+					ebs.setExtSkylightValue((x1 & 15), y1 & 15, (z1 & 15), lastLightValue);
+				}
+				if(lastLightValue != ebs.getExtSkylightValue((x1 & 15), y1 & 15, (z1 & 15))){
+					lastLightValue = (byte) ebs.getExtSkylightValue((x1 & 15), y1 & 15, (z1 & 15));
+				}
 				if (renderer == null) {
 					renderer = new EntityRendererCustom(minecraft);
 				}
@@ -93,15 +108,7 @@ public class ClientTickHandler {
 				Util.forceSetSize(Entity.class, minecraft.thePlayer, 0.6F, 0.6F);
 			} else if (prevRenderer != null && minecraft.entityRenderer != prevRenderer && !minecraft.thePlayer.isSneaking() && minecraft.theWorld.getBlock(MathHelper.floor_double(minecraft.thePlayer.posX), MathHelper.floor_double(minecraft.thePlayer.posY), MathHelper.floor_double(minecraft.thePlayer.posZ)).equals(Blocks.air)) {
 				// reset the renderer
-				if(EntityRendererCustom.offsetY < 0F){
-					EntityRendererCustom.offsetY += 0.2F;
-				}
-				if(EntityRendererCustom.offsetY > -0.2F){
-					EntityRendererCustom.offsetY = 0;
-				}
-				if(EntityRendererCustom.offsetY == 0){
-					minecraft.entityRenderer = prevRenderer;
-				}
+				minecraft.entityRenderer = prevRenderer;
 				Util.forceSetSize(Entity.class, minecraft.thePlayer, 0.6F, 1.8F);
 				((EntityPlayerCustom)minecraft.thePlayer.getExtendedProperties("Player Custom")).sneakTime = 0;
 			}
@@ -181,9 +188,6 @@ public class ClientTickHandler {
 				player.motionX *= (0.98F * 0.91F) + 1;
 				player.motionZ *= (0.98F * 0.91F) + 1;
 				((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).sneakTime++;
-			}
-			if(EntityRendererCustom.offsetY > -1F){
-				EntityRendererCustom.offsetY -= 0.2F;
 			}
 		}
 		if(((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).isSneaking && !player.isSneaking()){
@@ -270,9 +274,6 @@ public class ClientTickHandler {
 			Util.channel.sendToServer(new PacketPlayer.CPacketPlayerRoll(true));
 		}
 		if(((EntityPlayerCustom)player.getExtendedProperties("Player Custom")).isRolling){
-			if(EntityRendererCustom.offsetY > -1F){
-				EntityRendererCustom.offsetY -= 0.2F;
-			}
 			KeyBinding.setKeyBindState(minecraft.gameSettings.keyBindForward.getKeyCode(), true);
 			KeyBinding.setKeyBindState(minecraft.gameSettings.keyBindLeft.getKeyCode(), false);
 			KeyBinding.setKeyBindState(minecraft.gameSettings.keyBindRight.getKeyCode(), false);

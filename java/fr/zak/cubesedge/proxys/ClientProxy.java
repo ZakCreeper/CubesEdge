@@ -15,7 +15,7 @@ public class ClientProxy extends CommonProxy{
 	{
 		MinecraftForge.EVENT_BUS.register(new GuiInGameEvent());
 		FMLCommonHandler.instance().bus().register(new ClientTickHandler());
-		MinecraftForge.EVENT_BUS.register(new RenderPlayerEventCustom());
+//		MinecraftForge.EVENT_BUS.register(new RenderPlayerEventCustom());
 		FMLCommonHandler.instance().bus().register(new KeyHandler());
 		MinecraftForge.EVENT_BUS.register(new ClickEvent());
 	}

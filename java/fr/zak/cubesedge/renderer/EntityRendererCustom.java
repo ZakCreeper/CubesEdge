@@ -13,24 +13,11 @@ import net.minecraft.entity.Entity;
 public class EntityRendererCustom extends EntityRenderer
 {
 	private final Minecraft mc;
-	public static float offsetY = 0F; // just for testing, should be based on actual render size
+	private float offsetY = -1F; // just for testing, should be based on actual render size
 
 	public EntityRendererCustom(Minecraft mc) {
 		super(mc, mc.getResourceManager());
 		this.mc = mc;
-	}
-
-	@Override
-	public void updateCameraAndRender(float partialTick) {
-		if (mc.thePlayer == null || mc.thePlayer.isPlayerSleeping()){
-			super.updateCameraAndRender(partialTick);
-			return;
-		}
-		// this is what changes the actual camera height
-		// but also seems to affect the player model render position
-		mc.thePlayer.yOffset -= offsetY;
-		super.updateCameraAndRender(partialTick);
-		mc.thePlayer.yOffset = 1.62F;
 	}
 
 	@Override
@@ -44,7 +31,6 @@ public class EntityRendererCustom extends EntityRenderer
 		// that some block clicks do not process correctly
 		// (distance check or something like that)
 		
-//		mc.thePlayer.eyeHeight = 1.12F;
 		mc.thePlayer.posY += offsetY;
 		mc.thePlayer.prevPosY += offsetY;
 		mc.thePlayer.lastTickPosY += offsetY;
@@ -52,6 +38,5 @@ public class EntityRendererCustom extends EntityRenderer
 		mc.thePlayer.posY -= offsetY;
 		mc.thePlayer.prevPosY -= offsetY;
 		mc.thePlayer.lastTickPosY -= offsetY;
-//		mc.thePlayer.eyeHeight = 0.12F;
 	}
 }

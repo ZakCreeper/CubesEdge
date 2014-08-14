@@ -1,5 +1,7 @@
 package fr.zak.cubesedge.coremod;
 
+import java.util.ArrayList;
+
 import net.minecraft.launchwrapper.IClassTransformer;
 
 import org.objectweb.asm.ClassReader;
@@ -8,13 +10,14 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.InsnNode;
+import org.objectweb.asm.tree.LocalVariableNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
 public class EntityRendererTransformer implements IClassTransformer{
 
-	private String methodName;
+	private String renderHandMethodName, orientCameraMethodName;
 	private static String className;
 
 	@Override
@@ -27,7 +30,8 @@ public class EntityRendererTransformer implements IClassTransformer{
 		}
 		if (transformedName.equals("net.minecraft.client.renderer.EntityRenderer")){
 			System.out.println("Cube\'s Edge Core - Patching class EntityRenderer...");
-			methodName = CubesEdgeFMLLoadingPlugin.obfuscation ? "b" : "renderHand";
+			renderHandMethodName = CubesEdgeFMLLoadingPlugin.obfuscation ? "b" : "renderHand";
+			orientCameraMethodName = CubesEdgeFMLLoadingPlugin.obfuscation ? "g" : "orientCamera";
 			className = CubesEdgeFMLLoadingPlugin.obfuscation ? "bll" : "net/minecraft/client/renderer/EntityRenderer";
 
 			ClassReader cr = new ClassReader(basicClass);
@@ -35,8 +39,11 @@ public class EntityRendererTransformer implements IClassTransformer{
 			cr.accept(cn, 0);
 			for (Object mnObj : cn.methods) {
 				MethodNode mn = (MethodNode)mnObj;
-				if (mn.name.equals(methodName) && mn.desc.equals("(FI)V")) {
-					patchMethod(mn);
+				if (mn.name.equals(renderHandMethodName) && mn.desc.equals("(FI)V")) {
+					patchRenderHandMethod(mn);
+				}
+				if (mn.name.equals(orientCameraMethodName) && mn.desc.equals("(F)V")) {
+					patchOrientCameraMethod(mn);
 				}
 			}
 			ClassWriter cw = new ClassWriter(0);
@@ -49,7 +56,7 @@ public class EntityRendererTransformer implements IClassTransformer{
 		}
 	}
 
-	private static void patchMethod(MethodNode mn) {
+	private static void patchRenderHandMethod(MethodNode mn) {
 
 		System.out.println("\tPatching method renderHand in EntityRenderer");
 		InsnList newList = new InsnList();
@@ -62,5 +69,20 @@ public class EntityRendererTransformer implements IClassTransformer{
 		newList.add(new InsnNode(Opcodes.RETURN));
 
 		mn.instructions = newList;
-	}	
+	}
+	
+	private static void patchOrientCameraMethod(MethodNode mn) {
+
+		System.out.println("\tPatching method orientCamera in EntityRenderer");
+		InsnList newList = new InsnList();
+
+		newList.add(new VarInsnNode(Opcodes.FLOAD, 1));
+		newList.add(new VarInsnNode(Opcodes.ALOAD, 0));
+		newList.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "fr/zak/cubesedge/coremod/Patch", "orientCameraPatch"
+				, "(FL" + className + ";)V"));
+		newList.add(new InsnNode(Opcodes.RETURN));
+
+		mn.localVariables = new ArrayList<LocalVariableNode>(5);
+		mn.instructions = newList;
+	}
 }

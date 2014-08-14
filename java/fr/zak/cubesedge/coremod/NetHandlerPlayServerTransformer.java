@@ -49,34 +49,11 @@ public class NetHandlerPlayServerTransformer implements IClassTransformer{
 		}
 	}
 	
-	private static int returns = 0, aloads = 0, nb = -1;
-	private static LabelNode l1 = new LabelNode();
 	
 	private static void patchMethod(MethodNode mn) {
 		System.out.println("\tPatching method processPlayer in NetHandlerPlayServer");
 		InsnList newList = new InsnList();
-//		
-//		Iterator<AbstractInsnNode> it = mn.instructions.iterator();
-//		while (it.hasNext()) {
-//			AbstractInsnNode insn = it.next();
-//			if(insn.getOpcode() == Opcodes.ALOAD){
-//				aloads++;
-//			}
-//			if(aloads == 131){
-//				newList.add(new FieldInsnNode(Opcodes.GETSTATIC, "fr/zak/cubesedge/Util", "isSneaking", "Z"));
-//				newList.add(new JumpInsnNode(Opcodes.IFNE, l1));
-//				newList.add(new InsnNode(Opcodes.RETURN));
-//				newList.add(l1);
-//			}
-//			System.out.println(insn.getOpcode());
-//			if (insn.getOpcode() == Opcodes.RETURN) {
-//				returns++;
-//			}
-//			if(returns == 10){
-//				returns++;
-//			}
-//			newList.add(insn);
-//		}
+		
 		mn.localVariables = new ArrayList<LocalVariableNode>(5);
 		
 		newList.add(new VarInsnNode(Opcodes.ALOAD, 0));

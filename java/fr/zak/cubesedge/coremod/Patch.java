@@ -5,7 +5,6 @@ import static net.minecraftforge.client.IItemRenderer.ItemRenderType.FIRST_PERSO
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.text.DecimalFormat;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
@@ -19,6 +18,7 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemCloth;
@@ -29,9 +29,13 @@ import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.WorldServer;
+import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 import net.minecraft.world.storage.MapData;
+import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.MinecraftForgeClient;
 
@@ -930,5 +934,107 @@ public class Patch {
 		}
 
 		return false;
+	}
+	
+	public static void orientCameraPatch(float par1, EntityRenderer renderer){
+		EntityLivingBase entitylivingbase = Minecraft.getMinecraft().renderViewEntity;
+        float f1 = entitylivingbase.yOffset - 1.62F;
+        if(((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).isSneaking || ((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).isRolling){
+        	f1 = 1;
+        }
+        double d0 = entitylivingbase.prevPosX + (entitylivingbase.posX - entitylivingbase.prevPosX) * (double)par1;
+        double d1 = entitylivingbase.prevPosY + (entitylivingbase.posY - entitylivingbase.prevPosY) * (double)par1 - (double)f1;
+        double d2 = entitylivingbase.prevPosZ + (entitylivingbase.posZ - entitylivingbase.prevPosZ) * (double)par1;
+        GL11.glRotatef((Float)ObfuscationReflectionHelper.getPrivateValue(EntityRenderer.class, renderer, 31) + ((Float)ObfuscationReflectionHelper.getPrivateValue(EntityRenderer.class, renderer, 30) - (Float)ObfuscationReflectionHelper.getPrivateValue(EntityRenderer.class, renderer, 31)) * par1, 0.0F, 0.0F, 1.0F);
+
+        if (entitylivingbase.isPlayerSleeping())
+        {
+            f1 = (float)((double)f1 + 1.0D);
+            GL11.glTranslatef(0.0F, 0.3F, 0.0F);
+
+            if (!Minecraft.getMinecraft().gameSettings.debugCamEnable)
+            {
+                ForgeHooksClient.orientBedCamera(Minecraft.getMinecraft(), entitylivingbase);
+                GL11.glRotatef(entitylivingbase.prevRotationYaw + (entitylivingbase.rotationYaw - entitylivingbase.prevRotationYaw) * par1 + 180.0F, 0.0F, -1.0F, 0.0F);
+                GL11.glRotatef(entitylivingbase.prevRotationPitch + (entitylivingbase.rotationPitch - entitylivingbase.prevRotationPitch) * par1, -1.0F, 0.0F, 0.0F);
+            }
+        }
+        else if (Minecraft.getMinecraft().gameSettings.thirdPersonView > 0)
+        {
+            double d7 = (double)((Float)ObfuscationReflectionHelper.getPrivateValue(EntityRenderer.class, renderer, 18) + ((Float)ObfuscationReflectionHelper.getPrivateValue(EntityRenderer.class, renderer, 17) - (Float)ObfuscationReflectionHelper.getPrivateValue(EntityRenderer.class, renderer, 18)) * par1);
+            float f2;
+            float f6;
+
+            if (Minecraft.getMinecraft().gameSettings.debugCamEnable)
+            {
+                f6 = (Float)ObfuscationReflectionHelper.getPrivateValue(EntityRenderer.class, renderer, 20) + ((Float)ObfuscationReflectionHelper.getPrivateValue(EntityRenderer.class, renderer, 19) - (Float)ObfuscationReflectionHelper.getPrivateValue(EntityRenderer.class, renderer, 20)) * par1;
+                f2 = (Float)ObfuscationReflectionHelper.getPrivateValue(EntityRenderer.class, renderer, 22) + ((Float)ObfuscationReflectionHelper.getPrivateValue(EntityRenderer.class, renderer, 21) - (Float)ObfuscationReflectionHelper.getPrivateValue(EntityRenderer.class, renderer, 22)) * par1;
+                GL11.glTranslatef(0.0F, 0.0F, (float)(-d7));
+                GL11.glRotatef(f2, 1.0F, 0.0F, 0.0F);
+                GL11.glRotatef(f6, 0.0F, 1.0F, 0.0F);
+            }
+            else
+            {
+                f6 = entitylivingbase.rotationYaw;
+                f2 = entitylivingbase.rotationPitch;
+
+                if (Minecraft.getMinecraft().gameSettings.thirdPersonView == 2)
+                {
+                    f2 += 180.0F;
+                }
+
+                double d3 = (double)(-MathHelper.sin(f6 / 180.0F * (float)Math.PI) * MathHelper.cos(f2 / 180.0F * (float)Math.PI)) * d7;
+                double d4 = (double)(MathHelper.cos(f6 / 180.0F * (float)Math.PI) * MathHelper.cos(f2 / 180.0F * (float)Math.PI)) * d7;
+                double d5 = (double)(-MathHelper.sin(f2 / 180.0F * (float)Math.PI)) * d7;
+
+                for (int k = 0; k < 8; ++k)
+                {
+                    float f3 = (float)((k & 1) * 2 - 1);
+                    float f4 = (float)((k >> 1 & 1) * 2 - 1);
+                    float f5 = (float)((k >> 2 & 1) * 2 - 1);
+                    f3 *= 0.1F;
+                    f4 *= 0.1F;
+                    f5 *= 0.1F;
+                    MovingObjectPosition movingobjectposition = Minecraft.getMinecraft().theWorld.rayTraceBlocks(Minecraft.getMinecraft().theWorld.getWorldVec3Pool().getVecFromPool(d0 + (double)f3, d1 + (double)f4, d2 + (double)f5), Minecraft.getMinecraft().theWorld.getWorldVec3Pool().getVecFromPool(d0 - d3 + (double)f3 + (double)f5, d1 - d5 + (double)f4, d2 - d4 + (double)f5));
+
+                    if (movingobjectposition != null)
+                    {
+                        double d6 = movingobjectposition.hitVec.distanceTo(Minecraft.getMinecraft().theWorld.getWorldVec3Pool().getVecFromPool(d0, d1, d2));
+
+                        if (d6 < d7)
+                        {
+                            d7 = d6;
+                        }
+                    }
+                }
+
+                if (Minecraft.getMinecraft().gameSettings.thirdPersonView == 2)
+                {
+                    GL11.glRotatef(180.0F, 0.0F, 1.0F, 0.0F);
+                }
+
+                GL11.glRotatef(entitylivingbase.rotationPitch - f2, 1.0F, 0.0F, 0.0F);
+                GL11.glRotatef(entitylivingbase.rotationYaw - f6, 0.0F, 1.0F, 0.0F);
+                GL11.glTranslatef(0.0F, 0.0F, (float)(-d7));
+                GL11.glRotatef(f6 - entitylivingbase.rotationYaw, 0.0F, 1.0F, 0.0F);
+                GL11.glRotatef(f2 - entitylivingbase.rotationPitch, 1.0F, 0.0F, 0.0F);
+            }
+        }
+        else
+        {
+            GL11.glTranslatef(0.0F, 0.0F, -0.1F);
+        }
+
+        if (!Minecraft.getMinecraft().gameSettings.debugCamEnable)
+        {
+            GL11.glRotatef(entitylivingbase.prevRotationPitch + (entitylivingbase.rotationPitch - entitylivingbase.prevRotationPitch) * par1, 1.0F, 0.0F, 0.0F);
+            GL11.glRotatef(entitylivingbase.prevRotationYaw + (entitylivingbase.rotationYaw - entitylivingbase.prevRotationYaw) * par1 + 180.0F, 0.0F, 1.0F, 0.0F);
+        }
+
+        GL11.glTranslatef(0.0F, f1, 0.0F);
+        d0 = entitylivingbase.prevPosX + (entitylivingbase.posX - entitylivingbase.prevPosX) * (double)par1;
+        d1 = entitylivingbase.prevPosY + (entitylivingbase.posY - entitylivingbase.prevPosY) * (double)par1 - (double)f1;
+        d2 = entitylivingbase.prevPosZ + (entitylivingbase.posZ - entitylivingbase.prevPosZ) * (double)par1;
+        ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, renderer, Minecraft.getMinecraft().renderGlobal.hasCloudFog(d0, d1, d2, par1), 40);
 	}
 }
