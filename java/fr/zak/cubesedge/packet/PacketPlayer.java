@@ -42,7 +42,6 @@ public class PacketPlayer{
 
 			@Override
 			public IMessage onMessage(CPacketPlayerSneak message, MessageContext ctx) {
-				System.out.println("Sneaking is : " + message.isSneaking);
 				((EntityPlayerCustom)ctx.getServerHandler().playerEntity.getExtendedProperties("Player Custom")).isSneaking = message.isSneaking;
 				if(message.isSneaking){
 					Util.forceSetSize(Entity.class, ctx.getServerHandler().playerEntity, 0.6F, 0.6F);

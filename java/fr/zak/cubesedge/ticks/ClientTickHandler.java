@@ -79,24 +79,19 @@ public class ClientTickHandler {
 			}
 		}
 	}
-
-	byte lastLightValue;
 	
 	@SubscribeEvent
 	public void tick(TickEvent.RenderTickEvent event) {
 		if(event.phase == TickEvent.Phase.START && minecraft.theWorld != null){
-			if(((EntityPlayerCustom)minecraft.thePlayer.getExtendedProperties("Player Custom")).isSneaking || ((EntityPlayerCustom)minecraft.thePlayer.getExtendedProperties("Player Custom")).isRolling){
+			if(((EntityPlayerCustom)minecraft.thePlayer.getExtendedProperties("Player Custom")).isSneaking || ((EntityPlayerCustom)minecraft.thePlayer.getExtendedProperties("Player Custom")).isRolling || (minecraft.theWorld.getBlock(MathHelper.floor_double(minecraft.thePlayer.posX), MathHelper.floor_double(minecraft.thePlayer.posY), MathHelper.floor_double(minecraft.thePlayer.posZ)).isNormalCube() && (((EntityPlayerCustom)minecraft.thePlayer.getExtendedProperties("Player Custom")).wasSliding || ((EntityPlayerCustom)minecraft.thePlayer.getExtendedProperties("Player Custom")).wasRolling))){
 				int x1 = MathHelper.floor_double(minecraft.thePlayer.posX);
 				int y1 = MathHelper.floor_double(minecraft.thePlayer.posY);
 				int z1 = MathHelper.floor_double(minecraft.thePlayer.posZ);
 				ExtendedBlockStorage ebs = ((ExtendedBlockStorage[])ObfuscationReflectionHelper.getPrivateValue(Chunk.class, minecraft.thePlayer.worldObj.getChunkFromBlockCoords(x1, z1), 2))[y1 >> 4];
-//				System.out.println(ebs.getExtSkylightValue((x1 & 15) + 1, y1 & 15, (z1 & 15)));
 				if(ebs.getExtSkylightValue((x1 & 15), y1 & 15, (z1 & 15)) == 0){
-					ebs.setExtSkylightValue((x1 & 15), y1 & 15, (z1 & 15), lastLightValue);
+					ebs.setExtSkylightValue((x1 & 15), y1 & 15, (z1 & 15), ((EntityPlayerCustom)minecraft.thePlayer.getExtendedProperties("Player Custom")).lastLightValue);
 				}
-				if(lastLightValue != ebs.getExtSkylightValue((x1 & 15), y1 & 15, (z1 & 15))){
-					lastLightValue = (byte) ebs.getExtSkylightValue((x1 & 15), y1 & 15, (z1 & 15));
-				}
+				((EntityPlayerCustom)minecraft.thePlayer.getExtendedProperties("Player Custom")).lastLightValue = (byte) ebs.getExtSkylightValue((x1 & 15), y1 & 15, (z1 & 15));
 				if (renderer == null) {
 					renderer = new EntityRendererCustom(minecraft);
 				}
@@ -106,11 +101,19 @@ public class ClientTickHandler {
 					minecraft.entityRenderer = renderer;
 				}
 				Util.forceSetSize(Entity.class, minecraft.thePlayer, 0.6F, 0.6F);
-			} else if (prevRenderer != null && minecraft.entityRenderer != prevRenderer && !minecraft.thePlayer.isSneaking() && minecraft.theWorld.getBlock(MathHelper.floor_double(minecraft.thePlayer.posX), MathHelper.floor_double(minecraft.thePlayer.posY), MathHelper.floor_double(minecraft.thePlayer.posZ)).equals(Blocks.air)) {
+			} else if (prevRenderer != null && minecraft.entityRenderer != prevRenderer && !minecraft.thePlayer.isSneaking() && minecraft.theWorld.getBlock(MathHelper.floor_double(minecraft.thePlayer.posX), MathHelper.floor_double(minecraft.thePlayer.posY), MathHelper.floor_double(minecraft.thePlayer.posZ)) == Blocks.air) {
 				// reset the renderer
 				minecraft.entityRenderer = prevRenderer;
 				Util.forceSetSize(Entity.class, minecraft.thePlayer, 0.6F, 1.8F);
 				((EntityPlayerCustom)minecraft.thePlayer.getExtendedProperties("Player Custom")).sneakTime = 0;
+				((EntityPlayerCustom)minecraft.thePlayer.getExtendedProperties("Player Custom")).wasSliding = false;
+				((EntityPlayerCustom)minecraft.thePlayer.getExtendedProperties("Player Custom")).wasRolling = false;
+			}
+			if(!((EntityPlayerCustom)minecraft.thePlayer.getExtendedProperties("Player Custom")).wasSliding){
+				((EntityPlayerCustom)minecraft.thePlayer.getExtendedProperties("Player Custom")).wasSliding = ((EntityPlayerCustom)minecraft.thePlayer.getExtendedProperties("Player Custom")).isSneaking;
+			}
+			if(!((EntityPlayerCustom)minecraft.thePlayer.getExtendedProperties("Player Custom")).wasRolling){
+				((EntityPlayerCustom)minecraft.thePlayer.getExtendedProperties("Player Custom")).wasRolling = ((EntityPlayerCustom)minecraft.thePlayer.getExtendedProperties("Player Custom")).isRolling;
 			}
 		}
 	}

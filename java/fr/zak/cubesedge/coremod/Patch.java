@@ -920,7 +920,7 @@ public class Patch {
 				k = MathHelper.floor_double(ent.posY + (double)ent.getEyeHeight() + (double)f1);
 			}
 			else{
-				if(((EntityPlayerCustom)ent.getExtendedProperties("Player Custom")).isSneaking || ((EntityPlayerCustom)ent.getExtendedProperties("Player Custom")).isRolling){
+				if(((EntityPlayerCustom)ent.getExtendedProperties("Player Custom")).isSneaking || ((EntityPlayerCustom)ent.getExtendedProperties("Player Custom")).isRolling || (ent.worldObj.getBlock(MathHelper.floor_double(ent.posX), MathHelper.floor_double(ent.posY), MathHelper.floor_double(ent.posZ)).isNormalCube() && (((EntityPlayerCustom)ent.getExtendedProperties("Player Custom")).wasSliding || ((EntityPlayerCustom)ent.getExtendedProperties("Player Custom")).wasRolling))){
 					k = MathHelper.floor_double(ent.posY + (double)ent.getEyeHeight() + (double)f1) - 1;
 				}
 				else{
@@ -939,7 +939,7 @@ public class Patch {
 	public static void orientCameraPatch(float par1, EntityRenderer renderer){
 		EntityLivingBase entitylivingbase = Minecraft.getMinecraft().renderViewEntity;
         float f1 = entitylivingbase.yOffset - 1.62F;
-        if(((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).isSneaking || ((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).isRolling){
+        if(((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).isSneaking || ((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).isRolling || (Minecraft.getMinecraft().theWorld.getBlock(MathHelper.floor_double(Minecraft.getMinecraft().thePlayer.posX), MathHelper.floor_double(Minecraft.getMinecraft().thePlayer.posY), MathHelper.floor_double(Minecraft.getMinecraft().thePlayer.posZ)).isNormalCube() && (((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).wasSliding || ((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).wasRolling))){
         	f1 = 1;
         }
         double d0 = entitylivingbase.prevPosX + (entitylivingbase.posX - entitylivingbase.prevPosX) * (double)par1;
