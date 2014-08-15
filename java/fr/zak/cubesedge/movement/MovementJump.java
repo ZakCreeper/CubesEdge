@@ -8,7 +8,7 @@ import cpw.mods.fml.relauncher.Side;
 import fr.zak.cubesedge.Movement;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
 
-@Movement(Side.CLIENT)
+@Movement(name = "Jump")
 public class MovementJump {
 
 	public void control(EntityPlayerCustom playerCustom, EntityPlayer player, int heading){

@@ -12,7 +12,7 @@ import cpw.mods.fml.relauncher.Side;
 import fr.zak.cubesedge.Movement;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
 
-@Movement(Side.CLIENT)
+@Movement(name = "Grab")
 public class MovementGrab {
 
 	public void control(EntityPlayerCustom playerCustom, EntityPlayer player, int heading){

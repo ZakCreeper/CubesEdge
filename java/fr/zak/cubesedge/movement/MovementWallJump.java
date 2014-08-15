@@ -7,7 +7,7 @@ import cpw.mods.fml.relauncher.Side;
 import fr.zak.cubesedge.Movement;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
 
-@Movement(Side.CLIENT)
+@Movement(name = "Wall jump")
 public class MovementWallJump {
 
 	public void control(EntityPlayerCustom playerCustom, EntityPlayer player, int heading){
@@ -38,14 +38,14 @@ public class MovementWallJump {
 								playerCustom.wallJump = true;
 							}
 							if(!((EntityPlayerSP)player).movementInput.jump){
-								if(heading == 2){
-									playerCustom.animRight = true;
-								}
-								if(heading == 0){
-									playerCustom.animLeft = true;
-
-								}
 							}
+						}
+						if(heading == 2){
+							playerCustom.animRight = true;
+						}
+						if(heading == 0){
+							playerCustom.animLeft = true;
+
 						}
 					}
 				}
@@ -74,13 +74,13 @@ public class MovementWallJump {
 								playerCustom.wallJump = true;
 							}
 							if(!((EntityPlayerSP)player).movementInput.jump){
-								if(heading == 2){
-									playerCustom.animLeft = true;
-								}
-								if(heading == 0){
-									playerCustom.animRight = true;
-								}
 							}
+						}
+						if(heading == 2){
+							playerCustom.animLeft = true;
+						}
+						if(heading == 0){
+							playerCustom.animRight = true;
 						}
 					}
 				}
@@ -109,13 +109,13 @@ public class MovementWallJump {
 								playerCustom.wallJump = true;
 							}
 							if(!((EntityPlayerSP)player).movementInput.jump){
-								if(heading == 3){
-									playerCustom.animRight = true;
-								}
-								if(heading == 1){
-									playerCustom.animLeft = true;
-								}
 							}
+						}
+						if(heading == 3){
+							playerCustom.animRight = true;
+						}
+						if(heading == 1){
+							playerCustom.animLeft = true;
 						}
 					}
 				}
@@ -143,19 +143,19 @@ public class MovementWallJump {
 								player.motionY = 0.41999998688697815D;
 								playerCustom.wallJump = true;
 							}
-							if(!((EntityPlayerSP)player).movementInput.jump){
-								if(heading == 3){
-									playerCustom.animLeft = true;
-								}
-								if(heading == 1){
-									playerCustom.animRight = true;
-								}
-							}
+						}
+						if(heading == 3){
+							playerCustom.animLeft = true;
+						}
+						if(heading == 1){
+							playerCustom.animRight = true;
 						}
 					}
 				}
 				else {
 					playerCustom.isOnWall = false;
+					playerCustom.animLeft = false;
+					playerCustom.animRight = false;
 				}
 				if(playerCustom.isOnWall && player.moveForward > 0){
 					player.motionZ *= 0.95D;
@@ -180,8 +180,13 @@ public class MovementWallJump {
 			playerCustom.isJumpingOnWall = false;
 		}
 		if(player.capabilities.isFlying){
+			playerCustom.isOnWall = false;
 			playerCustom.animRight = false;
 			playerCustom.animLeft = false;
+		}
+		if(playerCustom.isGrabbing){
+			playerCustom.animLeft = false;
+			playerCustom.animRight = false;
 		}
 	}
 }

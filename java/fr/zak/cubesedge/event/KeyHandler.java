@@ -13,9 +13,9 @@ import fr.zak.cubesedge.entity.EntityPlayerCustom;
 
 public class KeyHandler {
 	
-	static KeyBinding ralenti = new KeyBinding("Ralenti", Keyboard.KEY_R, "Cube's Edge");
+	static KeyBinding ralenti = new KeyBinding("Slow", Keyboard.KEY_R, "Cube's Edge");
 	static KeyBinding turn = new KeyBinding("Turn", Keyboard.KEY_APOSTROPHE, "Cube's Edge");
-	public static boolean keyPressedRalenti = false;
+	public static boolean keyPressedSlow = false;
 	public static float defaultSensitivity = Minecraft.getMinecraft().gameSettings.mouseSensitivity;
 	
 	public KeyHandler(){
@@ -25,8 +25,8 @@ public class KeyHandler {
 	
 	@SubscribeEvent
 	public void key(KeyInputEvent event){
-		keyPressedRalenti = ralenti.isPressed();
-		if(keyPressedRalenti){
+		keyPressedSlow = ralenti.isPressed();
+		if(keyPressedSlow){
 			Minecraft.getMinecraft().gameSettings.mouseSensitivity = 0.1F;
 		}
 		if(turn.isPressed() && !((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Cube's Edge Player")).isTurning){

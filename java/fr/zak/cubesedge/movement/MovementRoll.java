@@ -17,7 +17,7 @@ import fr.zak.cubesedge.entity.EntityPlayerCustom;
 import fr.zak.cubesedge.packet.PacketPlayer;
 import fr.zak.cubesedge.renderer.EntityRendererCustom;
 
-@Movement(Side.CLIENT)
+@Movement(name = "Roll")
 public class MovementRoll {
 
 	private EntityRenderer renderer, prevRenderer;
