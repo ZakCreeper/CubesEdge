@@ -9,7 +9,7 @@ public class ClickEvent {
 
 	@SubscribeEvent
 	public void onClick(MouseEvent event){
-		if(((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).isGrabbing){
+		if(((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Cube's Edge Player")).isGrabbing){
 			event.setCanceled(true);
 		}
 	}

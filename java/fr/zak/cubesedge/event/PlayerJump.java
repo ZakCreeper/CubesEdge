@@ -10,7 +10,7 @@ public class PlayerJump {
 
 	@SubscribeEvent
 	public void jump(LivingJumpEvent event){
-		if(event.entityLiving instanceof EntityPlayer && (((EntityPlayerCustom)event.entityLiving.getExtendedProperties("Player Custom")).isRolling || ((EntityPlayerCustom)event.entityLiving.getExtendedProperties("Player Custom")).isSneaking)){
+		if(event.entityLiving instanceof EntityPlayer && (((EntityPlayerCustom)event.entityLiving.getExtendedProperties("Cube's Edge Player")).isRolling || ((EntityPlayerCustom)event.entityLiving.getExtendedProperties("Cube's Edge Player")).isSneaking)){
 			event.entityLiving.motionY = 0;
 		}
 	}

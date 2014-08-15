@@ -16,7 +16,7 @@ public class PlayerFall {
 
 	@SubscribeEvent
 	public void onFall(LivingFallEvent event){
-		if(event.entityLiving instanceof EntityPlayer && ((EntityPlayerCustom)event.entityLiving.getExtendedProperties("Player Custom")).isRolling){
+		if(event.entityLiving instanceof EntityPlayer && ((EntityPlayerCustom)event.entityLiving.getExtendedProperties("Cube's Edge Player")).isRolling){
 			event.distance = 0;
 		}
 	}

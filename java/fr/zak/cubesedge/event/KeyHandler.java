@@ -29,8 +29,8 @@ public class KeyHandler {
 		if(keyPressedRalenti){
 			Minecraft.getMinecraft().gameSettings.mouseSensitivity = 0.1F;
 		}
-		if(turn.isPressed() && !((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).isTurning){
-			((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).isTurning = true;
+		if(turn.isPressed() && !((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Cube's Edge Player")).isTurning){
+			((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Cube's Edge Player")).isTurning = true;
 		}
 	}
 }

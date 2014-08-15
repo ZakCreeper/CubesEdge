@@ -39,7 +39,7 @@ public class ClientTickHandler {
 	public void playerUpdate(TickEvent.PlayerTickEvent event){
 		if(event.phase == TickEvent.Phase.END){
 			if(playerCustom == null){
-				playerCustom = (EntityPlayerCustom)event.player.getExtendedProperties("Player Custom");
+				playerCustom = (EntityPlayerCustom)event.player.getExtendedProperties("Cube's Edge Player");
 			}
 			int heading = MathHelper.floor_double((double)(event.player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
 			for(Object o : Util.getMovements()){
@@ -78,7 +78,7 @@ public class ClientTickHandler {
 	@SubscribeEvent
 	public void tick(TickEvent.RenderTickEvent event) {
 		if(event.phase == TickEvent.Phase.START && Minecraft.getMinecraft().theWorld != null){
-			playerCustom = (EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom");
+			playerCustom = (EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Cube's Edge Player");
 			for(Object o : Util.getMovements()){
 				for(Method m : o.getClass().getDeclaredMethods()){
 					if(event.side == o.getClass().getAnnotation(Movement.class).value()){

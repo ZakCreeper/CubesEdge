@@ -16,6 +16,12 @@ public class MovementWallJump {
 				if((player.worldObj.getBlock(MathHelper.floor_double(player.posX) + 1, MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ)).isNormalCube() || player.worldObj.getBlock(MathHelper.floor_double(player.posX) + 1, MathHelper.floor_double(player.posY) - 1, MathHelper.floor_double(player.posZ)).isNormalCube()) && (( heading == 0) || (heading == 2))){
 					playerCustom.isOnWall = true;
 					if(player.moveForward > 0){
+						if(playerCustom.rotationYaw == 0){
+							playerCustom.rotationYaw = player.rotationYaw;
+							playerCustom.rotationPitch = player.rotationPitch;
+							playerCustom.prevRotationPitch = player.prevRotationPitch;
+							playerCustom.prevRotationYaw = player.prevRotationYaw;
+						}
 						if(player instanceof EntityPlayerSP){
 							if(((EntityPlayerSP)player).movementInput.jump && !playerCustom.wallJump){
 								playerCustom.animRight = false;
@@ -46,6 +52,12 @@ public class MovementWallJump {
 				else if((player.worldObj.getBlock(MathHelper.floor_double(player.posX) - 1, MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ)).isNormalCube() || player.worldObj.getBlock(MathHelper.floor_double(player.posX) - 1, MathHelper.floor_double(player.posY) - 1, MathHelper.floor_double(player.posZ)).isNormalCube()) && ((heading == 0) || (heading == 2))){
 					playerCustom.isOnWall = true;
 					if(player.moveForward > 0){
+						if(playerCustom.rotationYaw == 0){
+							playerCustom.rotationYaw = player.rotationYaw;
+							playerCustom.rotationPitch = player.rotationPitch;
+							playerCustom.prevRotationPitch = player.prevRotationPitch;
+							playerCustom.prevRotationYaw = player.prevRotationYaw;
+						}
 						if(player instanceof EntityPlayerSP){
 							if(((EntityPlayerSP)player).movementInput.jump && !playerCustom.wallJump){
 								playerCustom.animRight = false;
@@ -75,6 +87,12 @@ public class MovementWallJump {
 				else if((player.worldObj.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ) + 1).isNormalCube() || player.worldObj.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY) - 1, MathHelper.floor_double(player.posZ) + 1).isNormalCube()) && ((heading == 3) || (heading == 1))){
 					playerCustom.isOnWall = true;
 					if(player.moveForward > 0){
+						if(playerCustom.rotationYaw == 0){
+							playerCustom.rotationYaw = player.rotationYaw;
+							playerCustom.rotationPitch = player.rotationPitch;
+							playerCustom.prevRotationPitch = player.prevRotationPitch;
+							playerCustom.prevRotationYaw = player.prevRotationYaw;
+						}
 						if(player instanceof EntityPlayerSP){
 							if(((EntityPlayerSP)player).movementInput.jump && !playerCustom.wallJump){
 								playerCustom.animRight = false;
@@ -104,6 +122,12 @@ public class MovementWallJump {
 				else if((player.worldObj.getBlock(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ) - 1).isNormalCube() || player.worldObj.getBlock(MathHelper.floor_double(player.posX) , MathHelper.floor_double(player.posY) - 1, MathHelper.floor_double(player.posZ) - 1).isNormalCube()) && ((heading == 3) || (heading == 1))){
 					playerCustom.isOnWall = true;
 					if(player.moveForward > 0){
+						if(playerCustom.rotationYaw == 0){
+							playerCustom.rotationYaw = player.rotationYaw;
+							playerCustom.rotationPitch = player.rotationPitch;
+							playerCustom.prevRotationPitch = player.prevRotationPitch;
+							playerCustom.prevRotationYaw = player.prevRotationYaw;
+						}
 						if(player instanceof EntityPlayerSP){
 							if(((EntityPlayerSP)player).movementInput.jump && !playerCustom.wallJump){
 								playerCustom.animRight = false;
@@ -144,6 +168,12 @@ public class MovementWallJump {
 			}
 		}
 		if(player.onGround){
+			if(playerCustom.rotationYaw != 0){
+				playerCustom.rotationYaw = 0;
+				playerCustom.rotationPitch = 0;
+				playerCustom.prevRotationPitch = 0;
+				playerCustom.prevRotationYaw = 0;
+			}
 			playerCustom.wallJump = false;
 			playerCustom.animRight = false;
 			playerCustom.animLeft = false;

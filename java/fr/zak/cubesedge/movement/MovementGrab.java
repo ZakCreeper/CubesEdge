@@ -68,6 +68,9 @@ public class MovementGrab {
 					player.motionZ = 0;
 				}
 				player.motionY = 0.0;
+				if(player.isSprinting()){
+					player.setSprinting(false);
+				}
 			}
 			else if((Boolean)ObfuscationReflectionHelper.getPrivateValue(EntityLivingBase.class, (EntityLivingBase)player, 41) && playerCustom.isGrabbing){
 				player.motionY = 0.8D;

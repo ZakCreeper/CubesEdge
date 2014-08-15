@@ -42,7 +42,7 @@ public class PacketPlayer{
 
 			@Override
 			public IMessage onMessage(CPacketPlayerSneak message, MessageContext ctx) {
-				((EntityPlayerCustom)ctx.getServerHandler().playerEntity.getExtendedProperties("Player Custom")).isSneaking = message.isSneaking;
+				((EntityPlayerCustom)ctx.getServerHandler().playerEntity.getExtendedProperties("Cube's Edge Player")).isSneaking = message.isSneaking;
 				if(message.isSneaking){
 					Util.forceSetSize(Entity.class, ctx.getServerHandler().playerEntity, 0.6F, 0.6F);
 				}
@@ -84,7 +84,7 @@ public class PacketPlayer{
 
 			@Override
 			public IMessage onMessage(CPacketPlayerRoll message, MessageContext ctx) {
-				((EntityPlayerCustom)ctx.getServerHandler().playerEntity.getExtendedProperties("Player Custom")).isRolling = message.isRolling;
+				((EntityPlayerCustom)ctx.getServerHandler().playerEntity.getExtendedProperties("Cube's Edge Player")).isRolling = message.isRolling;
 				if(message.isRolling){
 					Util.forceSetSize(Entity.class, ctx.getServerHandler().playerEntity, 0.6F, 0.6F);
 				}

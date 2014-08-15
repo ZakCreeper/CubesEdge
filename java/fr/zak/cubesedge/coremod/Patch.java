@@ -52,7 +52,7 @@ public class Patch {
 	public static void entitySetAnglesPatch(float par1, float par2, Entity entity){
 		float f2 = entity.rotationPitch;
 		float f3 = entity.rotationYaw;
-		if(!((EntityPlayerCustom)entity.getExtendedProperties("Player Custom")).isRolling && !((EntityPlayerCustom)entity.getExtendedProperties("Player Custom")).isGrabbing){
+		if(!((EntityPlayerCustom)entity.getExtendedProperties("Cube's Edge Player")).isRolling && !((EntityPlayerCustom)entity.getExtendedProperties("Cube's Edge Player")).isGrabbing){
 			entity.rotationYaw = (float)((double)entity.rotationYaw + (double)par1 * 0.15D);
 			entity.rotationPitch = (float)((double)entity.rotationPitch - (double)par2 * 0.15D);
 
@@ -69,12 +69,12 @@ public class Patch {
 			entity.prevRotationPitch += entity.rotationPitch - f2;
 			entity.prevRotationYaw += entity.rotationYaw - f3;
 		}
-		if(((EntityPlayerCustom)entity.getExtendedProperties("Player Custom")).isGrabbing){
+		if(((EntityPlayerCustom)entity.getExtendedProperties("Cube's Edge Player")).isGrabbing){
 			entity.rotationYaw = (float)((double)entity.rotationYaw + (double)par1 * 0.15D);
 			entity.rotationPitch = (float)((double)entity.rotationPitch - (double)par2 * 0.15D);
 			int heading = MathHelper.floor_double((double)(Minecraft.getMinecraft().thePlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
 
-			if(((EntityPlayerCustom)entity.getExtendedProperties("Player Custom")).grabbingDirections[0] && ((EntityPlayerCustom)entity.getExtendedProperties("Player Custom")).grabbingDirections[3] && ((EntityPlayerCustom)entity.getExtendedProperties("Player Custom")).grabbingDirections[1]){
+			if(((EntityPlayerCustom)entity.getExtendedProperties("Cube's Edge Player")).grabbingDirections[0] && ((EntityPlayerCustom)entity.getExtendedProperties("Cube's Edge Player")).grabbingDirections[3] && ((EntityPlayerCustom)entity.getExtendedProperties("Cube's Edge Player")).grabbingDirections[1]){
 				if(MathHelper.wrapAngleTo180_float(entity.rotationYaw) > 44){
 					entity.rotationYaw = 44;
 				}
@@ -82,7 +82,7 @@ public class Patch {
 					entity.rotationYaw = -44;
 				}
 			}
-			else if(((EntityPlayerCustom)entity.getExtendedProperties("Player Custom")).grabbingDirections[1] && ((EntityPlayerCustom)entity.getExtendedProperties("Player Custom")).grabbingDirections[0] && ((EntityPlayerCustom)entity.getExtendedProperties("Player Custom")).grabbingDirections[2]){
+			else if(((EntityPlayerCustom)entity.getExtendedProperties("Cube's Edge Player")).grabbingDirections[1] && ((EntityPlayerCustom)entity.getExtendedProperties("Cube's Edge Player")).grabbingDirections[0] && ((EntityPlayerCustom)entity.getExtendedProperties("Cube's Edge Player")).grabbingDirections[2]){
 				if(MathHelper.wrapAngleTo180_float(entity.rotationYaw) < 46){
 					entity.rotationYaw = 46;
 				}
@@ -90,7 +90,7 @@ public class Patch {
 					entity.rotationYaw = 134;
 				}
 			}
-			else if(((EntityPlayerCustom)entity.getExtendedProperties("Player Custom")).grabbingDirections[2] && ((EntityPlayerCustom)entity.getExtendedProperties("Player Custom")).grabbingDirections[1] && ((EntityPlayerCustom)entity.getExtendedProperties("Player Custom")).grabbingDirections[3]){
+			else if(((EntityPlayerCustom)entity.getExtendedProperties("Cube's Edge Player")).grabbingDirections[2] && ((EntityPlayerCustom)entity.getExtendedProperties("Cube's Edge Player")).grabbingDirections[1] && ((EntityPlayerCustom)entity.getExtendedProperties("Cube's Edge Player")).grabbingDirections[3]){
 				if(MathHelper.wrapAngleTo180_float(entity.rotationYaw) < 136 && MathHelper.wrapAngleTo180_float(entity.rotationYaw) > 1){
 					entity.rotationYaw = 136;
 				}
@@ -98,7 +98,7 @@ public class Patch {
 					entity.rotationYaw = -136;
 				}
 			}
-			else if(((EntityPlayerCustom)entity.getExtendedProperties("Player Custom")).grabbingDirections[3] && ((EntityPlayerCustom)entity.getExtendedProperties("Player Custom")).grabbingDirections[2] && ((EntityPlayerCustom)entity.getExtendedProperties("Player Custom")).grabbingDirections[0]){
+			else if(((EntityPlayerCustom)entity.getExtendedProperties("Cube's Edge Player")).grabbingDirections[3] && ((EntityPlayerCustom)entity.getExtendedProperties("Cube's Edge Player")).grabbingDirections[2] && ((EntityPlayerCustom)entity.getExtendedProperties("Cube's Edge Player")).grabbingDirections[0]){
 				if(MathHelper.wrapAngleTo180_float(entity.rotationYaw) > -46){
 					entity.rotationYaw = -46;
 				}
@@ -149,11 +149,11 @@ public class Patch {
 			}
 
 			GL11.glMatrixMode(GL11.GL_MODELVIEW);
-			if(!((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).isGrabbing){
+			if(!((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Cube's Edge Player")).isGrabbing || !((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Cube's Edge Player")).isOnWall){
 				GL11.glLoadIdentity();
 			}
 			int heading = MathHelper.floor_double((double)(Minecraft.getMinecraft().thePlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-			if(((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).isGrabbing && heading != 2){
+			if(((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Cube's Edge Player")).isGrabbing && heading != 2){
 				if(heading != 0){
 					GL11.glRotatef(90 * heading, 0, 1, 0);
 				}
@@ -260,10 +260,10 @@ public class Patch {
 		float f1 = (Float)ObfuscationReflectionHelper.getPrivateValue(ItemRenderer.class, renderer, 6) + ((Float)ObfuscationReflectionHelper.getPrivateValue(ItemRenderer.class, renderer, 5) - (Float)ObfuscationReflectionHelper.getPrivateValue(ItemRenderer.class, renderer, 6)) * par1;
 		EntityClientPlayerMP entityclientplayermp = ((Minecraft)ObfuscationReflectionHelper.getPrivateValue(ItemRenderer.class, renderer, 3)).thePlayer;
 		float f2 = entityclientplayermp.prevRotationPitch + (entityclientplayermp.rotationPitch - entityclientplayermp.prevRotationPitch) * par1;
-		if(((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).isGrabbing && !((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).wasSneaking){
+		if((((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Cube's Edge Player")).isGrabbing && !((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Cube's Edge Player")).wasSneaking) || ((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Cube's Edge Player")).animLeft || ((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Cube's Edge Player")).animRight){
 			GL11.glPushMatrix();
-			GL11.glRotatef(((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).prevRotationPitch + (((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).rotationPitch - ((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).prevRotationPitch) * par1, 1.0F, 0.0F, 0.0F);
-			GL11.glRotatef(((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).prevRotationYaw + (((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).rotationYaw - ((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).prevRotationYaw) * par1, 0.0F, 1.0F, 0.0F);
+			GL11.glRotatef(((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Cube's Edge Player")).prevRotationPitch + (((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Cube's Edge Player")).rotationPitch - ((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Cube's Edge Player")).prevRotationPitch) * par1, 1.0F, 0.0F, 0.0F);
+			GL11.glRotatef(((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Cube's Edge Player")).prevRotationYaw + (((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Cube's Edge Player")).rotationYaw - ((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Cube's Edge Player")).prevRotationYaw) * par1, 0.0F, 1.0F, 0.0F);
 			RenderHelper.enableStandardItemLighting();
 			GL11.glPopMatrix();
 		}
@@ -277,7 +277,7 @@ public class Patch {
 		EntityPlayerSP entityplayersp = (EntityPlayerSP)entityclientplayermp;
 		float f3 = entityplayersp.prevRenderArmPitch + (entityplayersp.renderArmPitch - entityplayersp.prevRenderArmPitch) * par1;
 		float f4 = entityplayersp.prevRenderArmYaw + (entityplayersp.renderArmYaw - entityplayersp.prevRenderArmYaw) * par1;
-		if(!((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).isGrabbing){
+		if(!((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Cube's Edge Player")).isGrabbing){
 			GL11.glRotatef((entityclientplayermp.rotationPitch - f3) * 0.1F, 1.0F, 0.0F, 0.0F);
 			GL11.glRotatef((entityclientplayermp.rotationYaw - f4) * 0.1F, 0.0F, 1.0F, 0.0F);
 		}
@@ -553,7 +553,7 @@ public class Patch {
 		else if (!entityclientplayermp.isInvisible())
 		{
 			GL11.glPushMatrix();
-			if(((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).isGrabbing && !((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).wasSneaking){
+			if(((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Cube's Edge Player")).isGrabbing && !((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Cube's Edge Player")).wasSneaking){
 				GL11.glRotatef(30, 1, 0, 0);
 			}
 			if(Minecraft.getMinecraft().gameSettings.viewBobbing){
@@ -595,12 +595,12 @@ public class Patch {
 				if (((Minecraft)ObfuscationReflectionHelper.getPrivateValue(ItemRenderer.class, renderer, 3)).renderViewEntity instanceof EntityPlayer)
 				{
 					if(entityplayer.isSprinting()){
-						GL11.glTranslatef(0.F, ((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).tickRunningRight * 0.6F, 0);
-						GL11.glRotatef(-((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).tickRunningRight * 20F, 0, 0, 0.4F);
+						GL11.glTranslatef(0.F, ((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Cube's Edge Player")).tickRunningRight * 0.6F, 0);
+						GL11.glRotatef(-((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Cube's Edge Player")).tickRunningRight * 20F, 0, 0, 0.4F);
 					}
 				}
 			}
-			if(((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).isGrabbing && !((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).wasSneaking){
+			if(((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Cube's Edge Player")).isGrabbing && !((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Cube's Edge Player")).wasSneaking){
 				GL11.glRotatef(-20, 1, 0, 1);
 			}
 			renderplayer.renderFirstPersonArm(((Minecraft)ObfuscationReflectionHelper.getPrivateValue(ItemRenderer.class, renderer, 3)).thePlayer);
@@ -614,7 +614,7 @@ public class Patch {
 
 		if(!entityclientplayermp.isInvisible() && ((itemstack != null && !(itemstack.getItem() instanceof ItemMap) || itemstack == null))){
 			GL11.glPushMatrix();
-			if(((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).isGrabbing && !((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).wasSneaking){
+			if(((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Cube's Edge Player")).isGrabbing && !((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Cube's Edge Player")).wasSneaking){
 				GL11.glRotatef(30, 1, 0, 0);
 			}
 			if(Minecraft.getMinecraft().gameSettings.viewBobbing){
@@ -653,12 +653,12 @@ public class Patch {
 				if (((Minecraft)ObfuscationReflectionHelper.getPrivateValue(ItemRenderer.class, renderer, 3)).renderViewEntity instanceof EntityPlayer)
 				{
 					if(entityplayer.isSprinting()){
-						GL11.glTranslatef(0.F, ((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).tickRunningLeft * 0.8F, 0);
-						GL11.glRotatef(((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).tickRunningLeft * 20F, 0, 0, 0.4F);
+						GL11.glTranslatef(0.F, ((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Cube's Edge Player")).tickRunningLeft * 0.8F, 0);
+						GL11.glRotatef(((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Cube's Edge Player")).tickRunningLeft * 20F, 0, 0, 0.4F);
 					}
 				}
 			}
-			if(((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).isGrabbing && !((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).wasSneaking){
+			if(((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Cube's Edge Player")).isGrabbing && !((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Cube's Edge Player")).wasSneaking){
 				GL11.glRotatef(15, 1, 0, 1);
 				GL11.glTranslatef(0.1F, 0.22F, 0);
 			}
@@ -864,7 +864,7 @@ public class Patch {
 				net.playerEntity.setPositionAndRotation(d1, d2, d3, f1, f2);
 				boolean flag2 = worldserver.getCollidingBoundingBoxes(net.playerEntity, net.playerEntity.boundingBox.copy().contract((double)f3, (double)f3, (double)f3)).isEmpty();
 
-				if (flag && (flag1 || !flag2) && !net.playerEntity.isPlayerSleeping() && !net.playerEntity.noClip && ((EntityPlayerCustom)net.playerEntity.getExtendedProperties("Player Custom") != null && !((EntityPlayerCustom)net.playerEntity.getExtendedProperties("Player Custom")).isSneaking || (EntityPlayerCustom)net.playerEntity.getExtendedProperties("Player Custom") != null && !((EntityPlayerCustom)net.playerEntity.getExtendedProperties("Player Custom")).isRolling))
+				if (flag && (flag1 || !flag2) && !net.playerEntity.isPlayerSleeping() && !net.playerEntity.noClip && ((EntityPlayerCustom)net.playerEntity.getExtendedProperties("Cube's Edge Player") != null && !((EntityPlayerCustom)net.playerEntity.getExtendedProperties("Cube's Edge Player")).isSneaking || (EntityPlayerCustom)net.playerEntity.getExtendedProperties("Cube's Edge Player") != null && !((EntityPlayerCustom)net.playerEntity.getExtendedProperties("Cube's Edge Player")).isRolling))
 				{
 					net.setPlayerLocation(((Double) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 14)), ((Double) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 15)), ((Double) ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayServer.class, net, 16)), f1, f2);
 					return;
@@ -920,7 +920,7 @@ public class Patch {
 				k = MathHelper.floor_double(ent.posY + (double)ent.getEyeHeight() + (double)f1);
 			}
 			else{
-				if(((EntityPlayerCustom)ent.getExtendedProperties("Player Custom")).isSneaking || ((EntityPlayerCustom)ent.getExtendedProperties("Player Custom")).isRolling || (ent.worldObj.getBlock(MathHelper.floor_double(ent.posX), MathHelper.floor_double(ent.posY), MathHelper.floor_double(ent.posZ)).isNormalCube() && (((EntityPlayerCustom)ent.getExtendedProperties("Player Custom")).wasSliding || ((EntityPlayerCustom)ent.getExtendedProperties("Player Custom")).wasRolling))){
+				if(((EntityPlayerCustom)ent.getExtendedProperties("Cube's Edge Player")).isSneaking || ((EntityPlayerCustom)ent.getExtendedProperties("Cube's Edge Player")).isRolling || (ent.worldObj.getBlock(MathHelper.floor_double(ent.posX), MathHelper.floor_double(ent.posY), MathHelper.floor_double(ent.posZ)).isNormalCube() && (((EntityPlayerCustom)ent.getExtendedProperties("Cube's Edge Player")).wasSliding || ((EntityPlayerCustom)ent.getExtendedProperties("Cube's Edge Player")).wasRolling))){
 					k = MathHelper.floor_double(ent.posY + (double)ent.getEyeHeight() + (double)f1) - 1;
 				}
 				else{
@@ -939,7 +939,7 @@ public class Patch {
 	public static void orientCameraPatch(float par1, EntityRenderer renderer){
 		EntityLivingBase entitylivingbase = Minecraft.getMinecraft().renderViewEntity;
         float f1 = entitylivingbase.yOffset - 1.62F;
-        if(((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).isSneaking || ((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).isRolling || (Minecraft.getMinecraft().theWorld.getBlock(MathHelper.floor_double(Minecraft.getMinecraft().thePlayer.posX), MathHelper.floor_double(Minecraft.getMinecraft().thePlayer.posY), MathHelper.floor_double(Minecraft.getMinecraft().thePlayer.posZ)).isNormalCube() && (((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).wasSliding || ((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Player Custom")).wasRolling))){
+        if(((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Cube's Edge Player")).isSneaking || ((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Cube's Edge Player")).isRolling || (Minecraft.getMinecraft().theWorld.getBlock(MathHelper.floor_double(Minecraft.getMinecraft().thePlayer.posX), MathHelper.floor_double(Minecraft.getMinecraft().thePlayer.posY), MathHelper.floor_double(Minecraft.getMinecraft().thePlayer.posZ)).isNormalCube() && (((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Cube's Edge Player")).wasSliding || ((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Cube's Edge Player")).wasRolling))){
         	f1 = 1;
         }
         double d0 = entitylivingbase.prevPosX + (entitylivingbase.posX - entitylivingbase.prevPosX) * (double)par1;
