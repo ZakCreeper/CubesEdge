@@ -142,6 +142,16 @@ public class GuiMovementList extends GuiListExtended
     						f.setAccessible(true);
     						try {
     							ClientRegistry.registerKeyBinding((KeyBinding) f.get(movement));
+    							boolean flag = true;
+    							for(Object o : (HashSet)ObfuscationReflectionHelper.getPrivateValue(KeyBinding.class, (KeyBinding) f.get(movement), 2)){
+    								if(o.equals("Cube's Edge")){
+    									flag = false;
+    									break;
+    								}
+    							}
+    							if(flag){
+    								((HashSet)ObfuscationReflectionHelper.getPrivateValue(KeyBinding.class, (KeyBinding) f.get(movement), 2)).add("Cube's Edge");
+    							}
     						} catch (IllegalArgumentException e) {
     							e.printStackTrace();
     						} catch (IllegalAccessException e) {
@@ -174,7 +184,7 @@ public class GuiMovementList extends GuiListExtended
     						try {
     							Minecraft.getMinecraft().gameSettings.keyBindings = ArrayUtils.removeElement(Minecraft.getMinecraft().gameSettings.keyBindings, (KeyBinding) f.get(movement));
     							for(KeyBinding kb : Minecraft.getMinecraft().gameSettings.keyBindings){
-    								if((String) ObfuscationReflectionHelper.getPrivateValue(KeyBinding.class, kb, 5) == "Cube's Edge"){
+    								if(((String) ObfuscationReflectionHelper.getPrivateValue(KeyBinding.class, kb, 5)).equals("Cube's Edge")){
     									return true;
     								}
     							}
