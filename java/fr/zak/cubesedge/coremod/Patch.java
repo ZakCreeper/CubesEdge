@@ -622,8 +622,10 @@ public class Patch {
 				if (((Minecraft)ObfuscationReflectionHelper.getPrivateValue(ItemRenderer.class, renderer, 3)).renderViewEntity instanceof EntityPlayer)
 				{
 					if(entityplayer.isSprinting()){
-						GL11.glTranslatef(0.F, ((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Cube's Edge Player")).tickRunningRight * 0.6F, 0);
-						GL11.glRotatef(-((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Cube's Edge Player")).tickRunningRight * 20F, 0, 0, 0.4F);
+						GL11.glTranslatef(0, ((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Cube's Edge Player")).tickRunningRight, 0);
+						GL11.glRotatef(-((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Cube's Edge Player")).tickRunningRight * 100, 1, 0, 0);
+						GL11.glRotatef(((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Cube's Edge Player")).tickRunningRight * 50, 0, 0, 1);
+						GL11.glRotatef(((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Cube's Edge Player")).tickRunningRight * 10, 0, 1, 0);
 					}
 				}
 			}
@@ -680,8 +682,10 @@ public class Patch {
 				if (((Minecraft)ObfuscationReflectionHelper.getPrivateValue(ItemRenderer.class, renderer, 3)).renderViewEntity instanceof EntityPlayer)
 				{
 					if(entityplayer.isSprinting()){
-						GL11.glTranslatef(0.F, ((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Cube's Edge Player")).tickRunningLeft * 0.8F, 0);
-						GL11.glRotatef(((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Cube's Edge Player")).tickRunningLeft * 20F, 0, 0, 0.4F);
+						GL11.glTranslatef(0, ((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Cube's Edge Player")).tickRunningLeft * 1.6F, -((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Cube's Edge Player")).tickRunningLeft * -0.5F);
+						GL11.glRotatef(-((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Cube's Edge Player")).tickRunningLeft * 80, 1, 0, 0);
+						GL11.glRotatef(((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Cube's Edge Player")).tickRunningLeft * 55, 0, 0, 1);
+						GL11.glRotatef(-((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Cube's Edge Player")).tickRunningLeft * 90, 0, 1, 0);
 					}
 				}
 			}

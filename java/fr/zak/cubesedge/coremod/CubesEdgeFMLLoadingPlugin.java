@@ -1,7 +1,5 @@
 package fr.zak.cubesedge.coremod;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.Map;
 
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin.MCVersion;
