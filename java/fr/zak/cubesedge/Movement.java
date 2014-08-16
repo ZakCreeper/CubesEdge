@@ -10,6 +10,6 @@ import cpw.mods.fml.relauncher.Side;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface Movement {
+	public String value();
 	public Side side() default Side.CLIENT;
-	public String name();
 }

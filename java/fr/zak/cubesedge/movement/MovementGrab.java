@@ -1,19 +1,19 @@
 package fr.zak.cubesedge.movement;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
+import net.minecraftforge.client.event.MouseEvent;
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
-import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import fr.zak.cubesedge.Movement;
+import fr.zak.cubesedge.MovementVar;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
 
-@Movement(name = "Grab")
-public class MovementGrab {
+@Movement("Grab")
+public class MovementGrab extends MovementVar{
 
 	public void control(EntityPlayerCustom playerCustom, EntityPlayer player, int heading){
 		if(!player.capabilities.isFlying && !playerCustom.isSneaking){
@@ -73,7 +73,7 @@ public class MovementGrab {
 				}
 			}
 			else if((Boolean)ObfuscationReflectionHelper.getPrivateValue(EntityLivingBase.class, (EntityLivingBase)player, 41) && playerCustom.isGrabbing){
-				player.motionY = 0.8D;
+				player.motionY = 0.55D;
 			}
 		}
 //		if(playerCustom.isGrabbing && !player.capabilities.isCreativeMode){
@@ -86,5 +86,12 @@ public class MovementGrab {
 //			}
 //			player.fallDistance = 0;
 //		}
+	}
+	
+	@SubscribeEvent
+	public void onClick(MouseEvent event){
+		if(((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Cube's Edge Player")).isGrabbing){
+			event.setCanceled(true);
+		}
 	}
 }

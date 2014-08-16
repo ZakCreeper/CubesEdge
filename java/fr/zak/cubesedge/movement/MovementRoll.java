@@ -9,16 +9,19 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
+import net.minecraftforge.event.entity.living.LivingFallEvent;
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import fr.zak.cubesedge.Movement;
+import fr.zak.cubesedge.MovementVar;
 import fr.zak.cubesedge.Util;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
 import fr.zak.cubesedge.packet.PacketPlayer;
 import fr.zak.cubesedge.renderer.EntityRendererCustom;
 
-@Movement(name = "Roll")
-public class MovementRoll {
+@Movement("Roll")
+public class MovementRoll extends MovementVar {
 
 	private EntityRenderer renderer, prevRenderer;
 	
@@ -90,6 +93,13 @@ public class MovementRoll {
 		}
 		if(!playerCustom.wasRolling){
 			playerCustom.wasRolling = playerCustom.isRolling;
+		}
+	}
+	
+	@SubscribeEvent
+	public void onFall(LivingFallEvent event){
+		if(event.entityLiving instanceof EntityPlayer && ((EntityPlayerCustom)event.entityLiving.getExtendedProperties("Cube's Edge Player")).isRolling){
+			event.distance = 0;
 		}
 	}
 }

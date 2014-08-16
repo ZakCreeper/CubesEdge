@@ -10,16 +10,19 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
+import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import fr.zak.cubesedge.Movement;
+import fr.zak.cubesedge.MovementVar;
 import fr.zak.cubesedge.Util;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
 import fr.zak.cubesedge.packet.PacketPlayer;
 import fr.zak.cubesedge.renderer.EntityRendererCustom;
 
-@Movement(name = "Slide")
-public class MovementSlide {
+@Movement("Slide")
+public class MovementSlide extends MovementVar {
 
 	private EntityRenderer renderer, prevRenderer;
 	
@@ -80,6 +83,13 @@ public class MovementSlide {
 		}
 		if(!playerCustom.wasSliding){
 			playerCustom.wasSliding = playerCustom.isSneaking;
+		}
+	}
+	
+	@SubscribeEvent
+	public void jump(LivingJumpEvent event){
+		if(event.entityLiving instanceof EntityPlayer && (((EntityPlayerCustom)event.entityLiving.getExtendedProperties("Cube's Edge Player")).isRolling || ((EntityPlayerCustom)event.entityLiving.getExtendedProperties("Cube's Edge Player")).isSneaking)){
+			event.entityLiving.motionY = 0;
 		}
 	}
 }

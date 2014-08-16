@@ -1,14 +1,22 @@
 package fr.zak.cubesedge.movement;
 
+import org.lwjgl.input.Keyboard;
+
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MathHelper;
+import cpw.mods.fml.client.registry.ClientRegistry;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
 import cpw.mods.fml.relauncher.Side;
 import fr.zak.cubesedge.Movement;
+import fr.zak.cubesedge.MovementVar;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
 
-@Movement(name = "Turn")
-public class MovementTurn {
+@Movement("Turn")
+public class MovementTurn extends MovementVar {
 
 	public void control(EntityPlayerCustom playerCustom, EntityPlayer player, int heading){
 		if(!player.capabilities.isFlying && !playerCustom.isSneaking){
@@ -70,4 +78,12 @@ public class MovementTurn {
 		}
 	}
 
+	private KeyBinding turn = new KeyBinding("Turn", Keyboard.KEY_APOSTROPHE, "Cube's Edge");
+	
+	@SubscribeEvent
+	public void key(KeyInputEvent event){
+		if(turn.isPressed() && !((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Cube's Edge Player")).isTurning){
+			((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Cube's Edge Player")).isTurning = true;
+		}
+	}
 }

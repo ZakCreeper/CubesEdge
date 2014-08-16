@@ -5,10 +5,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MathHelper;
 import cpw.mods.fml.relauncher.Side;
 import fr.zak.cubesedge.Movement;
+import fr.zak.cubesedge.MovementVar;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
 
-@Movement(name = "Wall jump")
-public class MovementWallJump {
+@Movement("Wall jump")
+public class MovementWallJump extends MovementVar {
 
 	public void control(EntityPlayerCustom playerCustom, EntityPlayer player, int heading){
 		if(!player.capabilities.isFlying && !playerCustom.isSneaking){

@@ -4,12 +4,12 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MathHelper;
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
-import cpw.mods.fml.relauncher.Side;
 import fr.zak.cubesedge.Movement;
+import fr.zak.cubesedge.MovementVar;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
 
-@Movement(name = "Jump")
-public class MovementJump {
+@Movement("Jump")
+public class MovementJump extends MovementVar{
 
 	public void control(EntityPlayerCustom playerCustom, EntityPlayer player, int heading){
 		if(!player.capabilities.isFlying && !playerCustom.isSneaking){
