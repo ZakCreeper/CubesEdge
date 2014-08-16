@@ -30,7 +30,6 @@ public class EntityPlayerCustom implements IExtendedEntityProperties {
 	public boolean[] grabbingDirections = {false, false, false, false};
 	private byte[] grabbingDirectionsByte = {0, 0, 0, 0}; 
 
-	public boolean beginingRunning = false;
 	public float tickRunningLeft = 0;
 	public float tickRunningRight = 0;
 	public boolean animRunnig = false;
@@ -80,7 +79,6 @@ public class EntityPlayerCustom implements IExtendedEntityProperties {
 			}
 		}
 		compound.setByteArray("grabbingDirections", this.grabbingDirectionsByte);
-		compound.setBoolean("beginingRunning", this.beginingRunning);
 		compound.setFloat("tickRunningLeft", this.tickRunningLeft);
 		compound.setFloat("tickRunningRight", this.tickRunningRight);
 		compound.setBoolean("animRunning", this.animRunnig);
@@ -126,7 +124,6 @@ public class EntityPlayerCustom implements IExtendedEntityProperties {
 				this.grabbingDirections[i] = true;
 			}
 		}
-		this.beginingRunning = compound.getBoolean("beginingRunning");
 		this.tickRunningLeft = compound.getFloat("tickRunningLeft");
 		this.tickRunningRight = compound.getFloat("tickRunningRight");
 		this.animRunnig = compound.getBoolean("animRunning");

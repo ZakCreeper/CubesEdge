@@ -20,43 +20,39 @@ public class MovementSprint extends MovementVar {
 	public void control(EntityPlayerCustom playerCustom, EntityPlayer player){
 		if(!playerCustom.animLeft && !playerCustom.animRight){
 			if(player.isSprinting()){
-				if(playerCustom.tickRunningRight < 0.5F && !playerCustom.beginingRunning){
-					playerCustom.tickRunningRight += (speed - 1) * 0.05;
+				if(playerCustom.tickRunningRight < 0.5F && !playerCustom.animRunnig){
+					playerCustom.tickRunningRight += 0.06;
 				}
-				if(playerCustom.tickRunningRight >= 0.5F && !playerCustom.beginingRunning){
-					playerCustom.beginingRunning = true;
-				}
-				if(playerCustom.beginingRunning){
+				if(playerCustom.tickRunningRight >= 0.5F && !playerCustom.animRunnig){
 					playerCustom.animRunnig = true;
 				}
 			}
 			else{
 				playerCustom.animRunnig = false;
-				playerCustom.beginingRunning = false;
 				playerCustom.tickRunningLeft = 0;
 				playerCustom.tickRunningRight = 0;
 			}
 			if(playerCustom.animRunnig){
 				if(playerCustom.tickRunningLeft < 0.5F && !playerCustom.backLeft){
-					playerCustom.tickRunningLeft += (speed - 1) * 0.2;
+					playerCustom.tickRunningLeft += 0.06;
 				}
 				if(playerCustom.tickRunningLeft >= 0.5F && !playerCustom.backLeft){
 					playerCustom.backLeft = true;
 				}
 				if(playerCustom.tickRunningLeft > 0 && playerCustom.backLeft){
-					playerCustom.tickRunningLeft -= (speed - 1) * 0.2;
+					playerCustom.tickRunningLeft -= 0.06;
 				}
 				if(playerCustom.tickRunningLeft <= 0 && playerCustom.backLeft){
 					playerCustom.backLeft = false;
 				}
 				if(playerCustom.tickRunningRight > 0 && !playerCustom.backRight){
-					playerCustom.tickRunningRight -= (speed - 1) * 0.2;
+					playerCustom.tickRunningRight -= 0.06;
 				}
 				if(playerCustom.tickRunningRight <= 0 && !playerCustom.backRight){
 					playerCustom.backRight = true;
 				}
 				if(playerCustom.tickRunningRight < 0.5F && playerCustom.backRight){
-					playerCustom.tickRunningRight += (speed - 1) * 0.2;
+					playerCustom.tickRunningRight += 0.06;
 				}
 				if(playerCustom.tickRunningRight >= 0.5F && playerCustom.backRight){
 					playerCustom.backRight = false;
