@@ -1,8 +1,11 @@
 package fr.zak.cubesedge.movement;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MathHelper;
+import net.minecraftforge.client.event.MouseEvent;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import fr.zak.cubesedge.Movement;
 import fr.zak.cubesedge.MovementVar;
@@ -188,6 +191,13 @@ public class MovementWallJump extends MovementVar {
 		if(playerCustom.isGrabbing){
 			playerCustom.animLeft = false;
 			playerCustom.animRight = false;
+		}
+	}
+	
+	@SubscribeEvent
+	public void onClick(MouseEvent event){
+		if(((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Cube's Edge Player")).animLeft || ((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Cube's Edge Player")).animRight){
+			event.setCanceled(true);
 		}
 	}
 }

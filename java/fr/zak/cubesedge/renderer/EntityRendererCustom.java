@@ -1,14 +1,7 @@
 package fr.zak.cubesedge.renderer;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
-import org.lwjgl.opengl.GL11;
-
-import fr.zak.cubesedge.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.EntityRenderer;
-import net.minecraft.entity.Entity;
 
 public class EntityRendererCustom extends EntityRenderer
 {

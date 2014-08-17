@@ -9,7 +9,9 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
+import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
+import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
@@ -39,13 +41,14 @@ public class MovementRoll extends MovementVar {
 				Util.channel.sendToServer(new PacketPlayer.CPacketPlayerRoll(true));
 			}
 			if(playerCustom.isRolling){
+				player.setSprinting(false);
 				KeyBinding.setKeyBindState(Minecraft.getMinecraft().gameSettings.keyBindForward.getKeyCode(), true);
 				KeyBinding.setKeyBindState(Minecraft.getMinecraft().gameSettings.keyBindLeft.getKeyCode(), false);
 				KeyBinding.setKeyBindState(Minecraft.getMinecraft().gameSettings.keyBindRight.getKeyCode(), false);
 				KeyBinding.setKeyBindState(Minecraft.getMinecraft().gameSettings.keyBindBack.getKeyCode(), false);
 				KeyBinding.setKeyBindState(Minecraft.getMinecraft().gameSettings.keyBindSneak.getKeyCode(), false);
-				player.motionZ *= 0.7;
-				player.motionX *= 0.7;
+				player.motionZ *= 0.3;
+				player.motionX *= 0.3;
 				if(playerCustom.rollingTime < 27){
 					float f2 = player.rotationPitch;
 					player.rotationPitch = (float)((double)player.rotationPitch + 10);
@@ -88,8 +91,8 @@ public class MovementRoll extends MovementVar {
 			// reset the renderer
 			KeyBinding.setKeyBindState(Minecraft.getMinecraft().gameSettings.keyBindSneak.getKeyCode(), false);
 			Minecraft.getMinecraft().entityRenderer = prevRenderer;
-			Util.forceSetSize(Entity.class, Minecraft.getMinecraft().thePlayer, 0.6F, 1.8F);
 			playerCustom.wasRolling = false;
+			Util.forceSetSize(Entity.class, Minecraft.getMinecraft().thePlayer, 0.6F, 1.8F);
 		}
 		if(!playerCustom.wasRolling){
 			playerCustom.wasRolling = playerCustom.isRolling;
@@ -100,6 +103,20 @@ public class MovementRoll extends MovementVar {
 	public void onFall(LivingFallEvent event){
 		if(event.entityLiving instanceof EntityPlayer && ((EntityPlayerCustom)event.entityLiving.getExtendedProperties("Cube's Edge Player")).isRolling){
 			event.distance = 0;
+		}
+	}
+	
+	@SubscribeEvent
+	public void jump(LivingJumpEvent event){
+		if(event.entityLiving instanceof EntityPlayer && ((EntityPlayerCustom)event.entityLiving.getExtendedProperties("Cube's Edge Player")).isRolling){
+			event.entityLiving.motionY = 0;
+		}
+	}
+	
+	@SubscribeEvent
+	public void onClick(MouseEvent event){
+		if(((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Cube's Edge Player")).isRolling){
+			event.setCanceled(true);
 		}
 	}
 }

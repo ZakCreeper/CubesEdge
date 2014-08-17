@@ -1060,6 +1060,7 @@ public class Patch {
 		{
 			GL11.glRotatef(entitylivingbase.prevRotationPitch + (entitylivingbase.rotationPitch - entitylivingbase.prevRotationPitch) * par1, 1.0F, 0.0F, 0.0F);
 			GL11.glRotatef(entitylivingbase.prevRotationYaw + (entitylivingbase.rotationYaw - entitylivingbase.prevRotationYaw) * par1 + 180.0F, 0.0F, 1.0F, 0.0F);
+			GL11.glRotatef((((EntityPlayerCustom)entitylivingbase.getExtendedProperties("Cube's Edge Player")).tickRunningLeft - ((EntityPlayerCustom)entitylivingbase.getExtendedProperties("Cube's Edge Player")).tickRunningRight) * 10, 0, 0, 1);
 		}
 
 		GL11.glTranslatef(0.0F, f1, 0.0F);

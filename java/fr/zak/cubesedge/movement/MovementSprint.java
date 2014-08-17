@@ -21,7 +21,7 @@ public class MovementSprint extends MovementVar {
 		if(!playerCustom.animLeft && !playerCustom.animRight){
 			if(player.isSprinting()){
 				if(playerCustom.tickRunningRight < 0.5F && !playerCustom.animRunnig){
-					playerCustom.tickRunningRight += 0.06;
+					playerCustom.tickRunningRight += 0.1;
 				}
 				if(playerCustom.tickRunningRight >= 0.5F && !playerCustom.animRunnig){
 					playerCustom.animRunnig = true;
@@ -34,25 +34,25 @@ public class MovementSprint extends MovementVar {
 			}
 			if(playerCustom.animRunnig){
 				if(playerCustom.tickRunningLeft < 0.5F && !playerCustom.backLeft){
-					playerCustom.tickRunningLeft += 0.06;
+					playerCustom.tickRunningLeft += 0.1;
 				}
 				if(playerCustom.tickRunningLeft >= 0.5F && !playerCustom.backLeft){
 					playerCustom.backLeft = true;
 				}
 				if(playerCustom.tickRunningLeft > 0 && playerCustom.backLeft){
-					playerCustom.tickRunningLeft -= 0.06;
+					playerCustom.tickRunningLeft -= 0.1;
 				}
 				if(playerCustom.tickRunningLeft <= 0 && playerCustom.backLeft){
 					playerCustom.backLeft = false;
 				}
 				if(playerCustom.tickRunningRight > 0 && !playerCustom.backRight){
-					playerCustom.tickRunningRight -= 0.06;
+					playerCustom.tickRunningRight -= 0.1;
 				}
 				if(playerCustom.tickRunningRight <= 0 && !playerCustom.backRight){
 					playerCustom.backRight = true;
 				}
 				if(playerCustom.tickRunningRight < 0.5F && playerCustom.backRight){
-					playerCustom.tickRunningRight += 0.06;
+					playerCustom.tickRunningRight += 0.1;
 				}
 				if(playerCustom.tickRunningRight >= 0.5F && playerCustom.backRight){
 					playerCustom.backRight = false;

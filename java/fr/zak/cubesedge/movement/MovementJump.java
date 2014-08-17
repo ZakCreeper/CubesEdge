@@ -3,7 +3,9 @@ package fr.zak.cubesedge.movement;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MathHelper;
+import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import fr.zak.cubesedge.Movement;
 import fr.zak.cubesedge.MovementVar;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
@@ -33,7 +35,7 @@ public class MovementJump extends MovementVar{
 				}
 				if(playerCustom.isJumping == 4){
 					if(playerCustom.jumpTime < 1){
-						player.motionY = 0.41999998688697815D;
+						player.motionY *= 1.25D;
 						playerCustom.jumpTime++;
 					}
 				}
@@ -47,4 +49,10 @@ public class MovementJump extends MovementVar{
 		}
 	}
 	
+	@SubscribeEvent
+	public void jump(LivingJumpEvent event){
+//		if(event.entityLiving instanceof EntityPlayer && ((EntityPlayerCustom)event.entityLiving.getExtendedProperties("Cube's Edge Player")).isJumping != 0){
+//			event.entityLiving.motionY = 0;
+//		}
+	}
 }
