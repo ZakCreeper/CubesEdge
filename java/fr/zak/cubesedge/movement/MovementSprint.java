@@ -21,7 +21,9 @@ public class MovementSprint extends MovementVar {
 		if(!playerCustom.animLeft && !playerCustom.animRight){
 			if(player.isSprinting()){
 				if(playerCustom.tickRunningRight < 0.5F && !playerCustom.animRunnig){
-					playerCustom.tickRunningRight += 0.1;
+					for(int i = 0; i < 2; i++){
+						playerCustom.tickRunningRight += 0.05;
+					}
 				}
 				if(playerCustom.tickRunningRight >= 0.5F && !playerCustom.animRunnig){
 					playerCustom.animRunnig = true;
@@ -34,30 +36,42 @@ public class MovementSprint extends MovementVar {
 			}
 			if(playerCustom.animRunnig){
 				if(playerCustom.tickRunningLeft < 0.5F && !playerCustom.backLeft){
-					playerCustom.tickRunningLeft += 0.1;
+					for(int i = 0; i < 2; i++){
+						playerCustom.tickRunningLeft += 0.05;
+					}
 				}
 				if(playerCustom.tickRunningLeft >= 0.5F && !playerCustom.backLeft){
 					playerCustom.backLeft = true;
 				}
 				if(playerCustom.tickRunningLeft > 0 && playerCustom.backLeft){
-					playerCustom.tickRunningLeft -= 0.1;
+					for(int i = 0; i < 2; i++){
+						playerCustom.tickRunningLeft -= 0.05;
+					}
 				}
 				if(playerCustom.tickRunningLeft <= 0 && playerCustom.backLeft){
 					playerCustom.backLeft = false;
 				}
 				if(playerCustom.tickRunningRight > 0 && !playerCustom.backRight){
-					playerCustom.tickRunningRight -= 0.1;
+					for(int i = 0; i < 2; i++){
+						playerCustom.tickRunningRight -= 0.05;
+					}
 				}
 				if(playerCustom.tickRunningRight <= 0 && !playerCustom.backRight){
 					playerCustom.backRight = true;
 				}
 				if(playerCustom.tickRunningRight < 0.5F && playerCustom.backRight){
-					playerCustom.tickRunningRight += 0.1;
+					for(int i = 0; i < 2; i++){
+						playerCustom.tickRunningRight += 0.05;
+					}
 				}
 				if(playerCustom.tickRunningRight >= 0.5F && playerCustom.backRight){
 					playerCustom.backRight = false;
 				}
 			}
+		}
+		else if (playerCustom.animLeft || playerCustom.animRight){
+			playerCustom.tickRunningLeft = 0;
+			playerCustom.tickRunningRight = 0;
 		}
 	}
 
@@ -74,11 +88,11 @@ public class MovementSprint extends MovementVar {
 	}
 
 	public static float round(float d, int decimalPlace) {
-        BigDecimal bd = new BigDecimal(Float.toString(d));
-        bd = bd.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);
-        return bd.floatValue();
-    }
-	
+		BigDecimal bd = new BigDecimal(Float.toString(d));
+		bd = bd.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);
+		return bd.floatValue();
+	}
+
 	private float speed = 1;
 
 	@SubscribeEvent

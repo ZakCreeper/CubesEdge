@@ -21,7 +21,7 @@ public class EntityPlayerCustom implements IExtendedEntityProperties {
 	public boolean isJumpingOnWall = false;
 	
 	public boolean prevRolling = false;
-	public byte rollingTime = 0;
+	public float lastPitch = 0;
 	public boolean isRolling = false;
 	public boolean wasRolling = false;
 
@@ -65,7 +65,7 @@ public class EntityPlayerCustom implements IExtendedEntityProperties {
 		compound.setByte("jumpTime", this.jumpTime);
 		compound.setBoolean("isJumpingOnWall", this.isJumpingOnWall);
 		compound.setBoolean("prevRolling", this.prevRolling);
-		compound.setByte("rollingTime", this.rollingTime);
+		compound.setFloat("lastPitch", this.lastPitch);
 		compound.setBoolean("isRolling", this.isRolling);
 		compound.setBoolean("wasRolling", this.wasRolling);
 		compound.setBoolean("isGrabbing", this.isGrabbing);
@@ -111,7 +111,7 @@ public class EntityPlayerCustom implements IExtendedEntityProperties {
 		this.jumpTime = compound.getByte("jumpTime");
 		this.isJumpingOnWall = compound.getBoolean("isJumpingOnWall");
 		this.prevRolling = compound.getBoolean("prevRolling");
-		this.rollingTime = compound.getByte("rollingTime");
+		this.lastPitch = compound.getFloat("lastPitch");
 		this.isRolling = compound.getBoolean("isRolling");
 		this.wasRolling = compound.getBoolean("wasRolling");
 		this.isGrabbing = compound.getBoolean("isGrabbing");

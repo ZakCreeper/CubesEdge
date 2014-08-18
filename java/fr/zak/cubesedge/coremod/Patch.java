@@ -62,9 +62,12 @@ public class Patch {
 					entity.rotationPitch = -90.0F;
 				}
 
-				if (entity.rotationPitch > 90.0F)
+				if (entity.rotationPitch > 90.0F && entity.rotationPitch < 360)
 				{
 					entity.rotationPitch = 90.0F;
+				}
+				if(entity.rotationPitch >= 360){
+					entity.rotationPitch -= 360;
 				}
 			}
 			else{

@@ -47,17 +47,12 @@ public class MovementRoll extends MovementVar {
 				KeyBinding.setKeyBindState(Minecraft.getMinecraft().gameSettings.keyBindRight.getKeyCode(), false);
 				KeyBinding.setKeyBindState(Minecraft.getMinecraft().gameSettings.keyBindBack.getKeyCode(), false);
 				KeyBinding.setKeyBindState(Minecraft.getMinecraft().gameSettings.keyBindSneak.getKeyCode(), false);
-				player.motionZ *= 0.3;
-				player.motionX *= 0.3;
-				if(playerCustom.rollingTime < 27){
-					float f2 = player.rotationPitch;
-					player.rotationPitch = (float)((double)player.rotationPitch + 10);
-					player.prevRotationPitch += player.rotationPitch - f2;
-					playerCustom.rollingTime++;
-				}
-				if(playerCustom.rollingTime == 27){
-					player.rotationPitch = 0F;
-					playerCustom.rollingTime = 0;
+				player.motionZ *= 0.9;
+				player.motionX *= 0.9;
+				float f2 = player.rotationPitch;
+				player.rotationPitch = (float)((double)player.rotationPitch + 30);
+				player.prevRotationPitch += player.rotationPitch - f2;
+				if(player.rotationPitch >= 360){
 					playerCustom.prevRolling = false;
 					playerCustom.isRolling = false;
 					Util.channel.sendToServer(new PacketPlayer.CPacketPlayerRoll(false));
@@ -81,13 +76,14 @@ public class MovementRoll extends MovementVar {
 			if (renderer == null) {
 				renderer = new EntityRendererCustom(Minecraft.getMinecraft());
 			}
+			System.out.println("nlk");
 			if (Minecraft.getMinecraft().entityRenderer != renderer) {
 				// be sure to store the previous renderer
 				prevRenderer = Minecraft.getMinecraft().entityRenderer;
 				Minecraft.getMinecraft().entityRenderer = renderer;
 			}
-			Util.forceSetSize(Entity.class, Minecraft.getMinecraft().thePlayer, 0.6F, 0.6F);
 		} else if (prevRenderer != null && Minecraft.getMinecraft().entityRenderer != prevRenderer && Minecraft.getMinecraft().theWorld.getBlock(MathHelper.floor_double(Minecraft.getMinecraft().thePlayer.posX), MathHelper.floor_double(Minecraft.getMinecraft().thePlayer.posY), MathHelper.floor_double(Minecraft.getMinecraft().thePlayer.posZ)) == Blocks.air) {
+			System.out.println("fesf");
 			// reset the renderer
 			KeyBinding.setKeyBindState(Minecraft.getMinecraft().gameSettings.keyBindSneak.getKeyCode(), false);
 			Minecraft.getMinecraft().entityRenderer = prevRenderer;
