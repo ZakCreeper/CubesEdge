@@ -90,7 +90,7 @@ public class MovementSprint extends MovementVar {
 				if (playerCustom.tickRunningRight < 0.5F
 						&& !playerCustom.animRunnig) {
 					for (int i = 0; i < 2; i++) {
-						playerCustom.tickRunningRight += 0.05;
+						playerCustom.tickRunningRight += 0.015;
 					}
 				}
 				if (playerCustom.tickRunningRight >= 0.5F
@@ -106,7 +106,7 @@ public class MovementSprint extends MovementVar {
 				if (playerCustom.tickRunningLeft < 0.5F
 						&& !playerCustom.backLeft) {
 					for (int i = 0; i < 2; i++) {
-						playerCustom.tickRunningLeft += 0.05;
+						playerCustom.tickRunningLeft += 0.015;
 					}
 				}
 				if (playerCustom.tickRunningLeft >= 0.5F
@@ -115,7 +115,7 @@ public class MovementSprint extends MovementVar {
 				}
 				if (playerCustom.tickRunningLeft > 0 && playerCustom.backLeft) {
 					for (int i = 0; i < 2; i++) {
-						playerCustom.tickRunningLeft -= 0.05;
+						playerCustom.tickRunningLeft -= 0.015;
 					}
 				}
 				if (playerCustom.tickRunningLeft <= 0 && playerCustom.backLeft) {
@@ -124,7 +124,7 @@ public class MovementSprint extends MovementVar {
 				if (playerCustom.tickRunningRight > 0
 						&& !playerCustom.backRight) {
 					for (int i = 0; i < 2; i++) {
-						playerCustom.tickRunningRight -= 0.05;
+						playerCustom.tickRunningRight -= 0.015;
 					}
 				}
 				if (playerCustom.tickRunningRight <= 0
@@ -134,7 +134,7 @@ public class MovementSprint extends MovementVar {
 				if (playerCustom.tickRunningRight < 0.5F
 						&& playerCustom.backRight) {
 					for (int i = 0; i < 2; i++) {
-						playerCustom.tickRunningRight += 0.05;
+						playerCustom.tickRunningRight += 0.015;
 					}
 				}
 				if (playerCustom.tickRunningRight >= 0.5F

@@ -1516,7 +1516,7 @@ public class Patch {
 			GL11.glRotated(
 					(((EntityPlayerCustom) entitylivingbase
 							.getExtendedProperties("Cube's Edge Player")).tickRunningLeft - ((EntityPlayerCustom) entitylivingbase
-							.getExtendedProperties("Cube's Edge Player")).tickRunningRight) * 10,
+							.getExtendedProperties("Cube's Edge Player")).tickRunningRight) * 7,
 					0, 0, 1);
 		}
 		GL11.glTranslatef(0.0F, f1, 0.0F);
