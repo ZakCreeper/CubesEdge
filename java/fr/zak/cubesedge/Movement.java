@@ -11,5 +11,6 @@ import cpw.mods.fml.relauncher.Side;
 @Target(ElementType.TYPE)
 public @interface Movement {
 	public String value();
+
 	public Side side() default Side.CLIENT;
 }

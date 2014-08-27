@@ -10,6 +10,8 @@ import net.minecraft.util.MathHelper;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import fr.zak.cubesedge.Movement;
 import fr.zak.cubesedge.MovementVar;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
@@ -17,73 +19,28 @@ import fr.zak.cubesedge.entity.EntityPlayerCustom;
 @Movement("Sprint")
 public class MovementSprint extends MovementVar {
 
-	public void control(EntityPlayerCustom playerCustom, EntityPlayer player){
-		if(!playerCustom.animLeft && !playerCustom.animRight){
-			if(player.isSprinting()){
-				if(playerCustom.tickRunningRight < 0.5F && !playerCustom.animRunnig){
-					for(int i = 0; i < 2; i++){
-						playerCustom.tickRunningRight += 0.05;
-					}
-				}
-				if(playerCustom.tickRunningRight >= 0.5F && !playerCustom.animRunnig){
-					playerCustom.animRunnig = true;
-				}
-			}
-			else{
-				playerCustom.animRunnig = false;
-				playerCustom.tickRunningLeft = 0;
-				playerCustom.tickRunningRight = 0;
-			}
-			if(playerCustom.animRunnig){
-				if(playerCustom.tickRunningLeft < 0.5F && !playerCustom.backLeft){
-					for(int i = 0; i < 2; i++){
-						playerCustom.tickRunningLeft += 0.05;
-					}
-				}
-				if(playerCustom.tickRunningLeft >= 0.5F && !playerCustom.backLeft){
-					playerCustom.backLeft = true;
-				}
-				if(playerCustom.tickRunningLeft > 0 && playerCustom.backLeft){
-					for(int i = 0; i < 2; i++){
-						playerCustom.tickRunningLeft -= 0.05;
-					}
-				}
-				if(playerCustom.tickRunningLeft <= 0 && playerCustom.backLeft){
-					playerCustom.backLeft = false;
-				}
-				if(playerCustom.tickRunningRight > 0 && !playerCustom.backRight){
-					for(int i = 0; i < 2; i++){
-						playerCustom.tickRunningRight -= 0.05;
-					}
-				}
-				if(playerCustom.tickRunningRight <= 0 && !playerCustom.backRight){
-					playerCustom.backRight = true;
-				}
-				if(playerCustom.tickRunningRight < 0.5F && playerCustom.backRight){
-					for(int i = 0; i < 2; i++){
-						playerCustom.tickRunningRight += 0.05;
-					}
-				}
-				if(playerCustom.tickRunningRight >= 0.5F && playerCustom.backRight){
-					playerCustom.backRight = false;
-				}
-			}
-		}
-		else if (playerCustom.animLeft || playerCustom.animRight){
-			playerCustom.tickRunningLeft = 0;
-			playerCustom.tickRunningRight = 0;
-		}
+	@Override
+	public void control(EntityPlayerCustom playerCustom, EntityPlayer player) {
 	}
 
 	@SubscribeEvent
-	public void onRenderInGame(RenderGameOverlayEvent.Post event){
-		if(event.type == RenderGameOverlayEvent.ElementType.ALL){
-			this.drawString(Minecraft.getMinecraft().fontRenderer, "Vitesse : " + round((MathHelper.abs((float)Minecraft.getMinecraft().thePlayer.motionX) + MathHelper.abs((float) Minecraft.getMinecraft().thePlayer.motionZ)) * 20, 1) + " blocks/s", event.resolution.getScaledWidth() - 115, event.resolution.getScaledHeight() - 15, new Color(255, 255, 255).getRGB());
+	public void onRenderInGame(RenderGameOverlayEvent.Post event) {
+		if (event.type == RenderGameOverlayEvent.ElementType.ALL) {
+			this.drawString(
+					Minecraft.getMinecraft().fontRenderer,
+					"Speed : "
+							+ round((MathHelper.abs((float) Minecraft
+									.getMinecraft().thePlayer.motionX) + MathHelper
+									.abs((float) Minecraft.getMinecraft().thePlayer.motionZ)) * 20,
+									1) + " blocks/s", event.resolution
+							.getScaledWidth() - 115, event.resolution
+							.getScaledHeight() - 15, new Color(255, 255, 255)
+							.getRGB());
 		}
 	}
 
-	public void drawString(FontRenderer par1FontRenderer, String par2Str, int par3, int par4, int par5)
-	{
+	public void drawString(FontRenderer par1FontRenderer, String par2Str,
+			int par3, int par4, int par5) {
 		par1FontRenderer.drawStringWithShadow(par2Str, par3, par4, par5);
 	}
 
@@ -96,33 +53,99 @@ public class MovementSprint extends MovementVar {
 	private float speed = 1;
 
 	@SubscribeEvent
-	public void walk(LivingUpdateEvent event){
-		if(event.entityLiving instanceof EntityPlayer && event.entityLiving != null){
-			if(((EntityPlayer)event.entityLiving).isSprinting()){
-				if(speed < 1.15){
+	public void walk(LivingUpdateEvent event) {
+		if (event.entityLiving instanceof EntityPlayer
+				&& event.entityLiving != null) {
+			if (((EntityPlayer) event.entityLiving).isSprinting()) {
+				if (speed < 1.15) {
 					speed += 0.005F;
 				}
-				if(speed < 1.20 && speed >= 1.15){
+				if (speed < 1.20 && speed >= 1.15) {
 					speed += 0.002F;
 				}
-				if(speed < 1.30 && speed >= 1.20){
+				if (speed < 1.30 && speed >= 1.20) {
 					speed += 0.001F;
 				}
-				if(speed < 1.32 && speed >= 1.30){
+				if (speed < 1.32 && speed >= 1.30) {
 					speed += 0.0002F;
 				}
-				if(((EntityPlayer)event.entityLiving).onGround){
-					((EntityPlayer)event.entityLiving).motionX *= speed;
-					((EntityPlayer)event.entityLiving).motionZ *= speed;
+				if (((EntityPlayer) event.entityLiving).onGround) {
+					((EntityPlayer) event.entityLiving).motionX *= speed;
+					((EntityPlayer) event.entityLiving).motionZ *= speed;
 				}
-				if(!((EntityPlayer)event.entityLiving).onGround){
-					((EntityPlayer)event.entityLiving).motionX *= ((double)((speed - 1) / 2)) + 0.9;
-					((EntityPlayer)event.entityLiving).motionZ *= ((double)((speed - 1) / 2)) + 0.9;
+				if (!((EntityPlayer) event.entityLiving).onGround) {
+					((EntityPlayer) event.entityLiving).motionX *= ((double) ((speed - 1) / 2)) + 0.9;
+					((EntityPlayer) event.entityLiving).motionZ *= ((double) ((speed - 1) / 2)) + 0.9;
 				}
-			}
-			else{
+			} else {
 				speed = 1;
 			}
 		}
+	}
+
+	@Override
+	public void renderTick(EntityPlayerCustom playerCustom) {
+		if (!playerCustom.animLeft && !playerCustom.animRight) {
+			if (Minecraft.getMinecraft().thePlayer.isSprinting()) {
+				if (playerCustom.tickRunningRight < 0.5F
+						&& !playerCustom.animRunnig) {
+					for (int i = 0; i < 2; i++) {
+						playerCustom.tickRunningRight += 0.05;
+					}
+				}
+				if (playerCustom.tickRunningRight >= 0.5F
+						&& !playerCustom.animRunnig) {
+					playerCustom.animRunnig = true;
+				}
+			} else {
+				playerCustom.animRunnig = false;
+				playerCustom.tickRunningLeft = 0;
+				playerCustom.tickRunningRight = 0;
+			}
+			if (playerCustom.animRunnig) {
+				if (playerCustom.tickRunningLeft < 0.5F
+						&& !playerCustom.backLeft) {
+					for (int i = 0; i < 2; i++) {
+						playerCustom.tickRunningLeft += 0.05;
+					}
+				}
+				if (playerCustom.tickRunningLeft >= 0.5F
+						&& !playerCustom.backLeft) {
+					playerCustom.backLeft = true;
+				}
+				if (playerCustom.tickRunningLeft > 0 && playerCustom.backLeft) {
+					for (int i = 0; i < 2; i++) {
+						playerCustom.tickRunningLeft -= 0.05;
+					}
+				}
+				if (playerCustom.tickRunningLeft <= 0 && playerCustom.backLeft) {
+					playerCustom.backLeft = false;
+				}
+				if (playerCustom.tickRunningRight > 0
+						&& !playerCustom.backRight) {
+					for (int i = 0; i < 2; i++) {
+						playerCustom.tickRunningRight -= 0.05;
+					}
+				}
+				if (playerCustom.tickRunningRight <= 0
+						&& !playerCustom.backRight) {
+					playerCustom.backRight = true;
+				}
+				if (playerCustom.tickRunningRight < 0.5F
+						&& playerCustom.backRight) {
+					for (int i = 0; i < 2; i++) {
+						playerCustom.tickRunningRight += 0.05;
+					}
+				}
+				if (playerCustom.tickRunningRight >= 0.5F
+						&& playerCustom.backRight) {
+					playerCustom.backRight = false;
+				}
+			}
+		} else if (playerCustom.animLeft || playerCustom.animRight) {
+			playerCustom.tickRunningLeft = 0;
+			playerCustom.tickRunningRight = 0;
+		}
+
 	}
 }

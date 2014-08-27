@@ -8,10 +8,11 @@ import fr.zak.cubesedge.entity.EntityPlayerCustom;
 public class ConstructEvent {
 
 	@SubscribeEvent
-	public void construct(EntityConstructing event){
-		if(event.entity != null && event.entity instanceof EntityPlayer){
-			((EntityPlayer)event.entity).registerExtendedProperties("Cube's Edge Player", new EntityPlayerCustom());
+	public void construct(EntityConstructing event) {
+		if (event.entity != null && event.entity instanceof EntityPlayer) {
+			((EntityPlayer) event.entity).registerExtendedProperties(
+					"Cube's Edge Player", new EntityPlayerCustom());
 		}
 	}
-	
+
 }

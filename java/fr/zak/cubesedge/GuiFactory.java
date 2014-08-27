@@ -7,11 +7,11 @@ import net.minecraft.client.gui.GuiScreen;
 import cpw.mods.fml.client.IModGuiFactory;
 import fr.zak.cubesedge.gui.GuiConfig;
 
-public class GuiFactory implements IModGuiFactory{
+public class GuiFactory implements IModGuiFactory {
 
 	@Override
 	public void initialize(Minecraft minecraftInstance) {
-		
+
 	}
 
 	@Override

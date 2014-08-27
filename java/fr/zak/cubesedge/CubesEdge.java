@@ -40,13 +40,14 @@ import fr.zak.cubesedge.proxys.CommonProxy;
 public class CubesEdge {
 
 	public boolean isMovementDisabled = false;
-	
+
 	@SidedProxy(clientSide = "fr.zak.cubesedge.proxys.ClientProxy", serverSide = "fr.zak.cubesedge.proxys.CommonProxy")
 	public static CommonProxy proxy;
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
-		Util.cfg = new Configuration(new File(Loader.instance().getConfigDir(), "cube's edge.cfg"));
+		Util.cfg = new Configuration(new File(Loader.instance().getConfigDir(),
+				"cube's edge.cfg"));
 		Util.cfg.load();
 		Util.detectObfuscation();
 	}
@@ -64,16 +65,25 @@ public class CubesEdge {
 		proxy.registerRenderThings();
 		MinecraftForge.EVENT_BUS.register(new ConstructEvent());
 		Util.channel = NetworkRegistry.INSTANCE.newSimpleChannel("cubesedge");
-		Util.channel.registerMessage(PacketPlayer.CPacketPlayerSneak.Handler.class, PacketPlayer.CPacketPlayerSneak.class, 0, Side.SERVER);
-		Util.channel.registerMessage(PacketPlayer.CPacketPlayerRoll.Handler.class, PacketPlayer.CPacketPlayerRoll.class, 1, Side.SERVER);
+		Util.channel.registerMessage(
+				PacketPlayer.CPacketPlayerSneak.Handler.class,
+				PacketPlayer.CPacketPlayerSneak.class, 0, Side.SERVER);
+		Util.channel.registerMessage(
+				PacketPlayer.CPacketPlayerRoll.Handler.class,
+				PacketPlayer.CPacketPlayerRoll.class, 1, Side.SERVER);
 	}
 
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
 		Iterator<Block> i = Block.blockRegistry.iterator();
-		while(i.hasNext()){
+		while (i.hasNext()) {
 			Block block = i.next();
-			if(block.getBlockBoundsMaxX() == 1.0D && block.getBlockBoundsMaxY() == 1.0D && block.getBlockBoundsMaxZ() == 1.0D && block.getBlockBoundsMinX() == 0.0D && block.getBlockBoundsMinY() == 0.0D && block.getBlockBoundsMinZ() == 0.0D){
+			if (block.getBlockBoundsMaxX() == 1.0D
+					&& block.getBlockBoundsMaxY() == 1.0D
+					&& block.getBlockBoundsMaxZ() == 1.0D
+					&& block.getBlockBoundsMinX() == 0.0D
+					&& block.getBlockBoundsMinY() == 0.0D
+					&& block.getBlockBoundsMinZ() == 0.0D) {
 				Util.cubes.add(block);
 			}
 		}

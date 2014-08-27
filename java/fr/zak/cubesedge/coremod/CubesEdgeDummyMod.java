@@ -9,7 +9,7 @@ import cpw.mods.fml.common.LoadController;
 import cpw.mods.fml.common.ModMetadata;
 import fr.zak.cubesedge.Util;
 
-public class CubesEdgeDummyMod extends DummyModContainer{
+public class CubesEdgeDummyMod extends DummyModContainer {
 
 	public CubesEdgeDummyMod() {
 
@@ -17,7 +17,9 @@ public class CubesEdgeDummyMod extends DummyModContainer{
 		ModMetadata meta = getMetadata();
 		meta.modId = "cubesedgecore";
 		meta.name = "Cube's Edge Core";
-		meta.version = Util.VERSION; //String.format("%d.%d.%d.%d", majorVersion, minorVersion, revisionVersion, buildVersion);
+		meta.version = Util.VERSION; // String.format("%d.%d.%d.%d",
+										// majorVersion, minorVersion,
+										// revisionVersion, buildVersion);
 		meta.authorList = Arrays.asList("Zak");
 		meta.description = "";
 		meta.updateUrl = "";
@@ -27,10 +29,9 @@ public class CubesEdgeDummyMod extends DummyModContainer{
 	}
 
 	@Override
-    public boolean registerBus(EventBus bus, LoadController controller)
-    {
+	public boolean registerBus(EventBus bus, LoadController controller) {
 		bus.register(this);
-        return true;
-    }
-	
+		return true;
+	}
+
 }

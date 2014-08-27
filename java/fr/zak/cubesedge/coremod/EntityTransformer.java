@@ -15,38 +15,44 @@ import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
-public class EntityTransformer implements IClassTransformer{
+public class EntityTransformer implements IClassTransformer {
 
 	private String methodSetAnglesName, methodIsEntityInsideOpaqueBlockName;
 	private static String className;
 
 	@Override
-	public byte[] transform(String name, String transformedName, byte[] basicClass) {
+	public byte[] transform(String name, String transformedName,
+			byte[] basicClass) {
 		if (transformedName.equals("net.minecraft.entity.Entity")) {
 			System.out.println("Cube\'s Edge Core - Patching class Entity...");
-			methodSetAnglesName = CubesEdgeFMLLoadingPlugin.obfuscation ? "c" : "setAngles";
-			methodIsEntityInsideOpaqueBlockName = CubesEdgeFMLLoadingPlugin.obfuscation ? "aa" : "isEntityInsideOpaqueBlock";
-			className = CubesEdgeFMLLoadingPlugin.obfuscation ? "qn" : "net/minecraft/entity/Entity";
+			methodSetAnglesName = CubesEdgeFMLLoadingPlugin.obfuscation ? "c"
+					: "setAngles";
+			methodIsEntityInsideOpaqueBlockName = CubesEdgeFMLLoadingPlugin.obfuscation ? "aa"
+					: "isEntityInsideOpaqueBlock";
+			className = CubesEdgeFMLLoadingPlugin.obfuscation ? "qn"
+					: "net/minecraft/entity/Entity";
 
 			ClassReader cr = new ClassReader(basicClass);
 			ClassNode cn = new ClassNode(Opcodes.ASM4);
 			cr.accept(cn, 0);
 			for (Object mnObj : cn.methods) {
-				MethodNode mn = (MethodNode)mnObj;
-				if (mn.name.equals(methodSetAnglesName) && mn.desc.equals("(FF)V")) {
+				MethodNode mn = (MethodNode) mnObj;
+				if (mn.name.equals(methodSetAnglesName)
+						&& mn.desc.equals("(FF)V")) {
 					patchSetAnglesMethod(mn);
 				}
-				if (mn.name.equals(methodIsEntityInsideOpaqueBlockName) && mn.desc.equals("()Z")) {
+				if (mn.name.equals(methodIsEntityInsideOpaqueBlockName)
+						&& mn.desc.equals("()Z")) {
 					patchIsEntityInsideOpaqueBlockMethod(mn);
 				}
 			}
 			ClassWriter cw = new ClassWriter(0);
 			cn.accept(cw);
 
-			System.out.println("Cube\'s Edge Core - Patching class Entity done.");
+			System.out
+					.println("Cube\'s Edge Core - Patching class Entity done.");
 			return cw.toByteArray();
-		}
-		else{
+		} else {
 			return basicClass;
 		}
 	}
@@ -59,23 +65,26 @@ public class EntityTransformer implements IClassTransformer{
 		newList.add(new VarInsnNode(Opcodes.FLOAD, 1));
 		newList.add(new VarInsnNode(Opcodes.FLOAD, 2));
 		newList.add(new VarInsnNode(Opcodes.ALOAD, 0));
-		newList.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "fr/zak/cubesedge/coremod/Patch", "entitySetAnglesPatch"
-				, "(FFL" + className + ";)V"));
+		newList.add(new MethodInsnNode(Opcodes.INVOKESTATIC,
+				"fr/zak/cubesedge/coremod/Patch", "entitySetAnglesPatch",
+				"(FFL" + className + ";)V"));
 		newList.add(new InsnNode(Opcodes.RETURN));
 
 		mn.instructions = newList;
-	}	
+	}
 
 	private static void patchIsEntityInsideOpaqueBlockMethod(MethodNode mn) {
 
-		System.out.println("\tPatching method isEntityInsideOpaqueBlock in Entity");
+		System.out
+				.println("\tPatching method isEntityInsideOpaqueBlock in Entity");
 		InsnList newList = new InsnList();
 
 		newList.add(new VarInsnNode(Opcodes.ALOAD, 0));
-		newList.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "fr/zak/cubesedge/coremod/Patch", "isEntityInsideOpaqueBlockPatch"
-				, "(L" + className + ";)Z"));
+		newList.add(new MethodInsnNode(Opcodes.INVOKESTATIC,
+				"fr/zak/cubesedge/coremod/Patch",
+				"isEntityInsideOpaqueBlockPatch", "(L" + className + ";)Z"));
 		newList.add(new InsnNode(Opcodes.IRETURN));
 
 		mn.instructions = newList;
-	}	
+	}
 }

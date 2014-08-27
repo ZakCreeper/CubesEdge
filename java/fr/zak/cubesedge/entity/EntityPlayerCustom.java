@@ -6,20 +6,20 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
 
 public class EntityPlayerCustom implements IExtendedEntityProperties {
-	
+
 	public byte lastLightValue;
-	
+
 	public boolean wasSneaking = false;
-	
+
 	public float prevRotationYaw = 0;
 	public float prevRotationPitch = 0;
 	public float rotationYaw = 0;
 	public float rotationPitch = 0;
-	
+
 	public byte isJumping = 0;
 	public byte jumpTime = 0;
 	public boolean isJumpingOnWall = false;
-	
+
 	public boolean prevRolling = false;
 	public float lastPitch = 0;
 	public boolean isRolling = false;
@@ -27,8 +27,8 @@ public class EntityPlayerCustom implements IExtendedEntityProperties {
 
 	public boolean isGrabbing = false;
 	public boolean grabbingDamage = false;
-	public boolean[] grabbingDirections = {false, false, false, false};
-	private byte[] grabbingDirectionsByte = {0, 0, 0, 0}; 
+	public boolean[] grabbingDirections = { false, false, false, false };
+	private byte[] grabbingDirectionsByte = { 0, 0, 0, 0 };
 
 	public float tickRunningLeft = 0;
 	public float tickRunningRight = 0;
@@ -43,16 +43,16 @@ public class EntityPlayerCustom implements IExtendedEntityProperties {
 	public boolean wallJump = false;
 	public boolean animRight = false;
 	public boolean animLeft = false;
-	
+
 	public boolean isSneaking = false;
-	public byte sneakTime = 0; 
+	public byte sneakTime = 0;
 	public boolean wasSprinting = false;
-    public boolean wasSliding = false;
-	
+	public boolean wasSliding = false;
+
 	public boolean isTurning = false;
 	public boolean isTurningOnWall = false;
 	public byte turningTime = 0;
-	
+
 	@Override
 	public void saveNBTData(NBTTagCompound compound) {
 		compound.setByte("lastLightValue", this.lastLightValue);
@@ -70,11 +70,11 @@ public class EntityPlayerCustom implements IExtendedEntityProperties {
 		compound.setBoolean("wasRolling", this.wasRolling);
 		compound.setBoolean("isGrabbing", this.isGrabbing);
 		compound.setBoolean("grabbingDamage", this.grabbingDamage);
-		for(int i = 0; i < this.grabbingDirections.length; i++){
-			if(this.grabbingDirections[i]){
+		for (int i = 0; i < this.grabbingDirections.length; i++) {
+			if (this.grabbingDirections[i]) {
 				this.grabbingDirectionsByte[i] = 1;
 			}
-			if(!this.grabbingDirections[i]){
+			if (!this.grabbingDirections[i]) {
 				this.grabbingDirectionsByte[i] = 0;
 			}
 		}
@@ -116,11 +116,11 @@ public class EntityPlayerCustom implements IExtendedEntityProperties {
 		this.wasRolling = compound.getBoolean("wasRolling");
 		this.isGrabbing = compound.getBoolean("isGrabbing");
 		this.grabbingDamage = compound.getBoolean("grabbingDamage");
-		for(int i = 0; i < compound.getByteArray("grabbingDirections").length; i++){
-			if(compound.getByteArray("grabbingDirections")[i] == 0){
+		for (int i = 0; i < compound.getByteArray("grabbingDirections").length; i++) {
+			if (compound.getByteArray("grabbingDirections")[i] == 0) {
 				this.grabbingDirections[i] = false;
 			}
-			if(compound.getByteArray("grabbingDirections")[i] == 1){
+			if (compound.getByteArray("grabbingDirections")[i] == 1) {
 				this.grabbingDirections[i] = true;
 			}
 		}
@@ -146,6 +146,6 @@ public class EntityPlayerCustom implements IExtendedEntityProperties {
 
 	@Override
 	public void init(Entity entity, World world) {
-		
+
 	}
 }
