@@ -33,9 +33,9 @@ public class MovementSprint extends MovementVar {
 									.getMinecraft().thePlayer.motionX) + MathHelper
 									.abs((float) Minecraft.getMinecraft().thePlayer.motionZ)) * 20,
 									1) + " blocks/s", event.resolution
-							.getScaledWidth() - 115, event.resolution
-							.getScaledHeight() - 15, new Color(255, 255, 255)
-							.getRGB());
+									.getScaledWidth() - 115, event.resolution
+									.getScaledHeight() - 15, new Color(255, 255, 255)
+					.getRGB());
 		}
 	}
 
@@ -85,13 +85,12 @@ public class MovementSprint extends MovementVar {
 
 	@Override
 	public void renderTick(EntityPlayerCustom playerCustom) {
+		float f1 = playerCustom.slow ? 0.03F / 4F : 0.03F;
 		if (!playerCustom.animLeft && !playerCustom.animRight) {
 			if (Minecraft.getMinecraft().thePlayer.isSprinting()) {
 				if (playerCustom.tickRunningRight < 0.5F
 						&& !playerCustom.animRunnig) {
-					for (int i = 0; i < 2; i++) {
-						playerCustom.tickRunningRight += 0.015;
-					}
+					playerCustom.tickRunningRight += f1;
 				}
 				if (playerCustom.tickRunningRight >= 0.5F
 						&& !playerCustom.animRunnig) {
@@ -105,27 +104,21 @@ public class MovementSprint extends MovementVar {
 			if (playerCustom.animRunnig) {
 				if (playerCustom.tickRunningLeft < 0.5F
 						&& !playerCustom.backLeft) {
-					for (int i = 0; i < 2; i++) {
-						playerCustom.tickRunningLeft += 0.015;
-					}
+					playerCustom.tickRunningLeft += f1;
 				}
 				if (playerCustom.tickRunningLeft >= 0.5F
 						&& !playerCustom.backLeft) {
 					playerCustom.backLeft = true;
 				}
 				if (playerCustom.tickRunningLeft > 0 && playerCustom.backLeft) {
-					for (int i = 0; i < 2; i++) {
-						playerCustom.tickRunningLeft -= 0.015;
-					}
+					playerCustom.tickRunningLeft -= f1;
 				}
 				if (playerCustom.tickRunningLeft <= 0 && playerCustom.backLeft) {
 					playerCustom.backLeft = false;
 				}
 				if (playerCustom.tickRunningRight > 0
 						&& !playerCustom.backRight) {
-					for (int i = 0; i < 2; i++) {
-						playerCustom.tickRunningRight -= 0.015;
-					}
+					playerCustom.tickRunningRight -= f1;
 				}
 				if (playerCustom.tickRunningRight <= 0
 						&& !playerCustom.backRight) {
@@ -133,9 +126,7 @@ public class MovementSprint extends MovementVar {
 				}
 				if (playerCustom.tickRunningRight < 0.5F
 						&& playerCustom.backRight) {
-					for (int i = 0; i < 2; i++) {
-						playerCustom.tickRunningRight += 0.015;
-					}
+					playerCustom.tickRunningRight += f1;
 				}
 				if (playerCustom.tickRunningRight >= 0.5F
 						&& playerCustom.backRight) {

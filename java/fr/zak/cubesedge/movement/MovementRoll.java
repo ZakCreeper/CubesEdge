@@ -1,6 +1,7 @@
 package fr.zak.cubesedge.movement;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
@@ -10,11 +11,10 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 import net.minecraftforge.client.event.MouseEvent;
-import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
+import net.minecraftforge.event.entity.living.LivingFallEvent;
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.Side;
 import fr.zak.cubesedge.Movement;
 import fr.zak.cubesedge.MovementVar;
 import fr.zak.cubesedge.Util;
@@ -40,8 +40,10 @@ public class MovementRoll extends MovementVar {
 								MathHelper.floor_double(player.posY) - 4,
 								MathHelper.floor_double(player.posZ))
 								.isNormalCube()) {
-					if (player.isSneaking()) {
-						playerCustom.prevRolling = true;
+					if (player instanceof EntityPlayerSP) {
+						if (((EntityPlayerSP)player).movementInput.sneak) {
+							playerCustom.prevRolling = true;
+						}
 					}
 				}
 			}
@@ -121,7 +123,6 @@ public class MovementRoll extends MovementVar {
 			if (renderer == null) {
 				renderer = new EntityRendererCustom(Minecraft.getMinecraft());
 			}
-			System.out.println("nlk");
 			if (Minecraft.getMinecraft().entityRenderer != renderer) {
 				// be sure to store the previous renderer
 				prevRenderer = Minecraft.getMinecraft().entityRenderer;
@@ -136,7 +137,6 @@ public class MovementRoll extends MovementVar {
 										.getMinecraft().thePlayer.posY),
 								MathHelper.floor_double(Minecraft
 										.getMinecraft().thePlayer.posZ)) == Blocks.air) {
-			System.out.println("fesf");
 			// reset the renderer
 			KeyBinding.setKeyBindState(
 					Minecraft.getMinecraft().gameSettings.keyBindSneak

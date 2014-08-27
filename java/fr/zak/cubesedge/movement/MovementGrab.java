@@ -19,7 +19,7 @@ public class MovementGrab extends MovementVar {
 	public void control(EntityPlayerCustom playerCustom, EntityPlayer player) {
 		int heading = MathHelper
 				.floor_double((double) (player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-		if (!player.capabilities.isFlying && !playerCustom.isSneaking) {
+		if (!playerCustom.isSneaking) {
 			if (((((player.worldObj.getBlock(
 					MathHelper.floor_double(player.posX),
 					MathHelper.floor_double(player.posY),

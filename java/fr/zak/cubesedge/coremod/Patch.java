@@ -1009,7 +1009,7 @@ public class Patch {
 					if (!((Boolean) ObfuscationReflectionHelper
 							.getPrivateValue(NetHandlerPlayServer.class, net,
 									17))) // Fixes teleportation kick while
-											// riding entities
+					// riding entities
 					{
 						return;
 					}
@@ -1174,11 +1174,11 @@ public class Patch {
 
 				if (!((Boolean) ObfuscationReflectionHelper.getPrivateValue(
 						NetHandlerPlayServer.class, net, 17))) // Fixes
-																// "Moved Too Fast"
-																// kick when
-																// being
-																// teleported
-																// while moving
+				// "Moved Too Fast"
+				// kick when
+				// being
+				// teleported
+				// while moving
 				{
 					return;
 				}
@@ -1209,11 +1209,11 @@ public class Patch {
 
 				if (!((Boolean) ObfuscationReflectionHelper.getPrivateValue(
 						NetHandlerPlayServer.class, net, 17))) // Fixes
-																// "Moved Too Fast"
-																// kick when
-																// being
-																// teleported
-																// while moving
+				// "Moved Too Fast"
+				// kick when
+				// being
+				// teleported
+				// while moving
 				{
 					return;
 				}
@@ -1284,11 +1284,11 @@ public class Patch {
 
 				if (!((Boolean) ObfuscationReflectionHelper.getPrivateValue(
 						NetHandlerPlayServer.class, net, 17))) // Fixes
-																// "Moved Too Fast"
-																// kick when
-																// being
-																// teleported
-																// while moving
+				// "Moved Too Fast"
+				// kick when
+				// being
+				// teleported
+				// while moving
 				{
 					return;
 				}
@@ -1513,11 +1513,13 @@ public class Patch {
 					entitylivingbase.prevRotationYaw
 							+ (entitylivingbase.rotationYaw - entitylivingbase.prevRotationYaw)
 							* par1 + 180.0F, 0.0F, 1.0F, 0.0F);
-			GL11.glRotated(
-					(((EntityPlayerCustom) entitylivingbase
-							.getExtendedProperties("Cube's Edge Player")).tickRunningLeft - ((EntityPlayerCustom) entitylivingbase
-							.getExtendedProperties("Cube's Edge Player")).tickRunningRight) * 7,
-					0, 0, 1);
+			if (Minecraft.getMinecraft().gameSettings.thirdPersonView == 0) {
+				GL11.glRotated(
+						(((EntityPlayerCustom) entitylivingbase
+								.getExtendedProperties("Cube's Edge Player")).tickRunningLeft - ((EntityPlayerCustom) entitylivingbase
+								.getExtendedProperties("Cube's Edge Player")).tickRunningRight) * 7,
+						0, 0, 1);
+			}
 		}
 		GL11.glTranslatef(0.0F, f1, 0.0F);
 		d0 = entitylivingbase.prevPosX
