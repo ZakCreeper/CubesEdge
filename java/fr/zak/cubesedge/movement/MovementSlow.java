@@ -24,7 +24,7 @@ public class MovementSlow extends MovementVar {
 		if (keyPressedSlow && !playerCustom.slow) {
 			ObfuscationReflectionHelper.setPrivateValue(Timer.class,
 					((Timer) ObfuscationReflectionHelper.getPrivateValue(
-							Minecraft.class, Minecraft.getMinecraft(), 15)),
+							Minecraft.class, Minecraft.getMinecraft(), 16)),
 					5F, 0);
 			playerCustom.slow = true;
 		}
@@ -34,7 +34,7 @@ public class MovementSlow extends MovementVar {
 		if (playerCustom.slowTime == 25 && playerCustom.slow) {
 			ObfuscationReflectionHelper.setPrivateValue(Timer.class,
 					((Timer) ObfuscationReflectionHelper.getPrivateValue(
-							Minecraft.class, Minecraft.getMinecraft(), 15)),
+							Minecraft.class, Minecraft.getMinecraft(), 16)),
 					20F, 0);
 			playerCustom.slowTime = 0;
 			Minecraft.getMinecraft().gameSettings.mouseSensitivity = defaultSensitivity;

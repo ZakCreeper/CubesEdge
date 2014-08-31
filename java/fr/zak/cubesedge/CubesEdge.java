@@ -1,24 +1,26 @@
 package fr.zak.cubesedge;
 
 import java.io.File;
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 import cpw.mods.fml.relauncher.Side;
+import fr.zak.cubesedge.coremod.CubesEdgeDummyMod;
+import fr.zak.cubesedge.coremod.EntityRendererTransformer;
+import fr.zak.cubesedge.coremod.EntityTransformer;
+import fr.zak.cubesedge.coremod.NetHandlerPlayServerTransformer;
 import fr.zak.cubesedge.event.ConstructEvent;
 import fr.zak.cubesedge.movement.MovementGrab;
 import fr.zak.cubesedge.movement.MovementJump;
@@ -37,7 +39,8 @@ import fr.zak.cubesedge.proxys.CommonProxy;
  * 
  */
 @Mod(modid = "cubesedge", name = "Cube's Edge", version = Util.VERSION, guiFactory = "fr.zak.cubesedge.GuiFactory")
-public class CubesEdge {
+public class CubesEdge implements
+cpw.mods.fml.relauncher.IFMLLoadingPlugin {
 
 	public boolean isMovementDisabled = false;
 
@@ -87,5 +90,34 @@ public class CubesEdge {
 				Util.cubes.add(block);
 			}
 		}
+	}
+	
+	public static boolean obfuscation = false;
+
+	@Override
+	public String[] getASMTransformerClass() {
+		return new String[] { EntityRendererTransformer.class.getName(),
+				EntityTransformer.class.getName(),
+				NetHandlerPlayServerTransformer.class.getName() };
+	}
+
+	@Override
+	public String getModContainerClass() {
+		return CubesEdgeDummyMod.class.getName();
+	}
+
+	@Override
+	public String getSetupClass() {
+
+		return null;
+	}
+
+	@Override
+	public void injectData(Map<String, Object> data) {
+	}
+
+	@Override
+	public String getAccessTransformerClass() {
+		return null;
 	}
 }

@@ -31,6 +31,7 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.storage.MapData;
 import net.minecraftforge.client.ForgeHooksClient;
@@ -43,6 +44,7 @@ import org.lwjgl.opengl.GL12;
 import org.lwjgl.util.glu.Project;
 
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
+import fr.zak.cubesedge.Util;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
 
 public class Patch {
@@ -286,7 +288,7 @@ public class Patch {
 			float par1, boolean par2) {
 		try {
 			Method m = c.getDeclaredMethod(
-					CubesEdgeFMLLoadingPlugin.obfuscation ? "func_78481_a"
+					Util.obfuscation ? "func_78481_a"
 							: "getFOVModifier", float.class, boolean.class);
 			m.setAccessible(true);
 			return (Float) m.invoke(renderer, par1, par2);
@@ -312,7 +314,7 @@ public class Patch {
 			float par1) {
 		try {
 			Method m = c.getDeclaredMethod(
-					CubesEdgeFMLLoadingPlugin.obfuscation ? "func_78482_e"
+					Util.obfuscation ? "func_78482_e"
 							: "hurtCameraEffect", float.class);
 			m.setAccessible(true);
 			m.invoke(renderer, par1);
@@ -1460,25 +1462,16 @@ public class Patch {
 					f4 *= 0.1F;
 					f5 *= 0.1F;
 					MovingObjectPosition movingobjectposition = Minecraft
-							.getMinecraft().theWorld
-							.rayTraceBlocks(
-									Minecraft.getMinecraft().theWorld
-											.getWorldVec3Pool().getVecFromPool(
-													d0 + (double) f3,
-													d1 + (double) f4,
-													d2 + (double) f5),
-									Minecraft.getMinecraft().theWorld
-											.getWorldVec3Pool().getVecFromPool(
-													d0 - d3 + (double) f3
-															+ (double) f5,
-													d1 - d5 + (double) f4,
-													d2 - d4 + (double) f5));
+							.getMinecraft().theWorld.rayTraceBlocks(
+							Vec3.createVectorHelper(d0 + (double) f3, d1
+									+ (double) f4, d2 + (double) f5),
+							Vec3.createVectorHelper(d0 - d3 + (double) f3
+									+ (double) f5, d1 - d5 + (double) f4, d2
+									- d4 + (double) f5));
 
 					if (movingobjectposition != null) {
-						double d6 = movingobjectposition.hitVec
-								.distanceTo(Minecraft.getMinecraft().theWorld
-										.getWorldVec3Pool().getVecFromPool(d0,
-												d1, d2));
+						double d6 = movingobjectposition.hitVec.distanceTo(Vec3
+								.createVectorHelper(d0, d1, d2));
 
 						if (d6 < d7) {
 							d7 = d6;

@@ -86,7 +86,9 @@ public class MovementGrab extends MovementVar {
 			} else {
 				playerCustom.isGrabbing = false;
 				playerCustom.rotationYaw = 0;
-				playerCustom.rotationPitch = 0;
+				if (!playerCustom.isRolling) {
+					playerCustom.rotationPitch = 0;
+				}
 				playerCustom.prevRotationPitch = 0;
 				playerCustom.prevRotationYaw = 0;
 				playerCustom.grabbingDirections[0] = false;

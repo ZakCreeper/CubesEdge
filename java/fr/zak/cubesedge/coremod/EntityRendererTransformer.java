@@ -15,6 +15,8 @@ import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
+import fr.zak.cubesedge.CubesEdge;
+
 public class EntityRendererTransformer implements IClassTransformer {
 
 	private String renderHandMethodName, orientCameraMethodName;
@@ -24,20 +26,20 @@ public class EntityRendererTransformer implements IClassTransformer {
 	public byte[] transform(String name, String transformedName,
 			byte[] basicClass) {
 		if (name.equals("net.minecraft.profiler.IPlayerUsage")) {
-			CubesEdgeFMLLoadingPlugin.obfuscation = false;
+			CubesEdge.obfuscation = false;
 		}
 		if (name.equals("px")) {
-			CubesEdgeFMLLoadingPlugin.obfuscation = true;
+			CubesEdge.obfuscation = true;
 		}
 		if (transformedName
 				.equals("net.minecraft.client.renderer.EntityRenderer")) {
 			System.out
 					.println("Cube\'s Edge Core - Patching class EntityRenderer...");
-			renderHandMethodName = CubesEdgeFMLLoadingPlugin.obfuscation ? "b"
+			renderHandMethodName = CubesEdge.obfuscation ? "b"
 					: "renderHand";
-			orientCameraMethodName = CubesEdgeFMLLoadingPlugin.obfuscation ? "g"
+			orientCameraMethodName = CubesEdge.obfuscation ? "g"
 					: "orientCamera";
-			className = CubesEdgeFMLLoadingPlugin.obfuscation ? "bll"
+			className = CubesEdge.obfuscation ? "bll"
 					: "net/minecraft/client/renderer/EntityRenderer";
 
 			ClassReader cr = new ClassReader(basicClass);

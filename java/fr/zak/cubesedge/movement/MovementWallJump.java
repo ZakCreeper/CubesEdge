@@ -204,7 +204,9 @@ public class MovementWallJump extends MovementVar {
 		if (player.onGround) {
 			if (playerCustom.rotationYaw != 0) {
 				playerCustom.rotationYaw = 0;
-				playerCustom.rotationPitch = 0;
+				if	(!playerCustom.isRolling)	{
+					playerCustom.rotationPitch = 0;
+				}
 				playerCustom.prevRotationPitch = 0;
 				playerCustom.prevRotationYaw = 0;
 			}

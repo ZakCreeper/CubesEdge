@@ -33,9 +33,9 @@ public class MovementSprint extends MovementVar {
 									.getMinecraft().thePlayer.motionX) + MathHelper
 									.abs((float) Minecraft.getMinecraft().thePlayer.motionZ)) * 20,
 									1) + " blocks/s", event.resolution
-									.getScaledWidth() - 115, event.resolution
-									.getScaledHeight() - 15, new Color(255, 255, 255)
-					.getRGB());
+							.getScaledWidth() - 115, event.resolution
+							.getScaledHeight() - 15, new Color(255, 255, 255)
+							.getRGB());
 		}
 	}
 

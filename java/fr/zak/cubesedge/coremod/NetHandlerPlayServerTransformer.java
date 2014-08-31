@@ -10,11 +10,12 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.InsnNode;
-import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.LocalVariableNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
+
+import fr.zak.cubesedge.CubesEdge;
 
 public class NetHandlerPlayServerTransformer implements IClassTransformer {
 
@@ -28,11 +29,11 @@ public class NetHandlerPlayServerTransformer implements IClassTransformer {
 				.equals("net.minecraft.network.NetHandlerPlayServer")) {
 			System.out
 					.println("Cube\'s Edge Core - Patching class NetHandlerPlayServer...");
-			methodName = CubesEdgeFMLLoadingPlugin.obfuscation ? "a"
+			methodName = CubesEdge.obfuscation ? "a"
 					: "processPlayer";
-			className = CubesEdgeFMLLoadingPlugin.obfuscation ? "mx"
+			className = CubesEdge.obfuscation ? "mx"
 					: "net/minecraft/network/NetHandlerPlayServer";
-			packetPlayerClassName = CubesEdgeFMLLoadingPlugin.obfuscation ? "ir"
+			packetPlayerClassName = CubesEdge.obfuscation ? "ir"
 					: "net/minecraft/network/play/client/C03PacketPlayer";
 
 			ClassReader cr = new ClassReader(basicClass);

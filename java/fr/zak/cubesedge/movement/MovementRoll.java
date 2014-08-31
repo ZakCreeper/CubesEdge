@@ -41,7 +41,7 @@ public class MovementRoll extends MovementVar {
 								MathHelper.floor_double(player.posZ))
 								.isNormalCube()) {
 					if (player instanceof EntityPlayerSP) {
-						if (((EntityPlayerSP)player).movementInput.sneak) {
+						if (((EntityPlayerSP) player).movementInput.sneak) {
 							playerCustom.prevRolling = true;
 						}
 					}
@@ -71,12 +71,19 @@ public class MovementRoll extends MovementVar {
 								.getKeyCode(), false);
 				player.motionZ *= 0.9;
 				player.motionX *= 0.9;
+				if (playerCustom.rotationPitch == 0) {
+					playerCustom.rotationPitch = player.rotationPitch;
+				}
+				playerCustom.rotationPitch += 30;
 				float f2 = player.rotationPitch;
-				player.rotationPitch = (float) ((double) player.rotationPitch + 30);
-				player.prevRotationPitch += player.rotationPitch - f2;
-				if (player.rotationPitch >= 360) {
+				if (Minecraft.getMinecraft().gameSettings.thirdPersonView == 0) {
+					player.rotationPitch = (float) ((double) playerCustom.rotationPitch);
+					player.prevRotationPitch += playerCustom.rotationPitch - f2;
+				}
+				if (playerCustom.rotationPitch >= 360) {
 					playerCustom.prevRolling = false;
 					playerCustom.isRolling = false;
+					playerCustom.rotationPitch = 0;
 					Util.channel
 							.sendToServer(new PacketPlayer.CPacketPlayerRoll(
 									false));
@@ -128,6 +135,8 @@ public class MovementRoll extends MovementVar {
 				prevRenderer = Minecraft.getMinecraft().entityRenderer;
 				Minecraft.getMinecraft().entityRenderer = renderer;
 			}
+			Util.forceSetSize(Entity.class, Minecraft.getMinecraft().thePlayer,
+					0.6F, 1.8F);
 		} else if (prevRenderer != null
 				&& Minecraft.getMinecraft().entityRenderer != prevRenderer
 				&& Minecraft.getMinecraft().theWorld

@@ -1,19 +1,18 @@
 package fr.zak.cubesedge.coremod;
 
-import java.util.Iterator;
-
 import net.minecraft.launchwrapper.IClassTransformer;
 
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
+
+import fr.zak.cubesedge.CubesEdge;
 
 public class EntityTransformer implements IClassTransformer {
 
@@ -25,11 +24,11 @@ public class EntityTransformer implements IClassTransformer {
 			byte[] basicClass) {
 		if (transformedName.equals("net.minecraft.entity.Entity")) {
 			System.out.println("Cube\'s Edge Core - Patching class Entity...");
-			methodSetAnglesName = CubesEdgeFMLLoadingPlugin.obfuscation ? "c"
+			methodSetAnglesName = CubesEdge.obfuscation ? "c"
 					: "setAngles";
-			methodIsEntityInsideOpaqueBlockName = CubesEdgeFMLLoadingPlugin.obfuscation ? "aa"
+			methodIsEntityInsideOpaqueBlockName = CubesEdge.obfuscation ? "aa"
 					: "isEntityInsideOpaqueBlock";
-			className = CubesEdgeFMLLoadingPlugin.obfuscation ? "qn"
+			className = CubesEdge.obfuscation ? "qn"
 					: "net/minecraft/entity/Entity";
 
 			ClassReader cr = new ClassReader(basicClass);
