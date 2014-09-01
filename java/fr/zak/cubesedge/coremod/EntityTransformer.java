@@ -22,13 +22,19 @@ public class EntityTransformer implements IClassTransformer {
 	@Override
 	public byte[] transform(String name, String transformedName,
 			byte[] basicClass) {
+		if (name.equals("net.minecraft.profiler.IPlayerUsage")) {
+			CubesEdge.obfuscation = false;
+		}
+		if (name.equals("rk")) {
+			CubesEdge.obfuscation = true;
+		}
 		if (transformedName.equals("net.minecraft.entity.Entity")) {
 			System.out.println("Cube\'s Edge Core - Patching class Entity...");
 			methodSetAnglesName = CubesEdge.obfuscation ? "c"
 					: "setAngles";
 			methodIsEntityInsideOpaqueBlockName = CubesEdge.obfuscation ? "aa"
 					: "isEntityInsideOpaqueBlock";
-			className = CubesEdge.obfuscation ? "qn"
+			className = CubesEdge.obfuscation ? "sa"
 					: "net/minecraft/entity/Entity";
 
 			ClassReader cr = new ClassReader(basicClass);
