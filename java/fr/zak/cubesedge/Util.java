@@ -31,6 +31,10 @@ public class Util {
 
 	public static List<Block> cubes = new ArrayList<Block>();
 
+	public static boolean isCube(Block b){
+		return cubes.contains(b);
+	}
+	
 	public static void detectObfuscation() {
 		obfuscation = true;
 		try {

@@ -69,8 +69,8 @@ public class MovementRoll extends MovementVar {
 				KeyBinding.setKeyBindState(
 						Minecraft.getMinecraft().gameSettings.keyBindSneak
 								.getKeyCode(), false);
-				player.motionZ *= 0.9;
-				player.motionX *= 0.9;
+				player.motionZ *= 1.6;
+				player.motionX *= 1.6;
 				if (playerCustom.rotationPitch == 0) {
 					playerCustom.rotationPitch = player.rotationPitch;
 				}
@@ -136,16 +136,10 @@ public class MovementRoll extends MovementVar {
 				Minecraft.getMinecraft().entityRenderer = renderer;
 			}
 			Util.forceSetSize(Entity.class, Minecraft.getMinecraft().thePlayer,
-					0.6F, 1.8F);
+					0.6F, 0.6F);
 		} else if (prevRenderer != null
 				&& Minecraft.getMinecraft().entityRenderer != prevRenderer
-				&& Minecraft.getMinecraft().theWorld
-						.getBlock(MathHelper.floor_double(Minecraft
-								.getMinecraft().thePlayer.posX),
-								MathHelper.floor_double(Minecraft
-										.getMinecraft().thePlayer.posY),
-								MathHelper.floor_double(Minecraft
-										.getMinecraft().thePlayer.posZ)) == Blocks.air) {
+				&& playerCustom.wasRolling) {
 			// reset the renderer
 			KeyBinding.setKeyBindState(
 					Minecraft.getMinecraft().gameSettings.keyBindSneak

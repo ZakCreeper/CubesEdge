@@ -108,7 +108,7 @@ public class MovementSlide extends MovementVar {
 								MathHelper.floor_double(Minecraft
 										.getMinecraft().thePlayer.posY),
 								MathHelper.floor_double(Minecraft
-										.getMinecraft().thePlayer.posZ)) == Blocks.air) {
+										.getMinecraft().thePlayer.posZ)) == Blocks.air && !playerCustom.isRolling) {
 			// reset the renderer
 			KeyBinding.setKeyBindState(
 					Minecraft.getMinecraft().gameSettings.keyBindSneak
