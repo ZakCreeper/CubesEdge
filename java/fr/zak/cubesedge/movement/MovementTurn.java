@@ -13,6 +13,7 @@ import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
 import cpw.mods.fml.relauncher.Side;
 import fr.zak.cubesedge.Movement;
 import fr.zak.cubesedge.MovementVar;
+import fr.zak.cubesedge.Util;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
 
 @Movement("Turn")
@@ -39,12 +40,12 @@ public class MovementTurn extends MovementVar {
 							&& !playerCustom.isTurningOnWall) {
 						float yaw = MathHelper
 								.wrapAngleTo180_float(player.rotationYaw);
-						if ((player.worldObj.getBlock(
+						if ((Util.isCube(player.worldObj.getBlock(
 								MathHelper.floor_double(player.posX) + 1,
 								MathHelper.floor_double(player.posY),
 								MathHelper.floor_double(player.posZ))
-								.isNormalCube() && heading == 0)
-								|| (player.worldObj
+								) && heading == 0)
+								|| (Util.isCube(player.worldObj
 										.getBlock(
 												MathHelper
 														.floor_double(player.posX),
@@ -52,8 +53,8 @@ public class MovementTurn extends MovementVar {
 														.floor_double(player.posY),
 												MathHelper
 														.floor_double(player.posZ) + 1)
-										.isNormalCube() && heading == 1)
-								|| (player.worldObj
+										) && heading == 1)
+								|| (Util.isCube(player.worldObj
 										.getBlock(
 												MathHelper
 														.floor_double(player.posX) - 1,
@@ -61,8 +62,8 @@ public class MovementTurn extends MovementVar {
 														.floor_double(player.posY),
 												MathHelper
 														.floor_double(player.posZ))
-										.isNormalCube() && heading == 2)
-								|| (player.worldObj
+										) && heading == 2)
+								|| (Util.isCube(player.worldObj
 										.getBlock(
 												MathHelper
 														.floor_double(player.posX),
@@ -70,14 +71,14 @@ public class MovementTurn extends MovementVar {
 														.floor_double(player.posY),
 												MathHelper
 														.floor_double(player.posZ) - 1)
-										.isNormalCube() && heading == 3)) {
+										) && heading == 3)) {
 							player.rotationYaw = yaw - 90;
-						} else if ((player.worldObj.getBlock(
+						} else if ((Util.isCube(player.worldObj.getBlock(
 								MathHelper.floor_double(player.posX) - 1,
 								MathHelper.floor_double(player.posY),
 								MathHelper.floor_double(player.posZ))
-								.isNormalCube() && heading == 0)
-								|| (player.worldObj
+								) && heading == 0)
+								|| (Util.isCube(player.worldObj
 										.getBlock(
 												MathHelper
 														.floor_double(player.posX),
@@ -85,8 +86,8 @@ public class MovementTurn extends MovementVar {
 														.floor_double(player.posY),
 												MathHelper
 														.floor_double(player.posZ) - 1)
-										.isNormalCube() && heading == 1)
-								|| (player.worldObj
+										) && heading == 1)
+								|| (Util.isCube(player.worldObj
 										.getBlock(
 												MathHelper
 														.floor_double(player.posX) + 1,
@@ -94,8 +95,8 @@ public class MovementTurn extends MovementVar {
 														.floor_double(player.posY),
 												MathHelper
 														.floor_double(player.posZ))
-										.isNormalCube() && heading == 2)
-								|| (player.worldObj
+										) && heading == 2)
+								|| (Util.isCube(player.worldObj
 										.getBlock(
 												MathHelper
 														.floor_double(player.posX),
@@ -103,7 +104,7 @@ public class MovementTurn extends MovementVar {
 														.floor_double(player.posY),
 												MathHelper
 														.floor_double(player.posZ) + 1)
-										.isNormalCube() && heading == 3)) {
+										) && heading == 3)) {
 							player.rotationYaw = yaw + 90;
 						}
 						playerCustom.isTurningOnWall = true;
@@ -119,26 +120,26 @@ public class MovementTurn extends MovementVar {
 					playerCustom.turningTime = 0;
 					playerCustom.isTurningOnWall = false;
 				}
-				if ((player.worldObj.getBlock(
+				if ((Util.isCube(player.worldObj.getBlock(
 						MathHelper.floor_double(player.posX),
 						MathHelper.floor_double(player.posY),
 						MathHelper.floor_double(player.posZ) - 1)
-						.isNormalCube() && heading == 0)
-						|| (player.worldObj.getBlock(
+						) && heading == 0)
+						|| (Util.isCube(player.worldObj.getBlock(
 								MathHelper.floor_double(player.posX) + 1,
 								MathHelper.floor_double(player.posY),
 								MathHelper.floor_double(player.posZ))
-								.isNormalCube() && heading == 1)
-						|| (player.worldObj.getBlock(
+								) && heading == 1)
+						|| (Util.isCube(player.worldObj.getBlock(
 								MathHelper.floor_double(player.posX),
 								MathHelper.floor_double(player.posY),
 								MathHelper.floor_double(player.posZ) + 1)
-								.isNormalCube() && heading == 2)
-						|| (player.worldObj.getBlock(
+								) && heading == 2)
+						|| (Util.isCube(player.worldObj.getBlock(
 								MathHelper.floor_double(player.posX) - 1,
 								MathHelper.floor_double(player.posY),
 								MathHelper.floor_double(player.posZ))
-								.isNormalCube() && heading == 3)) {
+								) && heading == 3)) {
 					player.motionZ *= 0.95D;
 					player.motionX *= 0.95D;
 					player.motionY *= 0.75D;

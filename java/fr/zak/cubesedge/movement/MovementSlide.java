@@ -62,7 +62,7 @@ public class MovementSlide extends MovementVar {
 	@Override
 	public void renderTick(EntityPlayerCustom playerCustom) {
 		if (playerCustom.isSneaking
-				|| (Minecraft.getMinecraft().theWorld
+				|| (Util.isCube(Minecraft.getMinecraft().theWorld
 						.getBlock(
 								MathHelper.floor_double(Minecraft
 										.getMinecraft().thePlayer.posX),
@@ -70,7 +70,7 @@ public class MovementSlide extends MovementVar {
 										.getMinecraft().thePlayer.posY),
 								MathHelper.floor_double(Minecraft
 										.getMinecraft().thePlayer.posZ))
-						.isNormalCube() && playerCustom.wasSliding)) {
+						) && playerCustom.wasSliding)) {
 			int x1 = MathHelper
 					.floor_double(Minecraft.getMinecraft().thePlayer.posX);
 			int y1 = MathHelper

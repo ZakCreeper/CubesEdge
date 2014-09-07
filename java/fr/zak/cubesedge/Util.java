@@ -30,10 +30,6 @@ public class Util {
 	public static final String VERSION = "Alpha 0.1.18";
 
 	public static List<Block> cubes = new ArrayList<Block>();
-
-	public static boolean isCube(Block b){
-		return cubes.contains(b);
-	}
 	
 	public static void detectObfuscation() {
 		obfuscation = true;
@@ -109,5 +105,12 @@ public class Util {
 
 	public static Object[] getMovements() {
 		return movements.toArray();
+	}
+	
+	public static boolean isCube(Block b){
+		if(cubes.contains(b)){
+			return true;
+		}
+		return false;
 	}
 }

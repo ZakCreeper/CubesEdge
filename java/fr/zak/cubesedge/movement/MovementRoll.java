@@ -31,15 +31,15 @@ public class MovementRoll extends MovementVar {
 	public void control(EntityPlayerCustom playerCustom, EntityPlayer player) {
 		if (!player.capabilities.isFlying && !playerCustom.isSneaking) {
 			if (player.fallDistance > 3.0F && player.fallDistance < 15F) {
-				if (player.worldObj.getBlock(
+				if (Util.isCube(player.worldObj.getBlock(
 						MathHelper.floor_double(player.posX),
 						MathHelper.floor_double(player.posY) - 3,
-						MathHelper.floor_double(player.posZ)).isNormalCube()
-						|| player.worldObj.getBlock(
+						MathHelper.floor_double(player.posZ)))
+						|| Util.isCube(player.worldObj.getBlock(
 								MathHelper.floor_double(player.posX),
 								MathHelper.floor_double(player.posY) - 4,
 								MathHelper.floor_double(player.posZ))
-								.isNormalCube()) {
+								)) {
 					if (player instanceof EntityPlayerSP) {
 						if (((EntityPlayerSP) player).movementInput.sneak) {
 							playerCustom.prevRolling = true;
@@ -69,8 +69,8 @@ public class MovementRoll extends MovementVar {
 				KeyBinding.setKeyBindState(
 						Minecraft.getMinecraft().gameSettings.keyBindSneak
 								.getKeyCode(), false);
-				player.motionZ *= 1.6;
-				player.motionX *= 1.6;
+				player.motionZ *= 1.5;
+				player.motionX *= 1.5;
 				if (playerCustom.rotationPitch == 0) {
 					playerCustom.rotationPitch = player.rotationPitch;
 				}
@@ -99,7 +99,7 @@ public class MovementRoll extends MovementVar {
 	@Override
 	public void renderTick(EntityPlayerCustom playerCustom) {
 		if (playerCustom.isRolling
-				|| (Minecraft.getMinecraft().theWorld
+				|| (Util.isCube(Minecraft.getMinecraft().theWorld
 						.getBlock(
 								MathHelper.floor_double(Minecraft
 										.getMinecraft().thePlayer.posX),
@@ -107,7 +107,7 @@ public class MovementRoll extends MovementVar {
 										.getMinecraft().thePlayer.posY),
 								MathHelper.floor_double(Minecraft
 										.getMinecraft().thePlayer.posZ))
-						.isNormalCube() && playerCustom.wasRolling)) {
+						) && playerCustom.wasRolling)) {
 			int x1 = MathHelper
 					.floor_double(Minecraft.getMinecraft().thePlayer.posX);
 			int y1 = MathHelper

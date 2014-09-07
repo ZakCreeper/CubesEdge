@@ -8,6 +8,7 @@ import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import fr.zak.cubesedge.Movement;
 import fr.zak.cubesedge.MovementVar;
+import fr.zak.cubesedge.Util;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
 
 @Movement("Jump")
@@ -18,91 +19,91 @@ public class MovementJump extends MovementVar {
 		int heading = MathHelper
 				.floor_double((double) (player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
 		if (!player.capabilities.isFlying && !playerCustom.isSneaking) {
-			if ((player.worldObj.getBlock(MathHelper.floor_double(player.posX),
+			if ((Util.isCube(player.worldObj.getBlock(MathHelper.floor_double(player.posX),
 					MathHelper.floor_double(player.posY) - 1,
-					MathHelper.floor_double(player.posZ) - 1).isNormalCube() && heading == 2)
-					|| (player.worldObj.getBlock(
+					MathHelper.floor_double(player.posZ) - 1)) && heading == 2)
+					|| (Util.isCube(player.worldObj.getBlock(
 							MathHelper.floor_double(player.posX),
 							MathHelper.floor_double(player.posY) - 1,
 							MathHelper.floor_double(player.posZ) + 1)
-							.isNormalCube() && heading == 0)
-					|| (player.worldObj.getBlock(
+							) && heading == 0)
+					|| (Util.isCube(player.worldObj.getBlock(
 							MathHelper.floor_double(player.posX) - 1,
 							MathHelper.floor_double(player.posY) - 1,
 							MathHelper.floor_double(player.posZ))
-							.isNormalCube() && heading == 1)
-					|| (player.worldObj.getBlock(
+							) && heading == 1)
+					|| (Util.isCube(player.worldObj.getBlock(
 							MathHelper.floor_double(player.posX) + 1,
 							MathHelper.floor_double(player.posY) - 1,
 							MathHelper.floor_double(player.posZ))
-							.isNormalCube() && heading == 3)) {
-				if ((!player.worldObj.getBlock(
+							) && heading == 3)) {
+				if ((!Util.isCube(player.worldObj.getBlock(
 						MathHelper.floor_double(player.posX),
 						MathHelper.floor_double(player.posY),
 						MathHelper.floor_double(player.posZ) - 1)
-						.isNormalCube() && heading == 2)
-						|| (!player.worldObj.getBlock(
+						) && heading == 2)
+						|| (!Util.isCube(player.worldObj.getBlock(
 								MathHelper.floor_double(player.posX),
 								MathHelper.floor_double(player.posY),
 								MathHelper.floor_double(player.posZ) + 1)
-								.isNormalCube() && heading == 0)
-						|| (!player.worldObj.getBlock(
+								) && heading == 0)
+						|| (!Util.isCube(player.worldObj.getBlock(
 								MathHelper.floor_double(player.posX) - 1,
 								MathHelper.floor_double(player.posY),
 								MathHelper.floor_double(player.posZ))
-								.isNormalCube() && heading == 1)
-						|| (!player.worldObj.getBlock(
+								) && heading == 1)
+						|| (!Util.isCube(player.worldObj.getBlock(
 								MathHelper.floor_double(player.posX) + 1,
 								MathHelper.floor_double(player.posY),
 								MathHelper.floor_double(player.posZ))
-								.isNormalCube() && heading == 3)) {
+								) && heading == 3)) {
 					if (ObfuscationReflectionHelper.getPrivateValue(
 							EntityLivingBase.class, (EntityLivingBase) player,
 							41)) {
 						player.motionY = 0.41999998688697815D;
 					}
 				}
-				if ((player.worldObj.getBlock(
+				if ((Util.isCube(player.worldObj.getBlock(
 						MathHelper.floor_double(player.posX),
 						MathHelper.floor_double(player.posY),
 						MathHelper.floor_double(player.posZ) - 1)
-						.isNormalCube() && heading == 2)
-						|| (player.worldObj.getBlock(
+						) && heading == 2)
+						|| (Util.isCube(player.worldObj.getBlock(
 								MathHelper.floor_double(player.posX),
 								MathHelper.floor_double(player.posY),
 								MathHelper.floor_double(player.posZ) + 1)
-								.isNormalCube() && heading == 0)
-						|| (player.worldObj.getBlock(
+								) && heading == 0)
+						|| (Util.isCube(player.worldObj.getBlock(
 								MathHelper.floor_double(player.posX) - 1,
 								MathHelper.floor_double(player.posY),
 								MathHelper.floor_double(player.posZ))
-								.isNormalCube() && heading == 1)
-						|| (player.worldObj.getBlock(
+								) && heading == 1)
+						|| (Util.isCube(player.worldObj.getBlock(
 								MathHelper.floor_double(player.posX) + 1,
 								MathHelper.floor_double(player.posY),
 								MathHelper.floor_double(player.posZ))
-								.isNormalCube() && heading == 3)) {
+								) && heading == 3)) {
 					playerCustom.isJumping = 3;
-					if ((player.worldObj.getBlock(
+					if ((Util.isCube(player.worldObj.getBlock(
 							MathHelper.floor_double(player.posX),
 							MathHelper.floor_double(player.posY) + 1,
 							MathHelper.floor_double(player.posZ) - 1)
-							.isNormalCube() && heading == 2)
-							|| (player.worldObj.getBlock(
+							) && heading == 2)
+							|| (Util.isCube(player.worldObj.getBlock(
 									MathHelper.floor_double(player.posX),
 									MathHelper.floor_double(player.posY) + 1,
 									MathHelper.floor_double(player.posZ) + 1)
-									.isNormalCube() && heading == 0)
-							|| (player.worldObj.getBlock(
+									) && heading == 0)
+							|| (Util.isCube(player.worldObj.getBlock(
 									MathHelper.floor_double(player.posX) - 1,
 									MathHelper.floor_double(player.posY) + 1,
 									MathHelper.floor_double(player.posZ))
-									.isNormalCube() && heading == 1)
-							|| (player.worldObj.getBlock(
+									) && heading == 1)
+							|| (Util.isCube(player.worldObj.getBlock(
 									MathHelper.floor_double(player.posX) + 1,
 									MathHelper.floor_double(player.posY) + 1,
 									MathHelper.floor_double(player.posZ))
-									.isNormalCube() && heading == 3)) {
+									) && heading == 3)) {
 						playerCustom.isJumping = 4;
 					}
 				}

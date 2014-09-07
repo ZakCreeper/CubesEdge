@@ -9,6 +9,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import fr.zak.cubesedge.Movement;
 import fr.zak.cubesedge.MovementVar;
+import fr.zak.cubesedge.Util;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
 
 @Movement("Wall jump")
@@ -20,14 +21,14 @@ public class MovementWallJump extends MovementVar {
 				.floor_double((double) (player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
 		if (!player.capabilities.isFlying && !playerCustom.isSneaking) {
 			if (!player.onGround && player.motionY <= 0) {
-				if ((player.worldObj.getBlock(
+				if ((Util.isCube(player.worldObj.getBlock(
 						MathHelper.floor_double(player.posX) + 1,
 						MathHelper.floor_double(player.posY),
-						MathHelper.floor_double(player.posZ)).isNormalCube() || player.worldObj
+						MathHelper.floor_double(player.posZ))) || Util.isCube(player.worldObj
 						.getBlock(MathHelper.floor_double(player.posX) + 1,
 								MathHelper.floor_double(player.posY) - 1,
 								MathHelper.floor_double(player.posZ))
-						.isNormalCube())
+						))
 						&& ((heading == 0) || (heading == 2))) {
 					playerCustom.isOnWall = true;
 					if (player.moveForward > 0) {
@@ -62,14 +63,14 @@ public class MovementWallJump extends MovementVar {
 
 						}
 					}
-				} else if ((player.worldObj.getBlock(
+				} else if ((Util.isCube(player.worldObj.getBlock(
 						MathHelper.floor_double(player.posX) - 1,
 						MathHelper.floor_double(player.posY),
-						MathHelper.floor_double(player.posZ)).isNormalCube() || player.worldObj
+						MathHelper.floor_double(player.posZ))) || Util.isCube(player.worldObj
 						.getBlock(MathHelper.floor_double(player.posX) - 1,
 								MathHelper.floor_double(player.posY) - 1,
 								MathHelper.floor_double(player.posZ))
-						.isNormalCube())
+						))
 						&& ((heading == 0) || (heading == 2))) {
 					playerCustom.isOnWall = true;
 					if (player.moveForward > 0) {
@@ -103,15 +104,15 @@ public class MovementWallJump extends MovementVar {
 							playerCustom.animRight = true;
 						}
 					}
-				} else if ((player.worldObj.getBlock(
+				} else if ((Util.isCube(player.worldObj.getBlock(
 						MathHelper.floor_double(player.posX),
 						MathHelper.floor_double(player.posY),
 						MathHelper.floor_double(player.posZ) + 1)
-						.isNormalCube() || player.worldObj.getBlock(
+						) || Util.isCube(player.worldObj.getBlock(
 						MathHelper.floor_double(player.posX),
 						MathHelper.floor_double(player.posY) - 1,
 						MathHelper.floor_double(player.posZ) + 1)
-						.isNormalCube())
+						))
 						&& ((heading == 3) || (heading == 1))) {
 					playerCustom.isOnWall = true;
 					if (player.moveForward > 0) {
@@ -145,15 +146,15 @@ public class MovementWallJump extends MovementVar {
 							playerCustom.animLeft = true;
 						}
 					}
-				} else if ((player.worldObj.getBlock(
+				} else if ((Util.isCube(player.worldObj.getBlock(
 						MathHelper.floor_double(player.posX),
 						MathHelper.floor_double(player.posY),
 						MathHelper.floor_double(player.posZ) - 1)
-						.isNormalCube() || player.worldObj.getBlock(
+						) || Util.isCube(player.worldObj.getBlock(
 						MathHelper.floor_double(player.posX),
 						MathHelper.floor_double(player.posY) - 1,
 						MathHelper.floor_double(player.posZ) - 1)
-						.isNormalCube())
+						))
 						&& ((heading == 3) || (heading == 1))) {
 					playerCustom.isOnWall = true;
 					if (player.moveForward > 0) {

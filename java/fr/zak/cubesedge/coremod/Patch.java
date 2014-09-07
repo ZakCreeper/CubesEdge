@@ -1332,11 +1332,11 @@ public class Patch {
 						.getExtendedProperties("Cube's Edge Player")).isSneaking
 						|| ((EntityPlayerCustom) ent
 								.getExtendedProperties("Cube's Edge Player")).isRolling
-						|| (ent.worldObj.getBlock(
+						|| (Util.isCube(ent.worldObj.getBlock(
 								MathHelper.floor_double(ent.posX),
 								MathHelper.floor_double(ent.posY),
 								MathHelper.floor_double(ent.posZ))
-								.isNormalCube() && (((EntityPlayerCustom) ent
+								) && (((EntityPlayerCustom) ent
 								.getExtendedProperties("Cube's Edge Player")).wasSliding || ((EntityPlayerCustom) ent
 								.getExtendedProperties("Cube's Edge Player")).wasRolling))) {
 					k = MathHelper.floor_double(ent.posY
@@ -1346,7 +1346,7 @@ public class Patch {
 							+ (double) ent.getEyeHeight() + (double) f1);
 				}
 			}
-			if (ent.worldObj.getBlock(j, k, l).isNormalCube()) {
+			if (Util.isCube(ent.worldObj.getBlock(j, k, l))) {
 				return true;
 			}
 		}
@@ -1361,7 +1361,7 @@ public class Patch {
 				.getExtendedProperties("Cube's Edge Player")).isSneaking
 				|| ((EntityPlayerCustom) Minecraft.getMinecraft().thePlayer
 						.getExtendedProperties("Cube's Edge Player")).isRolling
-				|| (Minecraft.getMinecraft().theWorld
+				|| (Util.isCube(Minecraft.getMinecraft().theWorld
 						.getBlock(
 								MathHelper.floor_double(Minecraft
 										.getMinecraft().thePlayer.posX),
@@ -1369,7 +1369,7 @@ public class Patch {
 										.getMinecraft().thePlayer.posY),
 								MathHelper.floor_double(Minecraft
 										.getMinecraft().thePlayer.posZ))
-						.isNormalCube() && (((EntityPlayerCustom) Minecraft
+						) && (((EntityPlayerCustom) Minecraft
 						.getMinecraft().thePlayer
 						.getExtendedProperties("Cube's Edge Player")).wasSliding || ((EntityPlayerCustom) Minecraft
 						.getMinecraft().thePlayer

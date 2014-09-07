@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.MathHelper;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import fr.zak.cubesedge.Movement;
@@ -30,6 +31,7 @@ public class ClientTickHandler {
 					}
 				}
 			}
+			System.out.println(Util.isCube(event.player.worldObj.getBlock(MathHelper.floor_double(event.player.posX), MathHelper.floor_double(event.player.posY) + 1, MathHelper.floor_double(event.player.posZ))));
 		}
 	}
 

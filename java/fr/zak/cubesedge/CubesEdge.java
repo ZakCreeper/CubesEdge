@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import cpw.mods.fml.common.Loader;
@@ -81,15 +82,27 @@ cpw.mods.fml.relauncher.IFMLLoadingPlugin {
 		Iterator<Block> i = Block.blockRegistry.iterator();
 		while (i.hasNext()) {
 			Block block = i.next();
-			if (block.getBlockBoundsMaxX() == 1.0D
-					&& block.getBlockBoundsMaxY() == 1.0D
-					&& block.getBlockBoundsMaxZ() == 1.0D
-					&& block.getBlockBoundsMinX() == 0.0D
-					&& block.getBlockBoundsMinY() == 0.0D
-					&& block.getBlockBoundsMinZ() == 0.0D) {
+			if (block.getRenderType() == 0) {
 				Util.cubes.add(block);
 			}
 		}
+		Util.cubes.remove(Blocks.stone_pressure_plate);
+		Util.cubes.remove(Blocks.wooden_pressure_plate);
+		Util.cubes.remove(Blocks.stone_button);
+		Util.cubes.remove(Blocks.snow_layer);
+		Util.cubes.remove(Blocks.portal);
+		Util.cubes.remove(Blocks.cake);
+		Util.cubes.remove(Blocks.stained_glass_pane);
+		Util.cubes.remove(Blocks.trapdoor);
+		Util.cubes.remove(Blocks.wooden_slab);
+		Util.cubes.remove(Blocks.wooden_button);
+		Util.cubes.remove(Blocks.light_weighted_pressure_plate);
+		Util.cubes.remove(Blocks.heavy_weighted_pressure_plate);
+		Util.cubes.remove(Blocks.daylight_detector);
+		Util.cubes.remove(Blocks.carpet);
+		Util.cubes.remove(Blocks.stone_slab);
+		Util.cubes.add(Blocks.log);
+		Util.cubes.add(Blocks.log2);
 	}
 	
 	public static boolean obfuscation = false;
