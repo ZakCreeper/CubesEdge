@@ -20,6 +20,7 @@ import fr.zak.cubesedge.MovementVar;
 import fr.zak.cubesedge.Util;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
 import fr.zak.cubesedge.packet.PacketPlayer;
+import fr.zak.cubesedge.packet.PacketPlayer.CPacketPlayerAction;
 import fr.zak.cubesedge.renderer.EntityRendererCustom;
 
 @Movement("Slide")
@@ -35,8 +36,8 @@ public class MovementSlide extends MovementVar {
 						&& !playerCustom.isRolling) {
 					playerCustom.isSneaking = true;
 					Util.channel
-							.sendToServer(new PacketPlayer.CPacketPlayerSneak(
-									true));
+							.sendToServer(new CPacketPlayerAction(
+									4));
 				}
 			}
 			if (playerCustom.isSneaking && player.isSneaking()) {
@@ -51,8 +52,8 @@ public class MovementSlide extends MovementVar {
 			}
 			if (playerCustom.isSneaking && !player.isSneaking()) {
 				playerCustom.isSneaking = false;
-				Util.channel.sendToServer(new PacketPlayer.CPacketPlayerSneak(
-						false));
+				Util.channel.sendToServer(new CPacketPlayerAction(
+						5));
 				playerCustom.sneakTime = 0;
 			}
 			playerCustom.wasSprinting = player.isSprinting();

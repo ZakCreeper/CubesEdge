@@ -20,6 +20,7 @@ import fr.zak.cubesedge.MovementVar;
 import fr.zak.cubesedge.Util;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
 import fr.zak.cubesedge.packet.PacketPlayer;
+import fr.zak.cubesedge.packet.PacketPlayer.CPacketPlayerAction;
 import fr.zak.cubesedge.renderer.EntityRendererCustom;
 
 @Movement("Roll")
@@ -49,8 +50,8 @@ public class MovementRoll extends MovementVar {
 			}
 			if (playerCustom.prevRolling && player.onGround) {
 				playerCustom.isRolling = true;
-				Util.channel.sendToServer(new PacketPlayer.CPacketPlayerRoll(
-						true));
+				Util.channel.sendToServer(new CPacketPlayerAction(
+						2));
 			}
 			if (playerCustom.isRolling) {
 				player.setSprinting(false);
@@ -85,8 +86,8 @@ public class MovementRoll extends MovementVar {
 					playerCustom.isRolling = false;
 					playerCustom.rotationPitch = 0;
 					Util.channel
-							.sendToServer(new PacketPlayer.CPacketPlayerRoll(
-									false));
+							.sendToServer(new CPacketPlayerAction(
+									3));
 					KeyBinding
 							.setKeyBindState(
 									Minecraft.getMinecraft().gameSettings.keyBindForward

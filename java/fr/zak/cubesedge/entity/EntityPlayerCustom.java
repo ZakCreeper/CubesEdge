@@ -26,9 +26,9 @@ public class EntityPlayerCustom implements IExtendedEntityProperties {
 	public boolean wasRolling = false;
 
 	public boolean isGrabbing = false;
-	public boolean grabbingDamage = false;
 	public boolean[] grabbingDirections = { false, false, false, false };
 	private byte[] grabbingDirectionsByte = { 0, 0, 0, 0 };
+	public boolean wasGrabbing = false;
 
 	public float tickRunningLeft = 0;
 	public float tickRunningRight = 0;
@@ -69,7 +69,6 @@ public class EntityPlayerCustom implements IExtendedEntityProperties {
 		compound.setBoolean("isRolling", this.isRolling);
 		compound.setBoolean("wasRolling", this.wasRolling);
 		compound.setBoolean("isGrabbing", this.isGrabbing);
-		compound.setBoolean("grabbingDamage", this.grabbingDamage);
 		for (int i = 0; i < this.grabbingDirections.length; i++) {
 			if (this.grabbingDirections[i]) {
 				this.grabbingDirectionsByte[i] = 1;
@@ -79,6 +78,7 @@ public class EntityPlayerCustom implements IExtendedEntityProperties {
 			}
 		}
 		compound.setByteArray("grabbingDirections", this.grabbingDirectionsByte);
+		compound.setBoolean("wasGrabbing", this.wasGrabbing);
 		compound.setFloat("tickRunningLeft", this.tickRunningLeft);
 		compound.setFloat("tickRunningRight", this.tickRunningRight);
 		compound.setBoolean("animRunning", this.animRunnig);
@@ -115,7 +115,6 @@ public class EntityPlayerCustom implements IExtendedEntityProperties {
 		this.isRolling = compound.getBoolean("isRolling");
 		this.wasRolling = compound.getBoolean("wasRolling");
 		this.isGrabbing = compound.getBoolean("isGrabbing");
-		this.grabbingDamage = compound.getBoolean("grabbingDamage");
 		for (int i = 0; i < compound.getByteArray("grabbingDirections").length; i++) {
 			if (compound.getByteArray("grabbingDirections")[i] == 0) {
 				this.grabbingDirections[i] = false;
@@ -124,6 +123,7 @@ public class EntityPlayerCustom implements IExtendedEntityProperties {
 				this.grabbingDirections[i] = true;
 			}
 		}
+		this.wasGrabbing = compound.getBoolean("wasGrabbing");
 		this.tickRunningLeft = compound.getFloat("tickRunningLeft");
 		this.tickRunningRight = compound.getFloat("tickRunningRight");
 		this.animRunnig = compound.getBoolean("animRunning");

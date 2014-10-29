@@ -12,90 +12,62 @@ import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
 public class PacketPlayer {
 
-	public static class CPacketPlayerSneak implements IMessage {
+	public static class CPacketPlayerAction implements IMessage {
 
-		protected boolean isSneaking;
+		protected int actionId;
 
-		public CPacketPlayerSneak() {
+		public CPacketPlayerAction() {
 
 		}
 
-		public CPacketPlayerSneak(boolean isSneaking) {
-			this.isSneaking = isSneaking;
+		public CPacketPlayerAction(int id) {
+			this.actionId = id;
 		}
 
 		@Override
 		public void fromBytes(ByteBuf buf) {
-			isSneaking = buf.readBoolean();
+			this.actionId = buf.readInt();
 		}
 
 		@Override
 		public void toBytes(ByteBuf buf) {
-			buf.writeBoolean(isSneaking);
+			buf.writeInt(this.actionId);
 		}
 
 		public static class Handler implements
-				IMessageHandler<CPacketPlayerSneak, IMessage> {
+		IMessageHandler<CPacketPlayerAction, IMessage> {
 
 			public Handler() {
 
 			}
 
 			@Override
-			public IMessage onMessage(CPacketPlayerSneak message,
+			public IMessage onMessage(CPacketPlayerAction message,
 					MessageContext ctx) {
-				((EntityPlayerCustom) ctx.getServerHandler().playerEntity
-						.getExtendedProperties("Cube's Edge Player")).isSneaking = message.isSneaking;
-				if (message.isSneaking) {
+				EntityPlayerCustom playerEntity = ((EntityPlayerCustom) ctx.getServerHandler().playerEntity.getExtendedProperties("Cube's Edge Player"));
+				if(message.actionId == 0){
+					playerEntity.isGrabbing = true;
+				}
+				if(message.actionId == 1){
+					playerEntity.isGrabbing = false;
+				}
+				if(message.actionId == 2){
+					playerEntity.isRolling = true;
 					Util.forceSetSize(Entity.class,
 							ctx.getServerHandler().playerEntity, 0.6F, 0.6F);
-				} else {
+				}
+				if(message.actionId == 3){
+					playerEntity.isRolling = false;
 					Util.forceSetSize(Entity.class,
 							ctx.getServerHandler().playerEntity, 0.6F, 1.8F);
 				}
-				return null;
-			}
-		}
-	}
-
-	public static class CPacketPlayerRoll implements IMessage {
-
-		protected boolean isRolling;
-
-		public CPacketPlayerRoll() {
-
-		}
-
-		public CPacketPlayerRoll(boolean isRolling) {
-			this.isRolling = isRolling;
-		}
-
-		@Override
-		public void fromBytes(ByteBuf buf) {
-			isRolling = buf.readBoolean();
-		}
-
-		@Override
-		public void toBytes(ByteBuf buf) {
-			buf.writeBoolean(isRolling);
-		}
-
-		public static class Handler implements
-				IMessageHandler<CPacketPlayerRoll, IMessage> {
-
-			public Handler() {
-
-			}
-
-			@Override
-			public IMessage onMessage(CPacketPlayerRoll message,
-					MessageContext ctx) {
-				((EntityPlayerCustom) ctx.getServerHandler().playerEntity
-						.getExtendedProperties("Cube's Edge Player")).isRolling = message.isRolling;
-				if (message.isRolling) {
+				if(message.actionId == 4){
+					playerEntity.isSneaking = true;
 					Util.forceSetSize(Entity.class,
 							ctx.getServerHandler().playerEntity, 0.6F, 0.6F);
-				} else {
+				}
+				if(message.actionId == 5){
+					playerEntity.isSneaking = false;
 					Util.forceSetSize(Entity.class,
 							ctx.getServerHandler().playerEntity, 0.6F, 1.8F);
 				}

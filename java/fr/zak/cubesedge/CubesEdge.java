@@ -32,6 +32,7 @@ import fr.zak.cubesedge.movement.MovementSprint;
 import fr.zak.cubesedge.movement.MovementTurn;
 import fr.zak.cubesedge.movement.MovementWallJump;
 import fr.zak.cubesedge.packet.PacketPlayer;
+import fr.zak.cubesedge.packet.PacketPlayer.CPacketPlayerAction;
 import fr.zak.cubesedge.proxys.CommonProxy;
 
 /**
@@ -70,11 +71,8 @@ cpw.mods.fml.relauncher.IFMLLoadingPlugin {
 		MinecraftForge.EVENT_BUS.register(new ConstructEvent());
 		Util.channel = NetworkRegistry.INSTANCE.newSimpleChannel("cubesedge");
 		Util.channel.registerMessage(
-				PacketPlayer.CPacketPlayerSneak.Handler.class,
-				PacketPlayer.CPacketPlayerSneak.class, 0, Side.SERVER);
-		Util.channel.registerMessage(
-				PacketPlayer.CPacketPlayerRoll.Handler.class,
-				PacketPlayer.CPacketPlayerRoll.class, 1, Side.SERVER);
+				CPacketPlayerAction.Handler.class,
+				PacketPlayer.CPacketPlayerAction.class, 0, Side.SERVER);
 	}
 
 	@EventHandler

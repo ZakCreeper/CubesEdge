@@ -12,6 +12,8 @@ import fr.zak.cubesedge.Movement;
 import fr.zak.cubesedge.MovementVar;
 import fr.zak.cubesedge.Util;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
+import fr.zak.cubesedge.packet.PacketPlayer;
+import fr.zak.cubesedge.packet.PacketPlayer.CPacketPlayerAction;
 
 @Movement("Grab")
 public class MovementGrab extends MovementVar {
@@ -30,43 +32,43 @@ public class MovementGrab extends MovementVar {
 							MathHelper.floor_double(player.posY),
 							MathHelper.floor_double(player.posZ) + 1)
 							) && heading == 0)
-					|| (Util.isCube(player.worldObj.getBlock(
-							MathHelper.floor_double(player.posX) - 1,
-							MathHelper.floor_double(player.posY),
-							MathHelper.floor_double(player.posZ))
-							) && heading == 1) || (Util.isCube(player.worldObj
-					.getBlock(MathHelper.floor_double(player.posX) + 1,
-							MathHelper.floor_double(player.posY),
-							MathHelper.floor_double(player.posZ))
-					) && heading == 3))
-					&& ((!Util.isCube(player.worldObj.getBlock(
-							MathHelper.floor_double(player.posX),
-							MathHelper.floor_double(player.posY) + 1,
-							MathHelper.floor_double(player.posZ) - 1)
-							) && heading == 2)
-							|| (!Util.isCube(player.worldObj.getBlock(
-									MathHelper.floor_double(player.posX),
-									MathHelper.floor_double(player.posY) + 1,
-									MathHelper.floor_double(player.posZ) + 1)
-									) && heading == 0)
-							|| (!Util.isCube(player.worldObj.getBlock(
+							|| (Util.isCube(player.worldObj.getBlock(
 									MathHelper.floor_double(player.posX) - 1,
-									MathHelper.floor_double(player.posY) + 1,
+									MathHelper.floor_double(player.posY),
 									MathHelper.floor_double(player.posZ))
-									) && heading == 1) || (!Util.isCube(player.worldObj
-							.getBlock(MathHelper.floor_double(player.posX) + 1,
-									MathHelper.floor_double(player.posY) + 1,
-									MathHelper.floor_double(player.posZ))
-							) && heading == 3)) && (!Util.isCube(player.worldObj
-					.getBlock(MathHelper.floor_double(player.posX),
-							MathHelper.floor_double(player.posY) - 2,
-							MathHelper.floor_double(player.posZ))
-					))))
-					&& player.worldObj.getBlock(
-							MathHelper.floor_double(player.posX),
-							MathHelper.floor_double(player.posY),
-							MathHelper.floor_double(player.posZ)) != Blocks.ladder
-					&& player.getCurrentEquippedItem() == null) {
+									) && heading == 1) || (Util.isCube(player.worldObj
+											.getBlock(MathHelper.floor_double(player.posX) + 1,
+													MathHelper.floor_double(player.posY),
+													MathHelper.floor_double(player.posZ))
+											) && heading == 3))
+											&& ((!Util.isCube(player.worldObj.getBlock(
+													MathHelper.floor_double(player.posX),
+													MathHelper.floor_double(player.posY) + 1,
+													MathHelper.floor_double(player.posZ) - 1)
+													) && heading == 2)
+													|| (!Util.isCube(player.worldObj.getBlock(
+															MathHelper.floor_double(player.posX),
+															MathHelper.floor_double(player.posY) + 1,
+															MathHelper.floor_double(player.posZ) + 1)
+															) && heading == 0)
+															|| (!Util.isCube(player.worldObj.getBlock(
+																	MathHelper.floor_double(player.posX) - 1,
+																	MathHelper.floor_double(player.posY) + 1,
+																	MathHelper.floor_double(player.posZ))
+																	) && heading == 1) || (!Util.isCube(player.worldObj
+																			.getBlock(MathHelper.floor_double(player.posX) + 1,
+																					MathHelper.floor_double(player.posY) + 1,
+																					MathHelper.floor_double(player.posZ))
+																			) && heading == 3)) && (!Util.isCube(player.worldObj
+																					.getBlock(MathHelper.floor_double(player.posX),
+																							MathHelper.floor_double(player.posY) - 2,
+																							MathHelper.floor_double(player.posZ))
+																					))))
+																					&& player.worldObj.getBlock(
+																							MathHelper.floor_double(player.posX),
+																							MathHelper.floor_double(player.posY),
+																							MathHelper.floor_double(player.posZ)) != Blocks.ladder
+																							&& player.getCurrentEquippedItem() == null) {
 				playerCustom.isGrabbing = true;
 				playerCustom.rotationYaw = player.rotationYaw;
 				playerCustom.rotationPitch = player.rotationPitch;
@@ -149,6 +151,16 @@ public class MovementGrab extends MovementVar {
 		// }
 		// player.fallDistance = 0;
 		// }
+		boolean flag = playerCustom.isGrabbing;
+		if(flag != playerCustom.wasGrabbing){
+			if(flag){
+				Util.channel.sendToServer(new CPacketPlayerAction(0));
+			}
+			else {
+				Util.channel.sendToServer(new CPacketPlayerAction(1));
+			}
+			playerCustom.wasGrabbing = flag;
+		}
 	}
 
 	@SubscribeEvent
