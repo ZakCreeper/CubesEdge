@@ -19,7 +19,7 @@ import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 
 public class Util {
 
-	private static List<MovementVar> movements = new ArrayList<MovementVar>();
+	public static List<IMovement> movements = new ArrayList<IMovement>();
 
 	public static Configuration cfg;
 
@@ -65,42 +65,12 @@ public class Util {
 		}
 	}
 
-	public static void registerMovement(MovementVar target) {
-		if (target.getClass().isAnnotationPresent(Movement.class)) {
-			Property prop = cfg.get("movements", target.getClass()
-					.getAnnotation(Movement.class).value(), true);
+	public static void registerMovement(IMovement target) {
+			Property prop = cfg.get("movements", target.getName(), true);
 			if (!prop.getBoolean(true)) {
 				target.disable();
 			}
 			movements.add(target);
-			if (!target.isMovementDisabled()) {
-				for (Method m : target.getClass().getDeclaredMethods()) {
-					if (m.isAnnotationPresent(SubscribeEvent.class)) {
-						if (m.getParameterTypes()[0].getName().contains("cpw")) {
-							FMLCommonHandler.instance().bus().register(target);
-						} else if (m.getParameterTypes()[0].getName().contains(
-								"minecraftforge")) {
-							MinecraftForge.EVENT_BUS.register(target);
-						}
-					}
-				}
-				for (Field f : target.getClass().getDeclaredFields()) {
-					if (f.getGenericType().toString()
-							.contains(KeyBinding.class.getName())) {
-						f.setAccessible(true);
-						try {
-							ClientRegistry.registerKeyBinding((KeyBinding) f
-									.get(target));
-						} catch (IllegalArgumentException e) {
-							e.printStackTrace();
-						} catch (IllegalAccessException e) {
-							e.printStackTrace();
-						}
-						f.setAccessible(false);
-					}
-				}
-			}
-		}
 	}
 
 	public static Object[] getMovements() {

@@ -6,13 +6,11 @@ import net.minecraft.util.MathHelper;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import fr.zak.cubesedge.Movement;
-import fr.zak.cubesedge.MovementVar;
+import fr.zak.cubesedge.IMovement;
 import fr.zak.cubesedge.Util;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
 
-@Movement("Jump")
-public class MovementJump extends MovementVar {
+public class MovementJump extends IMovement {
 
 	@Override
 	public void control(EntityPlayerCustom playerCustom, EntityPlayer player) {
@@ -143,5 +141,11 @@ public class MovementJump extends MovementVar {
 	@Override
 	public void renderTick(EntityPlayerCustom playerCustom) {
 
+	}
+
+	@Override
+	public String getName() {
+		// TODO Auto-generated method stub
+		return "Jump";
 	}
 }

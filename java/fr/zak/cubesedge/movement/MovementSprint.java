@@ -10,14 +10,10 @@ import net.minecraft.util.MathHelper;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
-import cpw.mods.fml.common.gameevent.TickEvent.Phase;
-import fr.zak.cubesedge.Movement;
-import fr.zak.cubesedge.MovementVar;
+import fr.zak.cubesedge.IMovement;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
 
-@Movement("Sprint")
-public class MovementSprint extends MovementVar {
+public class MovementSprint extends IMovement {
 
 	@Override
 	public void control(EntityPlayerCustom playerCustom, EntityPlayer player) {
@@ -138,5 +134,11 @@ public class MovementSprint extends MovementVar {
 			playerCustom.tickRunningRight = 0;
 		}
 
+	}
+
+	@Override
+	public String getName() {
+		// TODO Auto-generated method stub
+		return "Sprint Animation";
 	}
 }

@@ -1,7 +1,5 @@
 package fr.zak.cubesedge.movement;
 
-import javax.vecmath.Vector3d;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.settings.KeyBinding;
@@ -14,17 +12,13 @@ import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.Side;
-import fr.zak.cubesedge.Movement;
-import fr.zak.cubesedge.MovementVar;
+import fr.zak.cubesedge.IMovement;
 import fr.zak.cubesedge.Util;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
-import fr.zak.cubesedge.packet.PacketPlayer;
 import fr.zak.cubesedge.packet.PacketPlayer.CPacketPlayerAction;
 import fr.zak.cubesedge.renderer.EntityRendererCustom;
 
-@Movement("Slide")
-public class MovementSlide extends MovementVar {
+public class MovementSlide extends IMovement {
 
 	private EntityRenderer renderer, prevRenderer;
 
@@ -132,5 +126,11 @@ public class MovementSlide extends MovementVar {
 						.getExtendedProperties("Cube's Edge Player")).isSneaking) {
 			event.entityLiving.motionY = 0;
 		}
+	}
+
+	@Override
+	public String getName() {
+		// TODO Auto-generated method stub
+		return "Slide";
 	}
 }

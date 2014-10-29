@@ -2,7 +2,9 @@ package fr.zak.cubesedge.gui;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.concurrent.ConcurrentHashMap;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -17,11 +19,12 @@ import org.apache.commons.lang3.ArrayUtils;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
+import cpw.mods.fml.common.eventhandler.EventBus;
+import cpw.mods.fml.common.eventhandler.IEventListener;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import fr.zak.cubesedge.Movement;
-import fr.zak.cubesedge.MovementVar;
+import fr.zak.cubesedge.IMovement;
 import fr.zak.cubesedge.Util;
 
 @SideOnly(Side.CLIENT)
@@ -42,10 +45,9 @@ public class GuiMovementList extends GuiListExtended {
 		int j = aObject.length;
 
 		for (int k = 0; k < j; ++k) {
-			MovementVar movement = (MovementVar) aObject1[k];
+			IMovement movement = (IMovement) aObject1[k];
 
-			int l = mc.fontRenderer.getStringWidth(movement.getClass()
-					.getAnnotation(Movement.class).value());
+			int l = mc.fontRenderer.getStringWidth(movement.getName());
 
 			if (l > this.lenghtName) {
 				this.lenghtName = l;
@@ -79,14 +81,13 @@ public class GuiMovementList extends GuiListExtended {
 
 	@SideOnly(Side.CLIENT)
 	public class MovementEntry implements GuiListExtended.IGuiListEntry {
-		private final MovementVar movement;
+		private final IMovement movement;
 		private final String movementName;
 		private final GuiButton btnDisable;
 
-		private MovementEntry(MovementVar mov) {
+		private MovementEntry(IMovement mov) {
 			this.movement = mov;
-			this.movementName = mov.getClass().getAnnotation(Movement.class)
-					.value();
+			this.movementName = mov.getName();
 			this.btnDisable = new GuiButton(0, 0, 0, 100, 18, "");
 		}
 
@@ -97,8 +98,8 @@ public class GuiMovementList extends GuiListExtended {
 			GuiMovementList.this.mc.fontRenderer.drawString(this.movementName,
 					p_148279_2_ + 105 - GuiMovementList.this.lenghtName,
 					p_148279_3_ + p_148279_5_ / 2
-							- GuiMovementList.this.mc.fontRenderer.FONT_HEIGHT
-							/ 2, 16777215);
+					- GuiMovementList.this.mc.fontRenderer.FONT_HEIGHT
+					/ 2, 16777215);
 			this.btnDisable.xPosition = p_148279_2_ + 125;
 			this.btnDisable.yPosition = p_148279_3_;
 			if (!movement.isMovementDisabled()) {
@@ -121,8 +122,7 @@ public class GuiMovementList extends GuiListExtended {
 					p_148278_2_, p_148278_3_)) {
 				if (this.movement.isMovementDisabled()) {
 					this.movement.enable();
-					Property prop = Util.cfg.get("movements", this.movement
-							.getClass().getAnnotation(Movement.class).value(),
+					Property prop = Util.cfg.get("movements", this.movement.getName(),
 							true);
 					prop.set(true);
 					if (Util.cfg.hasChanged()) {
@@ -133,7 +133,7 @@ public class GuiMovementList extends GuiListExtended {
 							if (m.getParameterTypes()[0].getName().contains(
 									"cpw")) {
 								FMLCommonHandler.instance().bus()
-										.register(movement);
+								.register(movement);
 							} else if (m.getParameterTypes()[0].getName()
 									.contains("minecraftforge")) {
 								MinecraftForge.EVENT_BUS.register(movement);
@@ -146,8 +146,8 @@ public class GuiMovementList extends GuiListExtended {
 							f.setAccessible(true);
 							try {
 								ClientRegistry
-										.registerKeyBinding((KeyBinding) f
-												.get(movement));
+								.registerKeyBinding((KeyBinding) f
+										.get(movement));
 								boolean flag = true;
 								for (Object o : (HashSet) ObfuscationReflectionHelper
 										.getPrivateValue(KeyBinding.class,
@@ -161,8 +161,8 @@ public class GuiMovementList extends GuiListExtended {
 									((HashSet) ObfuscationReflectionHelper
 											.getPrivateValue(KeyBinding.class,
 													(KeyBinding) f
-															.get(movement), 2))
-											.add("Cube's Edge");
+													.get(movement), 2))
+													.add("Cube's Edge");
 								}
 							} catch (IllegalArgumentException e) {
 								e.printStackTrace();
@@ -175,7 +175,7 @@ public class GuiMovementList extends GuiListExtended {
 				} else {
 					this.movement.disable();
 					Property prop = Util.cfg.get("movements", this.movement
-							.getClass().getAnnotation(Movement.class).value(),
+							.getName(),
 							true);
 					prop.set(false);
 					if (Util.cfg.hasChanged()) {
@@ -185,11 +185,15 @@ public class GuiMovementList extends GuiListExtended {
 						if (m.isAnnotationPresent(SubscribeEvent.class)) {
 							if (m.getParameterTypes()[0].getName().contains(
 									"cpw")) {
-								FMLCommonHandler.instance().bus()
-										.unregister(movement);
+								if(((ConcurrentHashMap<Object, ArrayList<IEventListener>>)ObfuscationReflectionHelper.getPrivateValue(EventBus.class, FMLCommonHandler.instance().bus(), 1)).containsKey(movement)){
+									FMLCommonHandler.instance().bus()
+									.unregister(movement);
+								}
 							} else if (m.getParameterTypes()[0].getName()
 									.contains("minecraftforge")) {
-								MinecraftForge.EVENT_BUS.unregister(movement);
+								if(((ConcurrentHashMap<Object, ArrayList<IEventListener>>)ObfuscationReflectionHelper.getPrivateValue(EventBus.class, MinecraftForge.EVENT_BUS, 1)).containsKey(movement)){
+									MinecraftForge.EVENT_BUS.unregister(movement);
+								}
 							}
 						}
 					}
@@ -206,14 +210,14 @@ public class GuiMovementList extends GuiListExtended {
 									if (((String) ObfuscationReflectionHelper
 											.getPrivateValue(KeyBinding.class,
 													kb, 5))
-											.equals("Cube's Edge")) {
+													.equals("Cube's Edge")) {
 										return true;
 									}
 								}
 								((HashSet) ObfuscationReflectionHelper
 										.getPrivateValue(KeyBinding.class,
 												(KeyBinding) f.get(movement), 2))
-										.remove("Cube's Edge");
+												.remove("Cube's Edge");
 							} catch (IllegalArgumentException e) {
 								e.printStackTrace();
 							} catch (IllegalAccessException e) {

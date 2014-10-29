@@ -6,7 +6,6 @@ import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
@@ -15,16 +14,13 @@ import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import fr.zak.cubesedge.Movement;
-import fr.zak.cubesedge.MovementVar;
+import fr.zak.cubesedge.IMovement;
 import fr.zak.cubesedge.Util;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
-import fr.zak.cubesedge.packet.PacketPlayer;
 import fr.zak.cubesedge.packet.PacketPlayer.CPacketPlayerAction;
 import fr.zak.cubesedge.renderer.EntityRendererCustom;
 
-@Movement("Roll")
-public class MovementRoll extends MovementVar {
+public class MovementRoll extends IMovement {
 
 	private EntityRenderer renderer, prevRenderer;
 
@@ -179,5 +175,11 @@ public class MovementRoll extends MovementVar {
 				.getExtendedProperties("Cube's Edge Player")).isRolling) {
 			event.setCanceled(true);
 		}
+	}
+
+	@Override
+	public String getName() {
+		// TODO Auto-generated method stub
+		return "Roll";
 	}
 }

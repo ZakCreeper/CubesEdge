@@ -5,7 +5,6 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import fr.zak.cubesedge.MovementVar;
 
 @SideOnly(Side.CLIENT)
 public class GuiConfig extends GuiScreen {

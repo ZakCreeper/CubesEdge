@@ -3,7 +3,7 @@ package fr.zak.cubesedge;
 import net.minecraft.entity.player.EntityPlayer;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
 
-public abstract class MovementVar {
+public abstract class IMovement {
 
 	private boolean disabled;
 
@@ -27,4 +27,6 @@ public abstract class MovementVar {
 			EntityPlayer player);
 
 	public abstract void renderTick(EntityPlayerCustom playerCustom);
+	
+	public abstract String getName();
 }

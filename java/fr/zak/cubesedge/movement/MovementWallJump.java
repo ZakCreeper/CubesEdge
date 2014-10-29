@@ -6,14 +6,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.client.event.MouseEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.Side;
-import fr.zak.cubesedge.Movement;
-import fr.zak.cubesedge.MovementVar;
+import fr.zak.cubesedge.IMovement;
 import fr.zak.cubesedge.Util;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
 
-@Movement("Wall jump")
-public class MovementWallJump extends MovementVar {
+public class MovementWallJump extends IMovement {
 
 	@Override
 	public void control(EntityPlayerCustom playerCustom, EntityPlayer player) {
@@ -240,5 +237,11 @@ public class MovementWallJump extends MovementVar {
 	@Override
 	public void renderTick(EntityPlayerCustom playerCustom) {
 
+	}
+
+	@Override
+	public String getName() {
+		// TODO Auto-generated method stub
+		return "Wall Jump";
 	}
 }

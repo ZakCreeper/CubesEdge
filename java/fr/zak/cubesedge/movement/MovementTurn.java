@@ -1,23 +1,22 @@
 package fr.zak.cubesedge.movement;
 
-import org.lwjgl.input.Keyboard;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MathHelper;
-import cpw.mods.fml.client.registry.ClientRegistry;
+
+import org.lwjgl.input.Keyboard;
+
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
 import cpw.mods.fml.relauncher.Side;
-import fr.zak.cubesedge.Movement;
-import fr.zak.cubesedge.MovementVar;
+import cpw.mods.fml.relauncher.SideOnly;
+import fr.zak.cubesedge.IMovement;
 import fr.zak.cubesedge.Util;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
 
-@Movement("Turn")
-public class MovementTurn extends MovementVar {
+public class MovementTurn extends IMovement {
 
 	@Override
 	public void control(EntityPlayerCustom playerCustom, EntityPlayer player) {
@@ -171,6 +170,7 @@ public class MovementTurn extends MovementVar {
 			"Cube's Edge");
 
 	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
 	public void key(KeyInputEvent event) {
 		if (turn.isPressed()
 				&& !((EntityPlayerCustom) Minecraft.getMinecraft().thePlayer
@@ -183,5 +183,11 @@ public class MovementTurn extends MovementVar {
 	@Override
 	public void renderTick(EntityPlayerCustom playerCustom) {
 
+	}
+
+	@Override
+	public String getName() {
+		// TODO Auto-generated method stub
+		return "Turn";
 	}
 }

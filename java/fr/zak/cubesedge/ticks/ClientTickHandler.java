@@ -1,14 +1,10 @@
 package fr.zak.cubesedge.ticks;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.MathHelper;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
-import fr.zak.cubesedge.Movement;
-import fr.zak.cubesedge.MovementVar;
+import fr.zak.cubesedge.IMovement;
 import fr.zak.cubesedge.Util;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
 
@@ -24,14 +20,10 @@ public class ClientTickHandler {
 						.getExtendedProperties("Cube's Edge Player");
 			}
 			for (Object o : Util.getMovements()) {
-				if (!((MovementVar) o).isMovementDisabled()) {
-					if (event.side == o.getClass()
-							.getAnnotation(Movement.class).side()) {
-						((MovementVar) o).control(playerCustom, event.player);
-					}
+				if (!((IMovement) o).isMovementDisabled()) {
+						((IMovement) o).control(playerCustom, event.player);
 				}
 			}
-			System.out.println(Util.isCube(event.player.worldObj.getBlock(MathHelper.floor_double(event.player.posX), MathHelper.floor_double(event.player.posY) + 1, MathHelper.floor_double(event.player.posZ))));
 		}
 	}
 
@@ -42,8 +34,8 @@ public class ClientTickHandler {
 			playerCustom = (EntityPlayerCustom) Minecraft.getMinecraft().thePlayer
 					.getExtendedProperties("Cube's Edge Player");
 			for (Object o : Util.getMovements()) {
-				if (!((MovementVar) o).isMovementDisabled()) {
-					((MovementVar) o).renderTick(playerCustom);
+				if (!((IMovement) o).isMovementDisabled()) {
+					((IMovement) o).renderTick(playerCustom);
 				}
 			}
 		}
