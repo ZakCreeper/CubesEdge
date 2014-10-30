@@ -59,14 +59,6 @@ cpw.mods.fml.relauncher.IFMLLoadingPlugin {
 
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
-		Util.registerMovement(new MovementTurn());
-		Util.registerMovement(new MovementRoll());
-		Util.registerMovement(new MovementGrab());
-		Util.registerMovement(new MovementWallJump());
-		Util.registerMovement(new MovementJump());
-		Util.registerMovement(new MovementSlide());
-		Util.registerMovement(new MovementSlow());
-		Util.registerMovement(new MovementSprint());
 		proxy.registerRenderThings();
 		MinecraftForge.EVENT_BUS.register(new ConstructEvent());
 		Util.channel = NetworkRegistry.INSTANCE.newSimpleChannel("cubesedge");

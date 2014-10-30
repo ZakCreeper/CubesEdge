@@ -17,127 +17,131 @@ public class MovementGrab extends IMovement {
 
 	@Override
 	public void control(EntityPlayerCustom playerCustom, EntityPlayer player) {
-		if(player.worldObj.isRemote){
-			int heading = MathHelper
-					.floor_double((double) (player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-			if (!playerCustom.isSneaking) {
-				if (((((Util.isCube(player.worldObj.getBlock(
-						MathHelper.floor_double(player.posX),
-						MathHelper.floor_double(player.posY),
-						MathHelper.floor_double(player.posZ) - 1)) && heading == 2)
-						|| (Util.isCube(player.worldObj.getBlock(
-								MathHelper.floor_double(player.posX),
-								MathHelper.floor_double(player.posY),
-								MathHelper.floor_double(player.posZ) + 1)
-								) && heading == 0)
-								|| (Util.isCube(player.worldObj.getBlock(
-										MathHelper.floor_double(player.posX) - 1,
-										MathHelper.floor_double(player.posY),
-										MathHelper.floor_double(player.posZ))
-										) && heading == 1) || (Util.isCube(player.worldObj
-												.getBlock(MathHelper.floor_double(player.posX) + 1,
-														MathHelper.floor_double(player.posY),
-														MathHelper.floor_double(player.posZ))
-												) && heading == 3))
-												&& ((!Util.isCube(player.worldObj.getBlock(
-														MathHelper.floor_double(player.posX),
-														MathHelper.floor_double(player.posY) + 1,
-														MathHelper.floor_double(player.posZ) - 1)
-														) && heading == 2)
-														|| (!Util.isCube(player.worldObj.getBlock(
-																MathHelper.floor_double(player.posX),
-																MathHelper.floor_double(player.posY) + 1,
-																MathHelper.floor_double(player.posZ) + 1)
-																) && heading == 0)
-																|| (!Util.isCube(player.worldObj.getBlock(
-																		MathHelper.floor_double(player.posX) - 1,
-																		MathHelper.floor_double(player.posY) + 1,
-																		MathHelper.floor_double(player.posZ))
-																		) && heading == 1) || (!Util.isCube(player.worldObj
-																				.getBlock(MathHelper.floor_double(player.posX) + 1,
-																						MathHelper.floor_double(player.posY) + 1,
-																						MathHelper.floor_double(player.posZ))
-																				) && heading == 3)) && (!Util.isCube(player.worldObj
-																						.getBlock(MathHelper.floor_double(player.posX),
-																								MathHelper.floor_double(player.posY) - 2,
-																								MathHelper.floor_double(player.posZ))
-																						))))
-																						&& player.worldObj.getBlock(
-																								MathHelper.floor_double(player.posX),
-																								MathHelper.floor_double(player.posY),
-																								MathHelper.floor_double(player.posZ)) != Blocks.ladder
-																								&& player.getCurrentEquippedItem() == null) {
-					playerCustom.isGrabbing = true;
-					playerCustom.rotationYaw = player.rotationYaw;
-					playerCustom.rotationPitch = player.rotationPitch;
-					playerCustom.prevRotationPitch = player.prevRotationPitch;
-					playerCustom.prevRotationYaw = player.prevRotationYaw;
-					playerCustom.grabbingDirections[heading] = true;
-					if (heading == 0) {
-						playerCustom.grabbingDirections[3] = true;
-					} else {
-						playerCustom.grabbingDirections[heading - 1] = true;
-					}
-
-					if (heading == 3) {
-						playerCustom.grabbingDirections[0] = true;
-					} else {
-						playerCustom.grabbingDirections[heading + 1] = true;
-					}
+		int heading = MathHelper
+				.floor_double((double) (player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+		if (!playerCustom.isSneaking) {
+			if (((((Util.isCube(player.worldObj.getBlock(
+					MathHelper.floor_double(player.posX),
+					MathHelper.floor_double(player.posY),
+					MathHelper.floor_double(player.posZ) - 1)) && heading == 2)
+					|| (Util.isCube(player.worldObj.getBlock(
+							MathHelper.floor_double(player.posX),
+							MathHelper.floor_double(player.posY),
+							MathHelper.floor_double(player.posZ) + 1)
+							) && heading == 0)
+							|| (Util.isCube(player.worldObj.getBlock(
+									MathHelper.floor_double(player.posX) - 1,
+									MathHelper.floor_double(player.posY),
+									MathHelper.floor_double(player.posZ))
+									) && heading == 1) || (Util.isCube(player.worldObj
+											.getBlock(MathHelper.floor_double(player.posX) + 1,
+													MathHelper.floor_double(player.posY),
+													MathHelper.floor_double(player.posZ))
+											) && heading == 3))
+											&& ((!Util.isCube(player.worldObj.getBlock(
+													MathHelper.floor_double(player.posX),
+													MathHelper.floor_double(player.posY) + 1,
+													MathHelper.floor_double(player.posZ) - 1)
+													) && heading == 2)
+													|| (!Util.isCube(player.worldObj.getBlock(
+															MathHelper.floor_double(player.posX),
+															MathHelper.floor_double(player.posY) + 1,
+															MathHelper.floor_double(player.posZ) + 1)
+															) && heading == 0)
+															|| (!Util.isCube(player.worldObj.getBlock(
+																	MathHelper.floor_double(player.posX) - 1,
+																	MathHelper.floor_double(player.posY) + 1,
+																	MathHelper.floor_double(player.posZ))
+																	) && heading == 1) || (!Util.isCube(player.worldObj
+																			.getBlock(MathHelper.floor_double(player.posX) + 1,
+																					MathHelper.floor_double(player.posY) + 1,
+																					MathHelper.floor_double(player.posZ))
+																			) && heading == 3)) && (!Util.isCube(player.worldObj
+																					.getBlock(MathHelper.floor_double(player.posX),
+																							MathHelper.floor_double(player.posY) - 2,
+																							MathHelper.floor_double(player.posZ))
+																					))))
+																					&& player.worldObj.getBlock(
+																							MathHelper.floor_double(player.posX),
+																							MathHelper.floor_double(player.posY),
+																							MathHelper.floor_double(player.posZ)) != Blocks.ladder
+																							&& player.getCurrentEquippedItem() == null) {
+				playerCustom.isGrabbing = true;
+				Util.channel.sendToServer(new CPacketPlayerAction(0));
+				playerCustom.rotationYaw = player.rotationYaw;
+				playerCustom.rotationPitch = player.rotationPitch;
+				playerCustom.prevRotationPitch = player.prevRotationPitch;
+				playerCustom.prevRotationYaw = player.prevRotationYaw;
+				playerCustom.grabbingDirections[heading] = true;
+				if (heading == 0) {
+					playerCustom.grabbingDirections[3] = true;
 				} else {
-					playerCustom.isGrabbing = false;
-					playerCustom.rotationYaw = 0;
-					if (!playerCustom.isRolling) {
-						playerCustom.rotationPitch = 0;
-					}
-					playerCustom.prevRotationPitch = 0;
-					playerCustom.prevRotationYaw = 0;
-					playerCustom.grabbingDirections[0] = false;
-					playerCustom.grabbingDirections[1] = false;
-					playerCustom.grabbingDirections[2] = false;
-					playerCustom.grabbingDirections[3] = false;
+					playerCustom.grabbingDirections[heading - 1] = true;
 				}
-				if (playerCustom.isGrabbing && !playerCustom.wasSneaking
-						&& player.isSneaking()) {
-					playerCustom.wasSneaking = true;
+
+				if (heading == 3) {
+					playerCustom.grabbingDirections[0] = true;
+				} else {
+					playerCustom.grabbingDirections[heading + 1] = true;
 				}
-				if (!playerCustom.isGrabbing) {
-					playerCustom.wasSneaking = false;
+			} else {
+				playerCustom.isGrabbing = false;
+				Util.channel.sendToServer(new CPacketPlayerAction(1));
+				playerCustom.rotationYaw = 0;
+				if (!playerCustom.isRolling) {
+					playerCustom.rotationPitch = 0;
 				}
-				if (playerCustom.wasSneaking) {
-					return;
+				playerCustom.prevRotationPitch = 0;
+				playerCustom.prevRotationYaw = 0;
+				playerCustom.grabbingDirections[0] = false;
+				playerCustom.grabbingDirections[1] = false;
+				playerCustom.grabbingDirections[2] = false;
+				playerCustom.grabbingDirections[3] = false;
+			}
+			if (playerCustom.isGrabbing && !playerCustom.wasSneaking
+					&& player.isSneaking()) {
+				playerCustom.wasSneaking = true;
+			}
+			if (!playerCustom.isGrabbing) {
+				playerCustom.wasSneaking = false;
+			}
+			if (playerCustom.wasSneaking) {
+				return;
+			}
+			if (!player.isSneaking()
+					&& !(Boolean) ObfuscationReflectionHelper.getPrivateValue(
+							EntityLivingBase.class, (EntityLivingBase) player,
+							41) && playerCustom.isGrabbing) {
+				if (heading == 1 || heading == 3) {
+					player.setPosition(
+							MathHelper.floor_double(player.posX) + 0.5F,
+							MathHelper.floor_double(player.posY) + 0.9F,
+							player.posZ);
+					player.motionX = 0;
 				}
-				if (!player.isSneaking()
-						&& !(Boolean) ObfuscationReflectionHelper.getPrivateValue(
-								EntityLivingBase.class, (EntityLivingBase) player,
-								41) && playerCustom.isGrabbing) {
-					if (heading == 1 || heading == 3) {
-						player.setPosition(
-								MathHelper.floor_double(player.posX) + 0.5F,
-								MathHelper.floor_double(player.posY) + 0.9F,
-								player.posZ);
-						player.motionX = 0;
-					}
-					if (heading == 2 || heading == 0) {
-						player.setPosition(player.posX,
-								MathHelper.floor_double(player.posY) + 0.9F,
-								MathHelper.floor_double(player.posZ) + 0.5F);
-						player.motionZ = 0;
-					}
-					player.motionY = 0.0;
-					if (player.isSprinting()) {
-						player.setSprinting(false);
-					}
-				} else if ((Boolean) ObfuscationReflectionHelper.getPrivateValue(
-						EntityLivingBase.class, (EntityLivingBase) player, 41)
-						&& playerCustom.isGrabbing) {
-					player.motionY = 0.55D;
+				if (heading == 2 || heading == 0) {
+					player.setPosition(player.posX,
+							MathHelper.floor_double(player.posY) + 0.9F,
+							MathHelper.floor_double(player.posZ) + 0.5F);
+					player.motionZ = 0;
 				}
+				player.motionY = 0.0;
+				if (player.isSprinting()) {
+					player.setSprinting(false);
+				}
+			} else if ((Boolean) ObfuscationReflectionHelper.getPrivateValue(
+					EntityLivingBase.class, (EntityLivingBase) player, 41)
+					&& playerCustom.isGrabbing) {
+				player.motionY = 0.55D;
 			}
 		}
+		if(!player.worldObj.isRemote){
+//			System.out.println(playerCustom.isGrabbing);
+		}
+
 		// if(playerCustom.isGrabbing && !player.capabilities.isCreativeMode){
-		// PotionEffect potioneffect =
-		// player.getActivePotionEffect(Potion.jump);
+			// PotionEffect potioneffect =
+					// player.getActivePotionEffect(Potion.jump);
 		// float f1 = potioneffect != null ? (float)(potioneffect.getAmplifier()
 		// + 1) : 0.0F;
 		// int i = MathHelper.ceiling_float_int(player.fallDistance - 3.0F -
@@ -150,16 +154,6 @@ public class MovementGrab extends IMovement {
 		// }
 		// player.fallDistance = 0;
 		// }
-		boolean flag = playerCustom.isGrabbing;
-		if(flag != playerCustom.wasGrabbing){
-			if(flag){
-				Util.channel.sendToServer(new CPacketPlayerAction(0));
-			}
-			else {
-				Util.channel.sendToServer(new CPacketPlayerAction(1));
-			}
-			playerCustom.wasGrabbing = flag;
-		}
 	}
 
 	@SubscribeEvent

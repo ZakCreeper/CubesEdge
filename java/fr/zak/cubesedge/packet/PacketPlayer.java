@@ -3,15 +3,16 @@ package fr.zak.cubesedge.packet;
 import fr.zak.cubesedge.Util;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityOtherPlayerMP;
 import net.minecraft.entity.Entity;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class PacketPlayer {
 
+	@SideOnly(Side.CLIENT)
 	public static class CPacketPlayerAction implements IMessage {
 
 		protected int actionId;
@@ -71,6 +72,7 @@ public class PacketPlayer {
 					Util.forceSetSize(Entity.class,
 							ctx.getServerHandler().playerEntity, 0.6F, 1.8F);
 				}
+				
 				return null;
 			}
 		}

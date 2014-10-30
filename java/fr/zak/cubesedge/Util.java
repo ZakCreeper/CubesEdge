@@ -16,10 +16,11 @@ import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class Util {
 
-	public static List<IMovement> movements = new ArrayList<IMovement>();
+	private static List<IMovement> movements = new ArrayList<IMovement>();
 
 	public static Configuration cfg;
 
@@ -30,7 +31,7 @@ public class Util {
 	public static final String VERSION = "Alpha 0.1.18";
 
 	public static List<Block> cubes = new ArrayList<Block>();
-	
+
 	public static void detectObfuscation() {
 		obfuscation = true;
 		try {
@@ -66,17 +67,44 @@ public class Util {
 	}
 
 	public static void registerMovement(IMovement target) {
-			Property prop = cfg.get("movements", target.getName(), true);
-			if (!prop.getBoolean(true)) {
-				target.disable();
+		Property prop = cfg.get("movements", target.getName(), true);
+		if (!prop.getBoolean(true)) {
+			target.disable();
+		}
+		movements.add(target);
+		if (!target.isMovementDisabled()) {
+			for (Method m : target.getClass().getDeclaredMethods()) {
+				if (m.isAnnotationPresent(SubscribeEvent.class)) {
+					if (m.getParameterTypes()[0].getName().contains("cpw")) {
+						FMLCommonHandler.instance().bus().register(target);
+					} else if (m.getParameterTypes()[0].getName().contains(
+							"minecraftforge")) {
+						MinecraftForge.EVENT_BUS.register(target);
+					}
+				}
 			}
-			movements.add(target);
+			for (Field f : target.getClass().getDeclaredFields()) {
+				if (f.getGenericType().toString()
+						.contains(KeyBinding.class.getName())) {
+					f.setAccessible(true);
+					try {
+						ClientRegistry.registerKeyBinding((KeyBinding) f
+								.get(target));
+					} catch (IllegalArgumentException e) {
+						e.printStackTrace();
+					} catch (IllegalAccessException e) {
+						e.printStackTrace();
+					}
+					f.setAccessible(false);
+				}
+			}
+		}
 	}
 
 	public static Object[] getMovements() {
 		return movements.toArray();
 	}
-	
+
 	public static boolean isCube(Block b){
 		if(cubes.contains(b)){
 			return true;

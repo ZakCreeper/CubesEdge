@@ -28,7 +28,6 @@ public class EntityPlayerCustom implements IExtendedEntityProperties {
 	public boolean isGrabbing = false;
 	public boolean[] grabbingDirections = { false, false, false, false };
 	private byte[] grabbingDirectionsByte = { 0, 0, 0, 0 };
-	public boolean wasGrabbing = false;
 
 	public float tickRunningLeft = 0;
 	public float tickRunningRight = 0;
@@ -78,7 +77,6 @@ public class EntityPlayerCustom implements IExtendedEntityProperties {
 			}
 		}
 		compound.setByteArray("grabbingDirections", this.grabbingDirectionsByte);
-		compound.setBoolean("wasGrabbing", this.wasGrabbing);
 		compound.setFloat("tickRunningLeft", this.tickRunningLeft);
 		compound.setFloat("tickRunningRight", this.tickRunningRight);
 		compound.setBoolean("animRunning", this.animRunnig);
@@ -123,7 +121,6 @@ public class EntityPlayerCustom implements IExtendedEntityProperties {
 				this.grabbingDirections[i] = true;
 			}
 		}
-		this.wasGrabbing = compound.getBoolean("wasGrabbing");
 		this.tickRunningLeft = compound.getFloat("tickRunningLeft");
 		this.tickRunningRight = compound.getFloat("tickRunningRight");
 		this.animRunnig = compound.getBoolean("animRunning");

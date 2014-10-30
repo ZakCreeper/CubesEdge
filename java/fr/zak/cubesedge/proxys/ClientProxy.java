@@ -12,6 +12,14 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import fr.zak.cubesedge.IMovement;
 import fr.zak.cubesedge.Util;
+import fr.zak.cubesedge.movement.MovementGrab;
+import fr.zak.cubesedge.movement.MovementJump;
+import fr.zak.cubesedge.movement.MovementRoll;
+import fr.zak.cubesedge.movement.MovementSlide;
+import fr.zak.cubesedge.movement.MovementSlow;
+import fr.zak.cubesedge.movement.MovementSprint;
+import fr.zak.cubesedge.movement.MovementTurn;
+import fr.zak.cubesedge.movement.MovementWallJump;
 import fr.zak.cubesedge.ticks.ClientTickHandler;
 
 public class ClientProxy extends CommonProxy {
@@ -19,38 +27,13 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void registerRenderThings() {
 		FMLCommonHandler.instance().bus().register(new ClientTickHandler());
-		for(IMovement target : Util.movements){
-			if (!target.isMovementDisabled()) {
-				for (Method m : target.getClass().getDeclaredMethods()) {
-					if(m.isAnnotationPresent(SideOnly.class)){
-						if(m.getAnnotation(SideOnly.class).value() == Side.CLIENT){
-							if (m.isAnnotationPresent(SubscribeEvent.class)) {
-								if (m.getParameterTypes()[0].getName().contains("cpw")) {
-									FMLCommonHandler.instance().bus().register(target);
-								} else if (m.getParameterTypes()[0].getName().contains(
-										"minecraftforge")) {
-									MinecraftForge.EVENT_BUS.register(target);
-								}
-							}
-						}
-					}
-				}
-				for (Field f : target.getClass().getDeclaredFields()) {
-					if (f.getGenericType().toString()
-							.contains(KeyBinding.class.getName())) {
-						f.setAccessible(true);
-						try {
-							ClientRegistry.registerKeyBinding((KeyBinding) f
-									.get(target));
-						} catch (IllegalArgumentException e) {
-							e.printStackTrace();
-						} catch (IllegalAccessException e) {
-							e.printStackTrace();
-						}
-						f.setAccessible(false);
-					}
-				}
-			}
-		}
+		Util.registerMovement(new MovementTurn());
+		Util.registerMovement(new MovementRoll());
+		Util.registerMovement(new MovementGrab());
+		Util.registerMovement(new MovementWallJump());
+		Util.registerMovement(new MovementJump());
+		Util.registerMovement(new MovementSlide());
+		Util.registerMovement(new MovementSlow());
+		Util.registerMovement(new MovementSprint());
 	}
 }
