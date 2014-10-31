@@ -10,13 +10,14 @@ import org.lwjgl.input.Keyboard;
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
+import cpw.mods.fml.relauncher.Side;
 import fr.zak.cubesedge.IMovement;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
 
 public class MovementSlow extends IMovement {
 
 	@Override
-	public void control(EntityPlayerCustom playerCustom, EntityPlayer player) {
+	public void control(EntityPlayerCustom playerCustom, EntityPlayer player, Side side) {
 		if (keyPressedSlow && !playerCustom.slow) {
 			ObfuscationReflectionHelper.setPrivateValue(Timer.class,
 					((Timer) ObfuscationReflectionHelper.getPrivateValue(

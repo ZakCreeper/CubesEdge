@@ -14,6 +14,7 @@ import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.relauncher.Side;
 import fr.zak.cubesedge.IMovement;
 import fr.zak.cubesedge.Util;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
@@ -25,7 +26,7 @@ public class MovementRoll extends IMovement {
 	private EntityRenderer renderer, prevRenderer;
 
 	@Override
-	public void control(EntityPlayerCustom playerCustom, EntityPlayer player) {
+	public void control(EntityPlayerCustom playerCustom, EntityPlayer player, Side side) {
 		if (!player.capabilities.isFlying && !playerCustom.isSneaking) {
 			if (player.fallDistance > 3.0F && player.fallDistance < 15F) {
 				if (Util.isCube(player.worldObj.getBlock(

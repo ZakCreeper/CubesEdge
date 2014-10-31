@@ -6,6 +6,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.client.event.MouseEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.relauncher.Side;
 import fr.zak.cubesedge.IMovement;
 import fr.zak.cubesedge.Util;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
@@ -13,7 +14,7 @@ import fr.zak.cubesedge.entity.EntityPlayerCustom;
 public class MovementWallJump extends IMovement {
 
 	@Override
-	public void control(EntityPlayerCustom playerCustom, EntityPlayer player) {
+	public void control(EntityPlayerCustom playerCustom, EntityPlayer player, Side side) {
 		int heading = MathHelper
 				.floor_double((double) (player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
 		if (!player.capabilities.isFlying && !playerCustom.isSneaking) {

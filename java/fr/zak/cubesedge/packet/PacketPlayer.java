@@ -12,7 +12,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class PacketPlayer {
 
-	@SideOnly(Side.CLIENT)
 	public static class CPacketPlayerAction implements IMessage {
 
 		protected int actionId;
@@ -48,9 +47,11 @@ public class PacketPlayer {
 				EntityPlayerCustom playerEntity = ((EntityPlayerCustom) ctx.getServerHandler().playerEntity.getExtendedProperties("Cube's Edge Player"));
 				if(message.actionId == 0){
 					playerEntity.isGrabbing = true;
+					System.out.println("2 : " + playerEntity.isGrabbing);
 				}
 				if(message.actionId == 1){
 					playerEntity.isGrabbing = false;
+					System.out.println("3 : " + playerEntity.isGrabbing);
 				}
 				if(message.actionId == 2){
 					playerEntity.isRolling = true;

@@ -19,7 +19,7 @@ import fr.zak.cubesedge.entity.EntityPlayerCustom;
 public class MovementTurn extends IMovement {
 
 	@Override
-	public void control(EntityPlayerCustom playerCustom, EntityPlayer player) {
+	public void control(EntityPlayerCustom playerCustom, EntityPlayer player, Side side) {
 		int heading = MathHelper
 				.floor_double((double) (player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
 		if (!player.capabilities.isFlying && !playerCustom.isSneaking) {

@@ -16,15 +16,13 @@ public class ClientTickHandler {
 	@SubscribeEvent
 	public void playerUpdate(TickEvent.PlayerTickEvent event) {
 		if (event.phase == TickEvent.Phase.END) {
-			if(event.side == Side.CLIENT){
-				if (playerCustom == null) {
-					playerCustom = (EntityPlayerCustom) event.player
-							.getExtendedProperties("Cube's Edge Player");
-				}
-				for (Object o : Util.getMovements()) {
-					if (!((IMovement) o).isMovementDisabled()) {
-						((IMovement) o).control(playerCustom, event.player);
-					}
+			if (playerCustom == null) {
+				playerCustom = (EntityPlayerCustom) event.player
+						.getExtendedProperties("Cube's Edge Player");
+			}
+			for (Object o : Util.getMovements()) {
+				if (!((IMovement) o).isMovementDisabled()) {
+					((IMovement) o).control(playerCustom, event.player, event.side);
 				}
 			}
 		}

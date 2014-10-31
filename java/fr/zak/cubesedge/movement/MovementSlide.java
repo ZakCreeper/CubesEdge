@@ -12,6 +12,7 @@ import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.relauncher.Side;
 import fr.zak.cubesedge.IMovement;
 import fr.zak.cubesedge.Util;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
@@ -23,7 +24,7 @@ public class MovementSlide extends IMovement {
 	private EntityRenderer renderer, prevRenderer;
 
 	@Override
-	public void control(EntityPlayerCustom playerCustom, EntityPlayer player) {
+	public void control(EntityPlayerCustom playerCustom, EntityPlayer player, Side side) {
 		if (!player.capabilities.isFlying) {
 			if (!player.isSprinting() && playerCustom.wasSprinting) {
 				if (player.isSneaking() && player.onGround

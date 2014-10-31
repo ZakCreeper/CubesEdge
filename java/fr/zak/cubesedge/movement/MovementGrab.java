@@ -8,6 +8,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraftforge.client.event.MouseEvent;
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.relauncher.Side;
 import fr.zak.cubesedge.IMovement;
 import fr.zak.cubesedge.Util;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
@@ -16,7 +17,7 @@ import fr.zak.cubesedge.packet.PacketPlayer.CPacketPlayerAction;
 public class MovementGrab extends IMovement {
 
 	@Override
-	public void control(EntityPlayerCustom playerCustom, EntityPlayer player) {
+	public void control(EntityPlayerCustom playerCustom, EntityPlayer player, Side side) {
 		int heading = MathHelper
 				.floor_double((double) (player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
 		if (!playerCustom.isSneaking) {
@@ -67,7 +68,6 @@ public class MovementGrab extends IMovement {
 																							MathHelper.floor_double(player.posZ)) != Blocks.ladder
 																							&& player.getCurrentEquippedItem() == null) {
 				playerCustom.isGrabbing = true;
-				Util.channel.sendToServer(new CPacketPlayerAction(0));
 				playerCustom.rotationYaw = player.rotationYaw;
 				playerCustom.rotationPitch = player.rotationPitch;
 				playerCustom.prevRotationPitch = player.prevRotationPitch;
@@ -86,7 +86,6 @@ public class MovementGrab extends IMovement {
 				}
 			} else {
 				playerCustom.isGrabbing = false;
-				Util.channel.sendToServer(new CPacketPlayerAction(1));
 				playerCustom.rotationYaw = 0;
 				if (!playerCustom.isRolling) {
 					playerCustom.rotationPitch = 0;
@@ -135,8 +134,13 @@ public class MovementGrab extends IMovement {
 				player.motionY = 0.55D;
 			}
 		}
-		if(!player.worldObj.isRemote){
-//			System.out.println(playerCustom.isGrabbing);
+		
+		if(side == Side.CLIENT){
+			Util.channel.sendToServer(new CPacketPlayerAction(playerCustom.isGrabbing ? 0 : 1));
+		}
+		
+		if(side == Side.SERVER){
+			System.out.println("1 : " + playerCustom.isGrabbing);
 		}
 
 		// if(playerCustom.isGrabbing && !player.capabilities.isCreativeMode){
