@@ -238,11 +238,6 @@ public class MovementWallJump extends IMovement {
 	}
 
 	@Override
-	public void renderTick(EntityPlayerCustom playerCustom) {
-
-	}
-
-	@Override
 	public String getName() {
 		// TODO Auto-generated method stub
 		return "Wall Jump";

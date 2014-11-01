@@ -142,11 +142,6 @@ public class MovementJump extends IMovement {
 	}
 
 	@Override
-	public void renderTick(EntityPlayerCustom playerCustom) {
-
-	}
-
-	@Override
 	public String getName() {
 		// TODO Auto-generated method stub
 		return "Jump";

@@ -20,8 +20,6 @@ import fr.zak.cubesedge.renderer.EntityRendererCustom;
 
 public class MovementSlide extends IMovement {
 
-	private EntityRenderer renderer, prevRenderer;
-
 	@Override
 	public void control(EntityPlayerCustom playerCustom, EntityPlayer player) {
 		if (!player.capabilities.isFlying) {
@@ -29,9 +27,6 @@ public class MovementSlide extends IMovement {
 				if (player.isSneaking() && player.onGround
 						&& !playerCustom.isRolling) {
 					playerCustom.isSneaking = true;
-					Util.channel
-							.sendToServer(new CPacketPlayerAction(
-									4));
 				}
 			}
 			if (playerCustom.isSneaking && player.isSneaking()) {
@@ -46,8 +41,6 @@ public class MovementSlide extends IMovement {
 			}
 			if (playerCustom.isSneaking && !player.isSneaking()) {
 				playerCustom.isSneaking = false;
-				Util.channel.sendToServer(new CPacketPlayerAction(
-						5));
 				playerCustom.sneakTime = 0;
 			}
 			playerCustom.wasSprinting = player.isSprinting();
@@ -59,67 +52,6 @@ public class MovementSlide extends IMovement {
 		else {
 			Util.forceSetSize(Entity.class, player,
 					0.6F, 1.8F);
-		}
-	}
-
-	@Override
-	public void renderTick(EntityPlayerCustom playerCustom) {
-		if (playerCustom.isSneaking
-				|| (Util.isCube(Minecraft.getMinecraft().theWorld
-						.getBlock(
-								MathHelper.floor_double(Minecraft
-										.getMinecraft().thePlayer.posX),
-								MathHelper.floor_double(Minecraft
-										.getMinecraft().thePlayer.posY),
-								MathHelper.floor_double(Minecraft
-										.getMinecraft().thePlayer.posZ))
-						) && playerCustom.wasSliding)) {
-			int x1 = MathHelper
-					.floor_double(Minecraft.getMinecraft().thePlayer.posX);
-			int y1 = MathHelper
-					.floor_double(Minecraft.getMinecraft().thePlayer.posY);
-			int z1 = MathHelper
-					.floor_double(Minecraft.getMinecraft().thePlayer.posZ);
-			ExtendedBlockStorage ebs = ((ExtendedBlockStorage[]) ObfuscationReflectionHelper
-					.getPrivateValue(Chunk.class,
-							Minecraft.getMinecraft().thePlayer.worldObj
-									.getChunkFromBlockCoords(x1, z1), 2))[y1 >> 4];
-			if (ebs.getExtSkylightValue((x1 & 15), y1 & 15, (z1 & 15)) == 0) {
-				ebs.setExtSkylightValue((x1 & 15), y1 & 15, (z1 & 15),
-						playerCustom.lastLightValue);
-			}
-			playerCustom.lastLightValue = (byte) ebs.getExtSkylightValue(
-					(x1 & 15), y1 & 15, (z1 & 15));
-			KeyBinding.setKeyBindState(
-					Minecraft.getMinecraft().gameSettings.keyBindSneak
-							.getKeyCode(), true);
-			if (renderer == null) {
-				renderer = new EntityRendererCustom(Minecraft.getMinecraft());
-			}
-			if (Minecraft.getMinecraft().entityRenderer != renderer) {
-				// be sure to store the previous renderer
-				prevRenderer = Minecraft.getMinecraft().entityRenderer;
-				Minecraft.getMinecraft().entityRenderer = renderer;
-			}
-		} else if (prevRenderer != null
-				&& Minecraft.getMinecraft().entityRenderer != prevRenderer
-				&& Minecraft.getMinecraft().theWorld
-						.getBlock(MathHelper.floor_double(Minecraft
-								.getMinecraft().thePlayer.posX),
-								MathHelper.floor_double(Minecraft
-										.getMinecraft().thePlayer.posY),
-								MathHelper.floor_double(Minecraft
-										.getMinecraft().thePlayer.posZ)) == Blocks.air && !playerCustom.isRolling) {
-			// reset the renderer
-			KeyBinding.setKeyBindState(
-					Minecraft.getMinecraft().gameSettings.keyBindSneak
-							.getKeyCode(), false);
-			Minecraft.getMinecraft().entityRenderer = prevRenderer;
-			playerCustom.sneakTime = 0;
-			playerCustom.wasSliding = false;
-		}
-		if (!playerCustom.wasSliding) {
-			playerCustom.wasSliding = playerCustom.isSneaking;
 		}
 	}
 

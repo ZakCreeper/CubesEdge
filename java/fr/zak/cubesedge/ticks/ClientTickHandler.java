@@ -5,6 +5,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 import fr.zak.cubesedge.IMovement;
+import fr.zak.cubesedge.IMovementClient;
 import fr.zak.cubesedge.Util;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
 import fr.zak.cubesedge.packet.PacketPlayer;
@@ -27,6 +28,13 @@ public class ClientTickHandler {
 					Util.channel.sendToServer(new PacketPlayer.CPacketPlayerAction(i));
 				}
 			}
+			for (Object o : Util.getClientsMovements()) {
+//				if (!((IMovementClient) o).isMovementDisabled()) {
+				if(event.side == Side.CLIENT){
+					((IMovementClient) o).controlClient(playerCustom, event.player);
+				}
+//				}
+			}
 		}
 	}
 
@@ -36,10 +44,10 @@ public class ClientTickHandler {
 				&& Minecraft.getMinecraft().theWorld != null) {
 			playerCustom = (EntityPlayerCustom) Minecraft.getMinecraft().thePlayer
 					.getExtendedProperties("Cube's Edge Player");
-			for (Object o : Util.getMovements()) {
-				if (!((IMovement) o).isMovementDisabled()) {
-					((IMovement) o).renderTick(playerCustom);
-				}
+			for (Object o : Util.getClientsMovements()) {
+//				if (!((IMovementClient) o).isMovementDisabled()) {
+					((IMovementClient) o).renderTick(playerCustom);
+//				}
 			}
 		}
 	}

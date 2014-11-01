@@ -1,4 +1,4 @@
-package fr.zak.cubesedge.movement;
+package fr.zak.cubesedge.movement.client;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
@@ -10,13 +10,13 @@ import org.lwjgl.input.Keyboard;
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
-import fr.zak.cubesedge.IMovement;
+import fr.zak.cubesedge.IMovementClient;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
 
-public class MovementSlow extends IMovement {
+public class MovementSlowClient extends IMovementClient {
 
 	@Override
-	public void control(EntityPlayerCustom playerCustom, EntityPlayer player) {
+	public void controlClient(EntityPlayerCustom playerCustom, EntityPlayer player) {
 		if (keyPressedSlow && !playerCustom.slow) {
 			ObfuscationReflectionHelper.setPrivateValue(Timer.class,
 					((Timer) ObfuscationReflectionHelper.getPrivateValue(
@@ -53,13 +53,13 @@ public class MovementSlow extends IMovement {
 	}
 
 	@Override
-	public void renderTick(EntityPlayerCustom playerCustom) {
-
-	}
-
-	@Override
 	public String getName() {
 		// TODO Auto-generated method stub
 		return "Slow Motion";
+	}
+
+	@Override
+	public void renderTick(EntityPlayerCustom playerCustom) {
+		
 	}
 }

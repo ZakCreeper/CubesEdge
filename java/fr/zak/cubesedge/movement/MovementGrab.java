@@ -168,12 +168,7 @@ public class MovementGrab extends IMovement {
 			event.setCanceled(true);
 		}
 	}
-
-	@Override
-	public void renderTick(EntityPlayerCustom playerCustom) {
-
-	}
-
+	
 	@Override
 	public String getName() {
 		// TODO Auto-generated method stub

@@ -21,7 +21,6 @@ import fr.zak.cubesedge.movement.MovementGrab;
 import fr.zak.cubesedge.movement.MovementJump;
 import fr.zak.cubesedge.movement.MovementRoll;
 import fr.zak.cubesedge.movement.MovementSlide;
-import fr.zak.cubesedge.movement.MovementSlow;
 import fr.zak.cubesedge.movement.MovementSprint;
 import fr.zak.cubesedge.movement.MovementTurn;
 import fr.zak.cubesedge.movement.MovementWallJump;
@@ -58,7 +57,6 @@ public class CubesEdge {
 		Util.registerMovement(new MovementWallJump());
 		Util.registerMovement(new MovementJump());
 		Util.registerMovement(new MovementSlide());
-		Util.registerMovement(new MovementSlow());
 		Util.registerMovement(new MovementSprint());
 		proxy.registerRenderThings();
 		MinecraftForge.EVENT_BUS.register(new ConstructEvent());

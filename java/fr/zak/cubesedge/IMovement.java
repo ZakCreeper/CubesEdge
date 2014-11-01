@@ -27,8 +27,6 @@ public abstract class IMovement {
 
 	public abstract void control(EntityPlayerCustom playerCustom,
 			EntityPlayer player);
-
-	public abstract void renderTick(EntityPlayerCustom playerCustom);
 	
 	public abstract String getName();
 }
