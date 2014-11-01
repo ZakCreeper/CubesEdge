@@ -2,7 +2,6 @@ package fr.zak.cubesedge;
 
 import java.io.File;
 import java.util.Iterator;
-import java.util.Map;
 
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
@@ -16,12 +15,7 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 import cpw.mods.fml.relauncher.Side;
-import fr.zak.cubesedge.coremod.CubesEdgeDummyMod;
-import fr.zak.cubesedge.coremod.EntityRendererTransformer;
-import fr.zak.cubesedge.coremod.EntityTransformer;
-import fr.zak.cubesedge.coremod.NetHandlerPlayServerTransformer;
 import fr.zak.cubesedge.event.ConstructEvent;
 import fr.zak.cubesedge.movement.MovementGrab;
 import fr.zak.cubesedge.movement.MovementJump;
@@ -41,8 +35,7 @@ import fr.zak.cubesedge.proxys.CommonProxy;
  * 
  */
 @Mod(modid = "cubesedge", name = "Cube's Edge", version = Util.VERSION, guiFactory = "fr.zak.cubesedge.GuiFactory")
-public class CubesEdge implements
-cpw.mods.fml.relauncher.IFMLLoadingPlugin {
+public class CubesEdge {
 
 	public boolean isMovementDisabled = false;
 
@@ -59,6 +52,14 @@ cpw.mods.fml.relauncher.IFMLLoadingPlugin {
 
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
+		Util.registerMovement(new MovementTurn());
+		Util.registerMovement(new MovementRoll());
+		Util.registerMovement(new MovementGrab());
+		Util.registerMovement(new MovementWallJump());
+		Util.registerMovement(new MovementJump());
+		Util.registerMovement(new MovementSlide());
+		Util.registerMovement(new MovementSlow());
+		Util.registerMovement(new MovementSprint());
 		proxy.registerRenderThings();
 		MinecraftForge.EVENT_BUS.register(new ConstructEvent());
 		Util.channel = NetworkRegistry.INSTANCE.newSimpleChannel("cubesedge");
@@ -93,34 +94,5 @@ cpw.mods.fml.relauncher.IFMLLoadingPlugin {
 		Util.cubes.remove(Blocks.stone_slab);
 		Util.cubes.add(Blocks.log);
 		Util.cubes.add(Blocks.log2);
-	}
-	
-	public static boolean obfuscation = false;
-
-	@Override
-	public String[] getASMTransformerClass() {
-		return new String[] { EntityRendererTransformer.class.getName(),
-				EntityTransformer.class.getName(),
-				NetHandlerPlayServerTransformer.class.getName() };
-	}
-
-	@Override
-	public String getModContainerClass() {
-		return CubesEdgeDummyMod.class.getName();
-	}
-
-	@Override
-	public String getSetupClass() {
-
-		return null;
-	}
-
-	@Override
-	public void injectData(Map<String, Object> data) {
-	}
-
-	@Override
-	public String getAccessTransformerClass() {
-		return null;
 	}
 }

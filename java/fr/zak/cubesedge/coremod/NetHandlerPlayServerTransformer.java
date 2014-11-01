@@ -29,11 +29,11 @@ public class NetHandlerPlayServerTransformer implements IClassTransformer {
 				.equals("net.minecraft.network.NetHandlerPlayServer")) {
 			System.out
 					.println("Cube\'s Edge Core - Patching class NetHandlerPlayServer...");
-			methodName = CubesEdge.obfuscation ? "a"
+			methodName = CubesEdgeLoadingPlugin.obfuscation ? "a"
 					: "processPlayer";
-			className = CubesEdge.obfuscation ? "nh"
+			className = CubesEdgeLoadingPlugin.obfuscation ? "nh"
 					: "net/minecraft/network/NetHandlerPlayServer";
-			packetPlayerClassName = CubesEdge.obfuscation ? "jd"
+			packetPlayerClassName = CubesEdgeLoadingPlugin.obfuscation ? "jd"
 					: "net/minecraft/network/play/client/C03PacketPlayer";
 
 			ClassReader cr = new ClassReader(basicClass);

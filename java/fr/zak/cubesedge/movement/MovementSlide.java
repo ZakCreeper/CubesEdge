@@ -12,7 +12,6 @@ import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.Side;
 import fr.zak.cubesedge.IMovement;
 import fr.zak.cubesedge.Util;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
@@ -24,7 +23,7 @@ public class MovementSlide extends IMovement {
 	private EntityRenderer renderer, prevRenderer;
 
 	@Override
-	public void control(EntityPlayerCustom playerCustom, EntityPlayer player, Side side) {
+	public void control(EntityPlayerCustom playerCustom, EntityPlayer player) {
 		if (!player.capabilities.isFlying) {
 			if (!player.isSprinting() && playerCustom.wasSprinting) {
 				if (player.isSneaking() && player.onGround
@@ -52,6 +51,14 @@ public class MovementSlide extends IMovement {
 				playerCustom.sneakTime = 0;
 			}
 			playerCustom.wasSprinting = player.isSprinting();
+		}
+		if(playerCustom.isSneaking){
+			Util.forceSetSize(Entity.class, player,
+					0.6F, 0.6F);
+		}
+		else {
+			Util.forceSetSize(Entity.class, player,
+					0.6F, 1.8F);
 		}
 	}
 
@@ -94,8 +101,6 @@ public class MovementSlide extends IMovement {
 				prevRenderer = Minecraft.getMinecraft().entityRenderer;
 				Minecraft.getMinecraft().entityRenderer = renderer;
 			}
-			Util.forceSetSize(Entity.class, Minecraft.getMinecraft().thePlayer,
-					0.6F, 0.6F);
 		} else if (prevRenderer != null
 				&& Minecraft.getMinecraft().entityRenderer != prevRenderer
 				&& Minecraft.getMinecraft().theWorld
@@ -110,8 +115,6 @@ public class MovementSlide extends IMovement {
 					Minecraft.getMinecraft().gameSettings.keyBindSneak
 							.getKeyCode(), false);
 			Minecraft.getMinecraft().entityRenderer = prevRenderer;
-			Util.forceSetSize(Entity.class, Minecraft.getMinecraft().thePlayer,
-					0.6F, 1.8F);
 			playerCustom.sneakTime = 0;
 			playerCustom.wasSliding = false;
 		}

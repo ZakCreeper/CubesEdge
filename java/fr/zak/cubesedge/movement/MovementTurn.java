@@ -2,12 +2,8 @@ package fr.zak.cubesedge.movement;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MathHelper;
-
-import org.lwjgl.input.Keyboard;
-
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
 import cpw.mods.fml.relauncher.Side;
@@ -15,11 +11,15 @@ import cpw.mods.fml.relauncher.SideOnly;
 import fr.zak.cubesedge.IMovement;
 import fr.zak.cubesedge.Util;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
+import fr.zak.cubesedge.proxys.ClientProxy;
 
 public class MovementTurn extends IMovement {
 
 	@Override
-	public void control(EntityPlayerCustom playerCustom, EntityPlayer player, Side side) {
+	public void control(EntityPlayerCustom playerCustom, EntityPlayer player) {
+		int x = MathHelper.floor_double(player.posX);
+		int y = MathHelper.floor_double(player.posY);
+		int z = MathHelper.floor_double(player.posZ);
 		int heading = MathHelper
 				.floor_double((double) (player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
 		if (!player.capabilities.isFlying && !playerCustom.isSneaking) {
@@ -40,9 +40,9 @@ public class MovementTurn extends IMovement {
 						float yaw = MathHelper
 								.wrapAngleTo180_float(player.rotationYaw);
 						if ((Util.isCube(player.worldObj.getBlock(
-								MathHelper.floor_double(player.posX) + 1,
-								MathHelper.floor_double(player.posY),
-								MathHelper.floor_double(player.posZ))
+								x + 1,
+								y,
+								z)
 								) && heading == 0)
 								|| (Util.isCube(player.worldObj
 										.getBlock(
@@ -73,9 +73,9 @@ public class MovementTurn extends IMovement {
 										) && heading == 3)) {
 							player.rotationYaw = yaw - 90;
 						} else if ((Util.isCube(player.worldObj.getBlock(
-								MathHelper.floor_double(player.posX) - 1,
-								MathHelper.floor_double(player.posY),
-								MathHelper.floor_double(player.posZ))
+								x - 1,
+								y,
+								z)
 								) && heading == 0)
 								|| (Util.isCube(player.worldObj
 										.getBlock(
@@ -120,24 +120,24 @@ public class MovementTurn extends IMovement {
 					playerCustom.isTurningOnWall = false;
 				}
 				if ((Util.isCube(player.worldObj.getBlock(
-						MathHelper.floor_double(player.posX),
-						MathHelper.floor_double(player.posY),
-						MathHelper.floor_double(player.posZ) - 1)
+						x,
+						y,
+						z - 1)
 						) && heading == 0)
 						|| (Util.isCube(player.worldObj.getBlock(
-								MathHelper.floor_double(player.posX) + 1,
-								MathHelper.floor_double(player.posY),
-								MathHelper.floor_double(player.posZ))
+								x + 1,
+								y,
+								z)
 								) && heading == 1)
 						|| (Util.isCube(player.worldObj.getBlock(
-								MathHelper.floor_double(player.posX),
-								MathHelper.floor_double(player.posY),
-								MathHelper.floor_double(player.posZ) + 1)
+								x,
+								y,
+								z + 1)
 								) && heading == 2)
 						|| (Util.isCube(player.worldObj.getBlock(
-								MathHelper.floor_double(player.posX) - 1,
-								MathHelper.floor_double(player.posY),
-								MathHelper.floor_double(player.posZ))
+								x - 1,
+								y,
+								z)
 								) && heading == 3)) {
 					player.motionZ *= 0.95D;
 					player.motionX *= 0.95D;
@@ -166,13 +166,10 @@ public class MovementTurn extends IMovement {
 		}
 	}
 
-	private KeyBinding turn = new KeyBinding("Turn", Keyboard.KEY_APOSTROPHE,
-			"Cube's Edge");
-
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
 	public void key(KeyInputEvent event) {
-		if (turn.isPressed()
+		if (ClientProxy.turn.isPressed()
 				&& !((EntityPlayerCustom) Minecraft.getMinecraft().thePlayer
 						.getExtendedProperties("Cube's Edge Player")).isTurning) {
 			((EntityPlayerCustom) Minecraft.getMinecraft().thePlayer

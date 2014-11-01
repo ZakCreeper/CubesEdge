@@ -1,14 +1,12 @@
 package fr.zak.cubesedge.packet;
 
+import fr.zak.cubesedge.IMovement;
 import fr.zak.cubesedge.Util;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.Entity;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class PacketPlayer {
 
@@ -44,36 +42,37 @@ public class PacketPlayer {
 			@Override
 			public IMessage onMessage(CPacketPlayerAction message,
 					MessageContext ctx) {
-				EntityPlayerCustom playerEntity = ((EntityPlayerCustom) ctx.getServerHandler().playerEntity.getExtendedProperties("Cube's Edge Player"));
-				if(message.actionId == 0){
-					playerEntity.isGrabbing = true;
-					System.out.println("2 : " + playerEntity.isGrabbing);
-				}
-				if(message.actionId == 1){
-					playerEntity.isGrabbing = false;
-					System.out.println("3 : " + playerEntity.isGrabbing);
-				}
-				if(message.actionId == 2){
-					playerEntity.isRolling = true;
-					Util.forceSetSize(Entity.class,
-							ctx.getServerHandler().playerEntity, 0.6F, 0.6F);
-				}
-				if(message.actionId == 3){
-					playerEntity.isRolling = false;
-					Util.forceSetSize(Entity.class,
-							ctx.getServerHandler().playerEntity, 0.6F, 1.8F);
-				}
-				if(message.actionId == 4){
-					playerEntity.isSneaking = true;
-					Util.forceSetSize(Entity.class,
-							ctx.getServerHandler().playerEntity, 0.6F, 0.6F);
-				}
-				if(message.actionId == 5){
-					playerEntity.isSneaking = false;
-					Util.forceSetSize(Entity.class,
-							ctx.getServerHandler().playerEntity, 0.6F, 1.8F);
-				}
-				
+//				EntityPlayerCustom playerEntity = ((EntityPlayerCustom) ctx.getServerHandler().playerEntity.getExtendedProperties("Cube's Edge Player"));
+//				if(message.actionId == 0){
+//					playerEntity.isGrabbing = true;
+//					System.out.println("2 : " + playerEntity.isGrabbing);
+//				}
+//				if(message.actionId == 1){
+//					playerEntity.isGrabbing = false;
+//					System.out.println("3 : " + playerEntity.isGrabbing);
+//				}
+//				if(message.actionId == 2){
+//					playerEntity.isRolling = true;
+//					Util.forceSetSize(Entity.class,
+//							ctx.getServerHandler().playerEntity, 0.6F, 0.6F);
+//				}
+//				if(message.actionId == 3){
+//					playerEntity.isRolling = false;
+//					Util.forceSetSize(Entity.class,
+//							ctx.getServerHandler().playerEntity, 0.6F, 1.8F);
+//				}
+//				if(message.actionId == 4){
+//					playerEntity.isSneaking = true;
+//					Util.forceSetSize(Entity.class,
+//							ctx.getServerHandler().playerEntity, 0.6F, 0.6F);
+//				}
+//				if(message.actionId == 5){
+//					playerEntity.isSneaking = false;
+//					Util.forceSetSize(Entity.class,
+//							ctx.getServerHandler().playerEntity, 0.6F, 1.8F);
+//				}
+////				System.out.println("1 + " + playerEntity);
+				((IMovement)Util.getMovements()[message.actionId]).control((EntityPlayerCustom)ctx.getServerHandler().playerEntity.getExtendedProperties("Cube's Edge Player"), ctx.getServerHandler().playerEntity);
 				return null;
 			}
 		}

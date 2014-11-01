@@ -6,7 +6,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.client.event.MouseEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.Side;
 import fr.zak.cubesedge.IMovement;
 import fr.zak.cubesedge.Util;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
@@ -14,18 +13,21 @@ import fr.zak.cubesedge.entity.EntityPlayerCustom;
 public class MovementWallJump extends IMovement {
 
 	@Override
-	public void control(EntityPlayerCustom playerCustom, EntityPlayer player, Side side) {
+	public void control(EntityPlayerCustom playerCustom, EntityPlayer player) {
+		int x = MathHelper.floor_double(player.posX);
+		int y = MathHelper.floor_double(player.posY);
+		int z = MathHelper.floor_double(player.posZ);
 		int heading = MathHelper
 				.floor_double((double) (player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
 		if (!player.capabilities.isFlying && !playerCustom.isSneaking) {
 			if (!player.onGround && player.motionY <= 0) {
 				if ((Util.isCube(player.worldObj.getBlock(
-						MathHelper.floor_double(player.posX) + 1,
-						MathHelper.floor_double(player.posY),
-						MathHelper.floor_double(player.posZ))) || Util.isCube(player.worldObj
-						.getBlock(MathHelper.floor_double(player.posX) + 1,
-								MathHelper.floor_double(player.posY) - 1,
-								MathHelper.floor_double(player.posZ))
+						x + 1,
+						y,
+						z)) || Util.isCube(player.worldObj
+						.getBlock(x + 1,
+								y - 1,
+								z)
 						))
 						&& ((heading == 0) || (heading == 2))) {
 					playerCustom.isOnWall = true;
@@ -62,12 +64,12 @@ public class MovementWallJump extends IMovement {
 						}
 					}
 				} else if ((Util.isCube(player.worldObj.getBlock(
-						MathHelper.floor_double(player.posX) - 1,
-						MathHelper.floor_double(player.posY),
-						MathHelper.floor_double(player.posZ))) || Util.isCube(player.worldObj
-						.getBlock(MathHelper.floor_double(player.posX) - 1,
-								MathHelper.floor_double(player.posY) - 1,
-								MathHelper.floor_double(player.posZ))
+						x - 1,
+						y,
+						z)) || Util.isCube(player.worldObj
+						.getBlock(x - 1,
+								y - 1,
+								z)
 						))
 						&& ((heading == 0) || (heading == 2))) {
 					playerCustom.isOnWall = true;
@@ -103,13 +105,13 @@ public class MovementWallJump extends IMovement {
 						}
 					}
 				} else if ((Util.isCube(player.worldObj.getBlock(
-						MathHelper.floor_double(player.posX),
-						MathHelper.floor_double(player.posY),
-						MathHelper.floor_double(player.posZ) + 1)
+						x,
+						y,
+						z + 1)
 						) || Util.isCube(player.worldObj.getBlock(
-						MathHelper.floor_double(player.posX),
-						MathHelper.floor_double(player.posY) - 1,
-						MathHelper.floor_double(player.posZ) + 1)
+						x,
+						y - 1,
+						z + 1)
 						))
 						&& ((heading == 3) || (heading == 1))) {
 					playerCustom.isOnWall = true;
@@ -145,13 +147,13 @@ public class MovementWallJump extends IMovement {
 						}
 					}
 				} else if ((Util.isCube(player.worldObj.getBlock(
-						MathHelper.floor_double(player.posX),
-						MathHelper.floor_double(player.posY),
-						MathHelper.floor_double(player.posZ) - 1)
+						x,
+						y,
+						z - 1)
 						) || Util.isCube(player.worldObj.getBlock(
-						MathHelper.floor_double(player.posX),
-						MathHelper.floor_double(player.posY) - 1,
-						MathHelper.floor_double(player.posZ) - 1)
+						x,
+						y - 1,
+						z - 1)
 						))
 						&& ((heading == 3) || (heading == 1))) {
 					playerCustom.isOnWall = true;

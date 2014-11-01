@@ -1,13 +1,13 @@
 package fr.zak.cubesedge.ticks;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.MathHelper;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 import fr.zak.cubesedge.IMovement;
 import fr.zak.cubesedge.Util;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
+import fr.zak.cubesedge.packet.PacketPlayer;
 
 public class ClientTickHandler {
 
@@ -15,14 +15,16 @@ public class ClientTickHandler {
 
 	@SubscribeEvent
 	public void playerUpdate(TickEvent.PlayerTickEvent event) {
-		if (event.phase == TickEvent.Phase.END) {
+		if (event.phase == TickEvent.Phase.END && event.side == Side.CLIENT) {
 			if (playerCustom == null) {
 				playerCustom = (EntityPlayerCustom) event.player
 						.getExtendedProperties("Cube's Edge Player");
 			}
-			for (Object o : Util.getMovements()) {
+			for (int i = 0; i < Util.getMovements().length; i++) {
+				Object o = Util.getMovements()[i];
 				if (!((IMovement) o).isMovementDisabled()) {
-					((IMovement) o).control(playerCustom, event.player, event.side);
+					((IMovement) o).control(playerCustom, event.player);
+					Util.channel.sendToServer(new PacketPlayer.CPacketPlayerAction(i));
 				}
 			}
 		}

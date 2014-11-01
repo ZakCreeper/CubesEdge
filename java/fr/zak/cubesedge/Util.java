@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import net.minecraft.block.Block;
@@ -12,7 +13,6 @@ import net.minecraft.entity.Entity;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
-import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
@@ -21,6 +21,9 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class Util {
 
 	private static List<IMovement> movements = new ArrayList<IMovement>();
+	
+	public static List<Object> clientEvFML = new ArrayList<Object>();
+	public static List<Object> clientEvMF = new ArrayList<Object>();
 
 	public static Configuration cfg;
 
@@ -76,26 +79,21 @@ public class Util {
 			for (Method m : target.getClass().getDeclaredMethods()) {
 				if (m.isAnnotationPresent(SubscribeEvent.class)) {
 					if (m.getParameterTypes()[0].getName().contains("cpw")) {
-						FMLCommonHandler.instance().bus().register(target);
+						if(!m.isAnnotationPresent(SideOnly.class)){
+							FMLCommonHandler.instance().bus().register(target);
+						}
+						else {
+							clientEvFML.add(target);
+						}
 					} else if (m.getParameterTypes()[0].getName().contains(
 							"minecraftforge")) {
-						MinecraftForge.EVENT_BUS.register(target);
+						if(!m.isAnnotationPresent(SideOnly.class)){
+							MinecraftForge.EVENT_BUS.register(target);
+						}
+						else {
+							clientEvMF.add(target);
+						}
 					}
-				}
-			}
-			for (Field f : target.getClass().getDeclaredFields()) {
-				if (f.getGenericType().toString()
-						.contains(KeyBinding.class.getName())) {
-					f.setAccessible(true);
-					try {
-						ClientRegistry.registerKeyBinding((KeyBinding) f
-								.get(target));
-					} catch (IllegalArgumentException e) {
-						e.printStackTrace();
-					} catch (IllegalAccessException e) {
-						e.printStackTrace();
-					}
-					f.setAccessible(false);
 				}
 			}
 		}

@@ -14,7 +14,6 @@ import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.Side;
 import fr.zak.cubesedge.IMovement;
 import fr.zak.cubesedge.Util;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
@@ -26,17 +25,20 @@ public class MovementRoll extends IMovement {
 	private EntityRenderer renderer, prevRenderer;
 
 	@Override
-	public void control(EntityPlayerCustom playerCustom, EntityPlayer player, Side side) {
+	public void control(EntityPlayerCustom playerCustom, EntityPlayer player) {
+		int x = MathHelper.floor_double(player.posX);
+		int y = MathHelper.floor_double(player.posY);
+		int z = MathHelper.floor_double(player.posZ);
 		if (!player.capabilities.isFlying && !playerCustom.isSneaking) {
 			if (player.fallDistance > 3.0F && player.fallDistance < 15F) {
 				if (Util.isCube(player.worldObj.getBlock(
-						MathHelper.floor_double(player.posX),
-						MathHelper.floor_double(player.posY) - 3,
-						MathHelper.floor_double(player.posZ)))
+						x,
+						y - 3,
+						z))
 						|| Util.isCube(player.worldObj.getBlock(
-								MathHelper.floor_double(player.posX),
-								MathHelper.floor_double(player.posY) - 4,
-								MathHelper.floor_double(player.posZ))
+								x,
+								y - 4,
+								z)
 								)) {
 					if (player instanceof EntityPlayerSP) {
 						if (((EntityPlayerSP) player).movementInput.sneak) {
@@ -92,6 +94,14 @@ public class MovementRoll extends IMovement {
 				}
 			}
 		}
+		if(playerCustom.isRolling){
+			Util.forceSetSize(Entity.class, player,
+					0.6F, 0.6F);
+		}
+		else {
+			Util.forceSetSize(Entity.class, player,
+					0.6F, 1.8F);
+		}
 	}
 
 	@Override
@@ -133,8 +143,6 @@ public class MovementRoll extends IMovement {
 				prevRenderer = Minecraft.getMinecraft().entityRenderer;
 				Minecraft.getMinecraft().entityRenderer = renderer;
 			}
-			Util.forceSetSize(Entity.class, Minecraft.getMinecraft().thePlayer,
-					0.6F, 0.6F);
 		} else if (prevRenderer != null
 				&& Minecraft.getMinecraft().entityRenderer != prevRenderer
 				&& playerCustom.wasRolling) {
@@ -144,8 +152,6 @@ public class MovementRoll extends IMovement {
 							.getKeyCode(), false);
 			Minecraft.getMinecraft().entityRenderer = prevRenderer;
 			playerCustom.wasRolling = false;
-			Util.forceSetSize(Entity.class, Minecraft.getMinecraft().thePlayer,
-					0.6F, 1.8F);
 		}
 		if (!playerCustom.wasRolling) {
 			playerCustom.wasRolling = playerCustom.isRolling;

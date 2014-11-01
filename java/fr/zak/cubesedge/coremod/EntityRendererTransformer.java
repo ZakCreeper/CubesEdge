@@ -29,11 +29,11 @@ public class EntityRendererTransformer implements IClassTransformer {
 				.equals("net.minecraft.client.renderer.EntityRenderer")) {
 			System.out
 					.println("Cube\'s Edge Core - Patching class EntityRenderer...");
-			renderHandMethodName = CubesEdge.obfuscation ? "b"
+			renderHandMethodName = CubesEdgeLoadingPlugin.obfuscation ? "b"
 					: "renderHand";
-			orientCameraMethodName = CubesEdge.obfuscation ? "h"
+			orientCameraMethodName = CubesEdgeLoadingPlugin.obfuscation ? "h"
 					: "orientCamera";
-			className = CubesEdge.obfuscation ? "blt"
+			className = CubesEdgeLoadingPlugin.obfuscation ? "blt"
 					: "net/minecraft/client/renderer/EntityRenderer";
 
 			ClassReader cr = new ClassReader(basicClass);

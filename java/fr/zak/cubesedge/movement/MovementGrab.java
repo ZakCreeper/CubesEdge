@@ -12,60 +12,62 @@ import cpw.mods.fml.relauncher.Side;
 import fr.zak.cubesedge.IMovement;
 import fr.zak.cubesedge.Util;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
-import fr.zak.cubesedge.packet.PacketPlayer.CPacketPlayerAction;
 
 public class MovementGrab extends IMovement {
 
 	@Override
-	public void control(EntityPlayerCustom playerCustom, EntityPlayer player, Side side) {
+	public void control(EntityPlayerCustom playerCustom, EntityPlayer player) {
+		int x = MathHelper.floor_double(player.posX);
+		int y = MathHelper.floor_double(player.posY);
+		int z = MathHelper.floor_double(player.posZ);
 		int heading = MathHelper
 				.floor_double((double) (player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
 		if (!playerCustom.isSneaking) {
 			if (((((Util.isCube(player.worldObj.getBlock(
-					MathHelper.floor_double(player.posX),
-					MathHelper.floor_double(player.posY),
-					MathHelper.floor_double(player.posZ) - 1)) && heading == 2)
+					x,
+					y,
+					z - 1)) && heading == 2)
 					|| (Util.isCube(player.worldObj.getBlock(
-							MathHelper.floor_double(player.posX),
-							MathHelper.floor_double(player.posY),
-							MathHelper.floor_double(player.posZ) + 1)
+							x,
+							y,
+							z + 1)
 							) && heading == 0)
 							|| (Util.isCube(player.worldObj.getBlock(
-									MathHelper.floor_double(player.posX) - 1,
-									MathHelper.floor_double(player.posY),
-									MathHelper.floor_double(player.posZ))
+									x - 1,
+									y,
+									z)
 									) && heading == 1) || (Util.isCube(player.worldObj
-											.getBlock(MathHelper.floor_double(player.posX) + 1,
-													MathHelper.floor_double(player.posY),
-													MathHelper.floor_double(player.posZ))
+											.getBlock(x + 1,
+													y,
+													z)
 											) && heading == 3))
 											&& ((!Util.isCube(player.worldObj.getBlock(
-													MathHelper.floor_double(player.posX),
-													MathHelper.floor_double(player.posY) + 1,
-													MathHelper.floor_double(player.posZ) - 1)
+													x,
+													y + 1,
+													z - 1)
 													) && heading == 2)
 													|| (!Util.isCube(player.worldObj.getBlock(
-															MathHelper.floor_double(player.posX),
-															MathHelper.floor_double(player.posY) + 1,
-															MathHelper.floor_double(player.posZ) + 1)
+															x,
+															y + 1,
+															z + 1)
 															) && heading == 0)
 															|| (!Util.isCube(player.worldObj.getBlock(
-																	MathHelper.floor_double(player.posX) - 1,
-																	MathHelper.floor_double(player.posY) + 1,
-																	MathHelper.floor_double(player.posZ))
+																	x - 1,
+																	y + 1,
+																	z)
 																	) && heading == 1) || (!Util.isCube(player.worldObj
-																			.getBlock(MathHelper.floor_double(player.posX) + 1,
-																					MathHelper.floor_double(player.posY) + 1,
-																					MathHelper.floor_double(player.posZ))
+																			.getBlock(x + 1,
+																					y + 1,
+																					z)
 																			) && heading == 3)) && (!Util.isCube(player.worldObj
-																					.getBlock(MathHelper.floor_double(player.posX),
-																							MathHelper.floor_double(player.posY) - 2,
-																							MathHelper.floor_double(player.posZ))
+																					.getBlock(x,
+																							y - 2,
+																							z)
 																					))))
 																					&& player.worldObj.getBlock(
-																							MathHelper.floor_double(player.posX),
-																							MathHelper.floor_double(player.posY),
-																							MathHelper.floor_double(player.posZ)) != Blocks.ladder
+																							x,
+																							y,
+																							z) != Blocks.ladder
 																							&& player.getCurrentEquippedItem() == null) {
 				playerCustom.isGrabbing = true;
 				playerCustom.rotationYaw = player.rotationYaw;
@@ -113,15 +115,15 @@ public class MovementGrab extends IMovement {
 							41) && playerCustom.isGrabbing) {
 				if (heading == 1 || heading == 3) {
 					player.setPosition(
-							MathHelper.floor_double(player.posX) + 0.5F,
-							MathHelper.floor_double(player.posY) + 0.9F,
+							x + 0.5F,
+							y + 0.9F,
 							player.posZ);
 					player.motionX = 0;
 				}
 				if (heading == 2 || heading == 0) {
 					player.setPosition(player.posX,
-							MathHelper.floor_double(player.posY) + 0.9F,
-							MathHelper.floor_double(player.posZ) + 0.5F);
+							y + 0.9F,
+							z + 0.5F);
 					player.motionZ = 0;
 				}
 				player.motionY = 0.0;
@@ -135,14 +137,13 @@ public class MovementGrab extends IMovement {
 			}
 		}
 		
-		if(side == Side.CLIENT){
-			Util.channel.sendToServer(new CPacketPlayerAction(playerCustom.isGrabbing ? 0 : 1));
-		}
-		
-		if(side == Side.SERVER){
-			System.out.println("1 : " + playerCustom.isGrabbing);
-		}
-
+//		if(side == Side.CLIENT){
+////			Util.channel.sendToServer(new CPacketPlayerAction(playerCustom.isGrabbing ? 0 : 1));
+//		}
+//		
+//		if(side == Side.SERVER){
+//			System.out.println("1 : " + playerCustom.isGrabbing);
+//		}
 		// if(playerCustom.isGrabbing && !player.capabilities.isCreativeMode){
 			// PotionEffect potioneffect =
 					// player.getActivePotionEffect(Potion.jump);
