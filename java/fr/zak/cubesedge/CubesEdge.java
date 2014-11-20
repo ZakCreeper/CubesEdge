@@ -7,6 +7,7 @@ import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -27,6 +28,7 @@ import fr.zak.cubesedge.movement.MovementWallJump;
 import fr.zak.cubesedge.packet.PacketPlayer;
 import fr.zak.cubesedge.packet.PacketPlayer.CPacketPlayerAction;
 import fr.zak.cubesedge.proxys.CommonProxy;
+import fr.zak.cubesedge.ticks.PlayerTickHandler;
 
 /**
  * 
@@ -35,8 +37,6 @@ import fr.zak.cubesedge.proxys.CommonProxy;
  */
 @Mod(modid = "cubesedge", name = "Cube's Edge", version = Util.VERSION, guiFactory = "fr.zak.cubesedge.GuiFactory")
 public class CubesEdge {
-
-	public boolean isMovementDisabled = false;
 
 	@SidedProxy(clientSide = "fr.zak.cubesedge.proxys.ClientProxy", serverSide = "fr.zak.cubesedge.proxys.CommonProxy")
 	public static CommonProxy proxy;
@@ -51,6 +51,7 @@ public class CubesEdge {
 
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
+		FMLCommonHandler.instance().bus().register(new PlayerTickHandler());
 		Util.registerMovement(new MovementTurn());
 		Util.registerMovement(new MovementRoll());
 		Util.registerMovement(new MovementGrab());
@@ -59,7 +60,6 @@ public class CubesEdge {
 		Util.registerMovement(new MovementSlide());
 		Util.registerMovement(new MovementSprint());
 		proxy.registerRenderThings();
-		MinecraftForge.EVENT_BUS.register(new ConstructEvent());
 		Util.channel = NetworkRegistry.INSTANCE.newSimpleChannel("cubesedge");
 		Util.channel.registerMessage(
 				CPacketPlayerAction.Handler.class,

@@ -3,12 +3,12 @@ package fr.zak.cubesedge.movement.client;
 import java.awt.Color;
 import java.math.BigDecimal;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import fr.zak.cubesedge.IMovementClient;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
 

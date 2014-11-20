@@ -8,9 +8,8 @@ import org.lwjgl.input.Keyboard;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import fr.zak.cubesedge.IMovementClient;
+import fr.zak.cubesedge.Util;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
 
 public class MovementTurnClient extends IMovementClient {
@@ -21,10 +20,8 @@ public class MovementTurnClient extends IMovementClient {
 	@SubscribeEvent
 	public void key(KeyInputEvent event) {
 		if (turn.isPressed()
-				&& !((EntityPlayerCustom) Minecraft.getMinecraft().thePlayer
-						.getExtendedProperties("Cube's Edge Player")).isTurning) {
-			((EntityPlayerCustom) Minecraft.getMinecraft().thePlayer
-					.getExtendedProperties("Cube's Edge Player")).isTurning = true;
+				&& !((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Cube's Edge Player")).isTurning) {
+			((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Cube's Edge Player")).isTurning = true;
 		}
 	}
 	

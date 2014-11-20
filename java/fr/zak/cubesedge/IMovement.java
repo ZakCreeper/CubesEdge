@@ -2,7 +2,6 @@ package fr.zak.cubesedge;
 
 import net.minecraft.entity.player.EntityPlayer;
 import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
 
 public abstract class IMovement {
@@ -26,7 +25,7 @@ public abstract class IMovement {
 	}
 
 	public abstract void control(EntityPlayerCustom playerCustom,
-			EntityPlayer player);
+			EntityPlayer player, Side side);
 	
 	public abstract String getName();
 }

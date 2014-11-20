@@ -1,7 +1,5 @@
 package fr.zak.cubesedge.movement.client;
 
-import cpw.mods.fml.common.ObfuscationReflectionHelper;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.EntityRenderer;
@@ -11,6 +9,8 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 import net.minecraftforge.client.event.MouseEvent;
+import cpw.mods.fml.common.ObfuscationReflectionHelper;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import fr.zak.cubesedge.IMovementClient;
 import fr.zak.cubesedge.Util;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
@@ -76,8 +76,7 @@ public class MovementRollClient extends IMovementClient {
 	
 	@SubscribeEvent
 	public void onClick(MouseEvent event) {
-		if (((EntityPlayerCustom) Minecraft.getMinecraft().thePlayer
-				.getExtendedProperties("Cube's Edge Player")).isRolling) {
+		if (((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Cube's Edge Player")).isRolling) {
 			event.setCanceled(true);
 		}
 	}

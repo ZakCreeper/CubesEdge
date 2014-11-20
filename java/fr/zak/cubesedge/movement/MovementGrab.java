@@ -15,6 +15,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraftforge.client.event.MouseEvent;
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.relauncher.Side;
 import fr.zak.cubesedge.IMovement;
 import fr.zak.cubesedge.Util;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
@@ -22,12 +23,13 @@ import fr.zak.cubesedge.entity.EntityPlayerCustom;
 public class MovementGrab extends IMovement {
 
 	@Override
-	public void control(EntityPlayerCustom playerCustom, EntityPlayer player) {
+	public void control(EntityPlayerCustom playerCustom, EntityPlayer player, Side side) {
 		int x = MathHelper.floor_double(player.posX);
-		int y = MathHelper.floor_double(player.posY);
+		int y = side.isClient() ? MathHelper.floor_double(player.posY) : MathHelper.floor_double(player.posY + 1.62);
 		int z = MathHelper.floor_double(player.posZ);
 		int heading = MathHelper
 				.floor_double((double) (player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+//		System.out.println(side + " " + player.posY);
 		if (!playerCustom.isSneaking) {
 			if (((((Util.isCube(player.worldObj.getBlock(
 					x,
@@ -172,8 +174,7 @@ public class MovementGrab extends IMovement {
 
 	@SubscribeEvent
 	public void onClick(MouseEvent event) {
-		if (((EntityPlayerCustom) Minecraft.getMinecraft().thePlayer
-				.getExtendedProperties("Cube's Edge Player")).isGrabbing) {
+		if (((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Cube's Edge Player")).isGrabbing) {
 			event.setCanceled(true);
 		}
 	}

@@ -10,43 +10,24 @@ import fr.zak.cubesedge.Util;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
 import fr.zak.cubesedge.packet.PacketPlayer;
 
-public class ClientTickHandler {
-
-	private EntityPlayerCustom playerCustom;
+public class PlayerTickHandler {
 
 	@SubscribeEvent
 	public void playerUpdate(TickEvent.PlayerTickEvent event) {
-		if (event.phase == TickEvent.Phase.END && event.side == Side.CLIENT) {
-			if (playerCustom == null) {
-				playerCustom = (EntityPlayerCustom) event.player
-						.getExtendedProperties("Cube's Edge Player");
-			}
+		if (event.phase == TickEvent.Phase.END) {
+			EntityPlayerCustom player = ((EntityPlayerCustom)event.player.getExtendedProperties("Cube's Edge Player"));
 			for (int i = 0; i < Util.getMovements().length; i++) {
 				Object o = Util.getMovements()[i];
 				if (!((IMovement) o).isMovementDisabled()) {
-					((IMovement) o).control(playerCustom, event.player);
+					((IMovement) o).control(player, event.player, event.side);
 					Util.channel.sendToServer(new PacketPlayer.CPacketPlayerAction(i));
 				}
 			}
 			for (Object o : Util.getClientsMovements()) {
 //				if (!((IMovementClient) o).isMovementDisabled()) {
 				if(event.side == Side.CLIENT){
-					((IMovementClient) o).controlClient(playerCustom, event.player);
+					((IMovementClient) o).controlClient(player, event.player);
 				}
-//				}
-			}
-		}
-	}
-
-	@SubscribeEvent
-	public void tick(TickEvent.RenderTickEvent event) {
-		if (event.phase == TickEvent.Phase.START
-				&& Minecraft.getMinecraft().theWorld != null) {
-			playerCustom = (EntityPlayerCustom) Minecraft.getMinecraft().thePlayer
-					.getExtendedProperties("Cube's Edge Player");
-			for (Object o : Util.getClientsMovements()) {
-//				if (!((IMovementClient) o).isMovementDisabled()) {
-					((IMovementClient) o).renderTick(playerCustom);
 //				}
 			}
 		}
