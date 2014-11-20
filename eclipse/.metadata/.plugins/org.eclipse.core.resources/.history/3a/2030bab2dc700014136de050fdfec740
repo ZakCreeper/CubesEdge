@@ -1,0 +1,48 @@
+package fr.zak.cubesedge;
+
+public class MovementFields {
+	public byte lastLightValue;
+
+	public boolean wasSneaking = false;
+
+	public float prevRotationYaw = 0;
+	public float prevRotationPitch = 0;
+	public float rotationYaw = 0;
+	public float rotationPitch = 0;
+
+	public byte isJumping = 0;
+	public byte jumpTime = 0;
+	public boolean isJumpingOnWall = false;
+
+	public boolean prevRolling = false;
+	public float lastPitch = 0;
+	public boolean isRolling = false;
+	public boolean wasRolling = false;
+
+	public boolean isGrabbing = false;
+	public boolean[] grabbingDirections = { false, false, false, false };
+	private byte[] grabbingDirectionsByte = { 0, 0, 0, 0 };
+
+	public float tickRunningLeft = 0;
+	public float tickRunningRight = 0;
+	public boolean animRunnig = false;
+	public boolean backLeft = false;
+	public boolean backRight = false;
+
+	public byte slowTime = 0;
+	public boolean slow = false;
+
+	public boolean isOnWall = false;
+	public boolean wallJump = false;
+	public boolean animRight = false;
+	public boolean animLeft = false;
+
+	public boolean isSneaking = false;
+	public byte sneakTime = 0;
+	public boolean wasSprinting = false;
+	public boolean wasSliding = false;
+
+	public boolean isTurning = false;
+	public boolean isTurningOnWall = false;
+	public byte turningTime = 0;
+}

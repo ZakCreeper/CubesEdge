@@ -1,0 +1,45 @@
+package fr.zak.cubesedge.event;
+
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import fr.zak.cubesedge.Util;
+import fr.zak.cubesedge.entity.EntityPlayerCustom;
+import fr.zak.cubesedge.movement.MovementGrab;
+import fr.zak.cubesedge.movement.MovementJump;
+import fr.zak.cubesedge.movement.MovementRoll;
+import fr.zak.cubesedge.movement.MovementSlide;
+import fr.zak.cubesedge.movement.MovementSprint;
+import fr.zak.cubesedge.movement.MovementTurn;
+import fr.zak.cubesedge.movement.MovementWallJump;
+import fr.zak.cubesedge.movement.client.MovementRollClient;
+import fr.zak.cubesedge.movement.client.MovementSlideClient;
+import fr.zak.cubesedge.movement.client.MovementSlowClient;
+import fr.zak.cubesedge.movement.client.MovementSprintClient;
+import fr.zak.cubesedge.movement.client.MovementTurnClient;
+
+public class ConstructEvent {
+
+	@SubscribeEvent
+	public void construct(EntityConstructing event) {
+		if (event.entity != null && event.entity instanceof EntityPlayer) {
+			((EntityPlayer) event.entity).registerExtendedProperties(
+					"Cube's Edge Player", new EntityPlayerCustom());
+			if(event.entity.worldObj.isRemote){
+				((EntityPlayerCustom)event.entity.getExtendedProperties("Cube's Edge Player")).registerClientMovement(new MovementSlowClient());
+				((EntityPlayerCustom)event.entity.getExtendedProperties("Cube's Edge Player")).registerClientMovement(new MovementRollClient());
+				((EntityPlayerCustom)event.entity.getExtendedProperties("Cube's Edge Player")).registerClientMovement(new MovementSlideClient());
+				((EntityPlayerCustom)event.entity.getExtendedProperties("Cube's Edge Player")).registerClientMovement(new MovementSprintClient());
+				((EntityPlayerCustom)event.entity.getExtendedProperties("Cube's Edge Player")).registerClientMovement(new MovementTurnClient());
+			}
+			((EntityPlayerCustom)event.entity.getExtendedProperties("Cube's Edge Player")).registerMovement(new MovementTurn());
+			((EntityPlayerCustom)event.entity.getExtendedProperties("Cube's Edge Player")).registerMovement(new MovementRoll());
+			((EntityPlayerCustom)event.entity.getExtendedProperties("Cube's Edge Player")).registerMovement(new MovementGrab());
+			((EntityPlayerCustom)event.entity.getExtendedProperties("Cube's Edge Player")).registerMovement(new MovementWallJump());
+			((EntityPlayerCustom)event.entity.getExtendedProperties("Cube's Edge Player")).registerMovement(new MovementJump());
+			((EntityPlayerCustom)event.entity.getExtendedProperties("Cube's Edge Player")).registerMovement(new MovementSlide());
+			((EntityPlayerCustom)event.entity.getExtendedProperties("Cube's Edge Player")).registerMovement(new MovementSprint());
+		}
+	}
+
+}

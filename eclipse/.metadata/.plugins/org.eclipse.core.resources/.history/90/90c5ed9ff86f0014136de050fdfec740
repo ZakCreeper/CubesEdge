@@ -1,0 +1,27 @@
+package fr.zak.cubesedge.ticks;
+
+import net.minecraft.client.Minecraft;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
+import fr.zak.cubesedge.IMovementClient;
+import fr.zak.cubesedge.Util;
+import fr.zak.cubesedge.entity.EntityPlayerCustom;
+
+public class RenderTickHandler {
+
+	private EntityPlayerCustom playerCustom;
+	
+	@SubscribeEvent
+	public void tick(TickEvent.RenderTickEvent event) {
+		if (event.phase == TickEvent.Phase.START
+				&& Minecraft.getMinecraft().theWorld != null) {
+			playerCustom = (EntityPlayerCustom) Minecraft.getMinecraft().thePlayer
+					.getExtendedProperties("Cube's Edge Player");
+			for (Object o : ((EntityPlayerCustom)event.player.getExtendedProperties("Cube's Edge Player")).getClientsMovements()) {
+//				if (!((IMovementClient) o).isMovementDisabled()) {
+					((IMovementClient) o).renderTick(playerCustom);
+//				}
+			}
+		}
+	}
+}

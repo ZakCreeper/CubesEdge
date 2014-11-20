@@ -1,0 +1,29 @@
+package fr.zak.cubesedge.event;
+
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import fr.zak.cubesedge.Util;
+import fr.zak.cubesedge.entity.EntityPlayerCustom;
+import fr.zak.cubesedge.movement.client.MovementRollClient;
+import fr.zak.cubesedge.movement.client.MovementSlideClient;
+import fr.zak.cubesedge.movement.client.MovementSlowClient;
+import fr.zak.cubesedge.movement.client.MovementSprintClient;
+import fr.zak.cubesedge.movement.client.MovementTurnClient;
+
+public class ConstructEvent {
+
+	@SubscribeEvent
+	public void construct(EntityConstructing event) {
+		if (event.entity != null && event.entity instanceof EntityPlayer) {
+			((EntityPlayer) event.entity).registerExtendedProperties(
+					"Cube's Edge Player", new EntityPlayerCustom());
+		}
+		((EntityPlayerCustom)event.entity.getExtendedProperties("Cube's Edge Player")).registerClientMovement(new MovementSlowClient());
+		((EntityPlayerCustom)event.entity.getExtendedProperties("Cube's Edge Player")).registerClientMovement(new MovementRollClient());
+		((EntityPlayerCustom)event.entity.getExtendedProperties("Cube's Edge Player")).registerClientMovement(new MovementSlideClient());
+		((EntityPlayerCustom)event.entity.getExtendedProperties("Cube's Edge Player")).registerClientMovement(new MovementSprintClient());
+		((EntityPlayerCustom)event.entity.getExtendedProperties("Cube's Edge Player")).registerClientMovement(new MovementTurnClient());
+	}
+
+}

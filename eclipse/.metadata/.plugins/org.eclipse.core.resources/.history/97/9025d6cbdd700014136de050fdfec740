@@ -1,0 +1,45 @@
+package fr.zak.cubesedge.movement.client;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.entity.player.EntityPlayer;
+
+import org.lwjgl.input.Keyboard;
+
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
+import fr.zak.cubesedge.IMovementClient;
+import fr.zak.cubesedge.MovementFields;
+import fr.zak.cubesedge.Util;
+import fr.zak.cubesedge.entity.EntityPlayerCustom;
+
+public class MovementTurnClient extends IMovementClient {
+
+	private KeyBinding turn = new KeyBinding("Turn", Keyboard.KEY_APOSTROPHE,
+			"Cube's Edge");
+
+	@SubscribeEvent
+	public void key(KeyInputEvent event) {
+		if (turn.isPressed()
+				&& !Util.fields.isTurning) {
+			Util.fields.isTurning = true;
+		}
+	}
+	
+	@Override
+	public String getName() {
+		return "Turn Client";
+	}
+
+	@Override
+	public void renderTick(MovementFields playerCustom) {
+		
+	}
+
+	@Override
+	public void controlClient(MovementFields playerCustom,
+			EntityPlayer player) {
+		
+	}
+	
+}
