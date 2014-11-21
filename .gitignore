@@ -1,0 +1,15 @@
+/.gradle/
+/.settings/
+/gradle/
+/eclipse/
+/build/
+/bin/
+/libs/
+
+/.classpath
+/.project
+/gradlew
+/gradlew.bat
+
+# Not including APIs
+/src/api
