@@ -19,7 +19,7 @@ cpw.mods.fml.relauncher.IFMLLoadingPlugin {
 
 	@Override
 	public String getModContainerClass() {
-		return CubesEdgeDummyMod.class.getName();
+		return null;
 	}
 
 	@Override
