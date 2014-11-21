@@ -15,8 +15,6 @@ import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
-import fr.zak.cubesedge.CubesEdge;
-
 public class EntityRendererTransformer implements IClassTransformer {
 
 	private String renderHandMethodName, orientCameraMethodName;
@@ -70,7 +68,7 @@ public class EntityRendererTransformer implements IClassTransformer {
 		newList.add(new VarInsnNode(Opcodes.ALOAD, 0));
 		newList.add(new MethodInsnNode(Opcodes.INVOKESTATIC,
 				"fr/zak/cubesedge/coremod/Patch",
-				"entityRendererRenderHandPatch", "(FIL" + className + ";)V"));
+				"entityRendererRenderHandPatch", "(FIL" + className + ";)V", false));
 		newList.add(new InsnNode(Opcodes.RETURN));
 
 		mn.instructions = newList;
@@ -85,7 +83,7 @@ public class EntityRendererTransformer implements IClassTransformer {
 		newList.add(new VarInsnNode(Opcodes.ALOAD, 0));
 		newList.add(new MethodInsnNode(Opcodes.INVOKESTATIC,
 				"fr/zak/cubesedge/coremod/Patch", "orientCameraPatch", "(FL"
-						+ className + ";)V"));
+						+ className + ";)V", false));
 		newList.add(new InsnNode(Opcodes.RETURN));
 
 		mn.localVariables = new ArrayList<LocalVariableNode>(5);

@@ -185,6 +185,7 @@ public class MovementGrab extends IMovement {
 		return "Grab";
 	}
 
+	@SuppressWarnings("unchecked")
 	public static void damageEntity(Class clz, Entity ent, DamageSource dmg,
 			float i) {
 		try {

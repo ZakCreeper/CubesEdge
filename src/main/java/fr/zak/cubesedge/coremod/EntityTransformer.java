@@ -12,8 +12,6 @@ import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
-import fr.zak.cubesedge.CubesEdge;
-
 public class EntityTransformer implements IClassTransformer {
 
 	private String methodSetAnglesName, methodIsEntityInsideOpaqueBlockName;
@@ -72,7 +70,7 @@ public class EntityTransformer implements IClassTransformer {
 		newList.add(new VarInsnNode(Opcodes.ALOAD, 0));
 		newList.add(new MethodInsnNode(Opcodes.INVOKESTATIC,
 				"fr/zak/cubesedge/coremod/Patch", "entitySetAnglesPatch",
-				"(FFL" + className + ";)V"));
+				"(FFL" + className + ";)V", false));
 		newList.add(new InsnNode(Opcodes.RETURN));
 
 		mn.instructions = newList;
@@ -87,7 +85,7 @@ public class EntityTransformer implements IClassTransformer {
 		newList.add(new VarInsnNode(Opcodes.ALOAD, 0));
 		newList.add(new MethodInsnNode(Opcodes.INVOKESTATIC,
 				"fr/zak/cubesedge/coremod/Patch",
-				"isEntityInsideOpaqueBlockPatch", "(L" + className + ";)Z"));
+				"isEntityInsideOpaqueBlockPatch", "(L" + className + ";)Z", false));
 		newList.add(new InsnNode(Opcodes.IRETURN));
 
 		mn.instructions = newList;

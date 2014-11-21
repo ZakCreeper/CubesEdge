@@ -15,8 +15,6 @@ import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
-import fr.zak.cubesedge.CubesEdge;
-
 public class NetHandlerPlayServerTransformer implements IClassTransformer {
 
 	private String methodName;
@@ -68,7 +66,7 @@ public class NetHandlerPlayServerTransformer implements IClassTransformer {
 		newList.add(new VarInsnNode(Opcodes.ALOAD, 1));
 		newList.add(new MethodInsnNode(Opcodes.INVOKESTATIC,
 				"fr/zak/cubesedge/coremod/Patch", "processPlayerPatch", "(L"
-						+ className + ";L" + packetPlayerClassName + ";)V"));
+						+ className + ";L" + packetPlayerClassName + ";)V", false));
 		newList.add(new InsnNode(Opcodes.RETURN));
 		mn.instructions = newList;
 	}

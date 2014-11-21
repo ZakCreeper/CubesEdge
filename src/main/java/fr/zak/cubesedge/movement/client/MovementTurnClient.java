@@ -9,7 +9,6 @@ import org.lwjgl.input.Keyboard;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
 import fr.zak.cubesedge.IMovementClient;
-import fr.zak.cubesedge.Util;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
 
 public class MovementTurnClient extends IMovementClient {

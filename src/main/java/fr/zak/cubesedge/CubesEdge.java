@@ -47,6 +47,7 @@ public class CubesEdge {
 				"cube's edge.cfg"));
 		Util.cfg.load();
 		Util.detectObfuscation();
+		MinecraftForge.EVENT_BUS.register(new ConstructEvent());
 	}
 
 	@EventHandler

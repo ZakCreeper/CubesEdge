@@ -28,6 +28,19 @@ minecraft {
 
 dependencies {}
 
+jar {
+    manifest {
+        attributes("FMLCorePlugin": "fr.zak.cubesedge.coremod.CubesEdgeLoadingPlugin", "FMLCorePluginContainsFMLMod": "true")
+    }
+}
+runServer {
+    jvmArgs '-Dfml.coreMods.load=fr.zak.cubesedge.coremod.CubesEdgeLoadingPlugin'
+}
+
+runClient {
+    jvmArgs '-Dfml.coreMods.load=fr.zak.cubesedge.coremod.CubesEdgeLoadingPlugin'
+}
+
 processResources
 {
     inputs.property "version", project.version
