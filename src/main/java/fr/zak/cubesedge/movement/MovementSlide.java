@@ -1,7 +1,9 @@
 package fr.zak.cubesedge.movement;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.MathHelper;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
@@ -13,6 +15,9 @@ public class MovementSlide extends IMovement {
 
 	@Override
 	public void control(EntityPlayerCustom playerCustom, EntityPlayer player, Side side) {
+		int x = MathHelper.floor_double(player.posX);
+		int y = side.isClient() ? MathHelper.floor_double(player.posY) : MathHelper.floor_double(player.posY + 1.62);
+		int z = MathHelper.floor_double(player.posZ);
 		if (!player.capabilities.isFlying) {
 			if (!player.isSprinting() && playerCustom.wasSprinting) {
 				if (player.isSneaking() && player.onGround
@@ -36,7 +41,9 @@ public class MovementSlide extends IMovement {
 			}
 			playerCustom.wasSprinting = player.isSprinting();
 		}
-		if(playerCustom.isSneaking){
+		if(playerCustom.isSneaking || (Util.isCube(Minecraft.getMinecraft().theWorld
+				.getBlock(
+						x, y, z)) && playerCustom.wasSliding)){
 			Util.forceSetSize(Entity.class, player,
 					0.6F, 0.6F);
 		}
