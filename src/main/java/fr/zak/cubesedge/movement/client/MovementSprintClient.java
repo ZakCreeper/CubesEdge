@@ -2,6 +2,7 @@ package fr.zak.cubesedge.movement.client;
 
 import java.awt.Color;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -14,19 +15,42 @@ import fr.zak.cubesedge.entity.EntityPlayerCustom;
 
 public class MovementSprintClient extends IMovementClient {
 
+	private static long lastTime = -1;
+	public static double speed = 0; //actuellement en 2d, enleverles commentaires pour la vitesse en 3d
+	private static double prevPosX;
+	//private static double prevPosY;
+	private static double prevPosZ;
+	private Minecraft mc;
+
 	@SubscribeEvent
 	public void onRenderInGame(RenderGameOverlayEvent.Post event) {
+		if (mc == null)
+			mc = Minecraft.getMinecraft();
+		calculateSpeed();
 		if (event.type == RenderGameOverlayEvent.ElementType.ALL) {
 			this.drawString(
-					Minecraft.getMinecraft().fontRenderer,
-					"Speed : "
-							+ round((MathHelper.abs((float) Minecraft
-									.getMinecraft().thePlayer.motionX) + MathHelper
-									.abs((float) Minecraft.getMinecraft().thePlayer.motionZ)) * 20,
-									1) + " blocks/s", event.resolution
-									.getScaledWidth() - 115, event.resolution
-									.getScaledHeight() - 15, new Color(255, 255, 255)
-					.getRGB());
+				mc.fontRenderer,
+				"Speed : ",
+				event.resolution.getScaledWidth() - 115,
+				event.resolution.getScaledHeight() - 15,
+				new Color(255, 255, 255).getRGB()
+			);
+			
+			this.drawString(
+				mc.fontRenderer,
+				speedToStr(),
+				event.resolution.getScaledWidth() - 45 - mc.fontRenderer.getStringWidth(speedToStr()),
+				event.resolution.getScaledHeight() - 15,
+				new Color(255, 255, 255).getRGB()
+			);
+			
+			this.drawString(
+				mc.fontRenderer,
+				"kb/h",
+				event.resolution.getScaledWidth() - 40,
+				event.resolution.getScaledHeight() - 15,
+				new Color(255, 255, 255).getRGB()
+			);
 		}
 	}
 
@@ -35,14 +59,39 @@ public class MovementSprintClient extends IMovementClient {
 		par1FontRenderer.drawStringWithShadow(par2Str, par3, par4, par5);
 	}
 
+	public static String speedToStr()
+	{
+		if (speed <= 0)
+			return "0";
+		String str = "" + round((float)speed, 2);
+		String[] tab = str.split("\\.");
+		if (tab.length > 1)
+		{
+			while (tab[1].length() < 2)
+			{
+				str += "0";
+				tab = str.split("\\.");
+			}
+		}
+		return str;
+	}
+
+	private void calculateSpeed()
+	{
+		double dec = !mc.thePlayer.onGround ? 0 : 0.0784000015258789D;
+		speed = Math.sqrt(mc.thePlayer.motionX * mc.thePlayer.motionX + mc.thePlayer.motionZ * mc.thePlayer.motionZ);
+		speed = Math.sqrt(speed * speed + (mc.thePlayer.motionY + dec) * (mc.thePlayer.motionY + dec)) * 36D;
+	}
+
 	public static float round(float d, int decimalPlace) {
-		BigDecimal bd = new BigDecimal(Float.toString(d));
+		BigDecimal bd = new BigDecimal(d);
 		bd = bd.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);
 		return bd.floatValue();
 	}
 
 	@Override
 	public void renderTick(EntityPlayerCustom playerCustom) {
+
 		float f1 = playerCustom.slow ? 0.03F / 4F : 0.03F;
 		if (!playerCustom.animLeft && !playerCustom.animRight) {
 			if (Minecraft.getMinecraft().thePlayer.isSprinting()) {
@@ -106,7 +155,7 @@ public class MovementSprintClient extends IMovementClient {
 	@Override
 	public void controlClient(EntityPlayerCustom playerCustom,
 			EntityPlayer player) {
-		
+
 	}
 
 }
