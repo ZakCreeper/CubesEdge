@@ -17,6 +17,7 @@ import fr.zak.cubesedge.renderer.EntityRendererCustom;
 public class MovementSlideClient extends IMovementClient{
 
 	private EntityRenderer renderer, prevRenderer;
+	ExtendedBlockStorage ebs;
 	
 	@Override
 	public void renderTick(EntityPlayerCustom playerCustom) {
@@ -36,7 +37,7 @@ public class MovementSlideClient extends IMovementClient{
 					.floor_double(Minecraft.getMinecraft().thePlayer.posY);
 			int z1 = MathHelper
 					.floor_double(Minecraft.getMinecraft().thePlayer.posZ);
-			ExtendedBlockStorage ebs = ((ExtendedBlockStorage[]) ObfuscationReflectionHelper
+			ebs = ((ExtendedBlockStorage[]) ObfuscationReflectionHelper
 					.getPrivateValue(Chunk.class,
 							Minecraft.getMinecraft().thePlayer.worldObj
 									.getChunkFromBlockCoords(x1, z1), 2))[y1 >> 4];
