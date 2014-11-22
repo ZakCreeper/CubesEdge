@@ -1,6 +1,5 @@
 package fr.zak.cubesedge.movement;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MathHelper;
@@ -41,7 +40,7 @@ public class MovementSlide extends IMovement {
 			}
 			playerCustom.wasSprinting = player.isSprinting();
 		}
-		if(playerCustom.isSneaking || (Util.isCube(Minecraft.getMinecraft().theWorld
+		if(playerCustom.isSneaking || (Util.isCube(player.worldObj
 				.getBlock(
 						x, y, z)) && playerCustom.wasSliding)){
 			Util.forceSetSize(Entity.class, player,
