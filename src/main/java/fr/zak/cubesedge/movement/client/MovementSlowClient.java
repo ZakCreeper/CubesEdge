@@ -10,10 +10,10 @@ import org.lwjgl.input.Keyboard;
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
-import fr.zak.cubesedge.IMovementClient;
+import fr.zak.cubesedge.MovementClient;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
 
-public class MovementSlowClient extends IMovementClient {
+public class MovementSlowClient extends MovementClient {
 
 	@Override
 	public void controlClient(EntityPlayerCustom playerCustom, EntityPlayer player) {

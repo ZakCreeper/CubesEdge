@@ -17,7 +17,7 @@ buildscript {
 
 apply plugin: 'forge'
 
-version = "0.1.18Alpha"
+version = "0.2.0Alpha"
 group= "fr.zak.cubesedge" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "CubesEdge"
 

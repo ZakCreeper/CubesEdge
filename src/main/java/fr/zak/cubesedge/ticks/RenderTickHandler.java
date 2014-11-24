@@ -3,7 +3,7 @@ package fr.zak.cubesedge.ticks;
 import net.minecraft.client.Minecraft;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
-import fr.zak.cubesedge.IMovementClient;
+import fr.zak.cubesedge.MovementClient;
 import fr.zak.cubesedge.Util;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
 
@@ -16,7 +16,7 @@ public class RenderTickHandler {
 			for (Object o : Util.getClientsMovements()) {
 				EntityPlayerCustom player = ((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Cube's Edge Player"));
 //				if (!((IMovementClient) o).isMovementDisabled()) {
-					((IMovementClient) o).renderTick(player);
+					((MovementClient) o).renderTick(player);
 //				}
 			}
 		}

@@ -2,18 +2,16 @@ package fr.zak.cubesedge.movement.client;
 
 import java.awt.Color;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.MathHelper;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import fr.zak.cubesedge.IMovementClient;
+import fr.zak.cubesedge.MovementClient;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
 
-public class MovementSprintClient extends IMovementClient {
+public class MovementSprintClient extends MovementClient {
 
 	private static long lastTime = -1;
 	public static double speed = 0; //actuellement en 2d, enleverles commentaires pour la vitesse en 3d

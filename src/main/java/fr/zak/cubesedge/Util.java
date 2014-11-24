@@ -19,8 +19,8 @@ import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 
 public class Util {
 
-	private static List<IMovement> movements = new ArrayList<IMovement>();
-	private static List<IMovementClient> clientsMovements = new ArrayList<IMovementClient>();
+	private static List<Movement> movements = new ArrayList<Movement>();
+	private static List<MovementClient> clientsMovements = new ArrayList<MovementClient>();
 
 	public static Configuration cfg;
 
@@ -28,7 +28,7 @@ public class Util {
 
 	public static SimpleNetworkWrapper channel;
 
-	public static final String VERSION = "Alpha 0.1.18";
+	public static final String VERSION = "Alpha 0.2.0";
 
 	public static List<Block> cubes = new ArrayList<Block>();
 
@@ -66,7 +66,7 @@ public class Util {
 		}
 	}
 
-	public static void registerMovement(IMovement target) {
+	public static void registerMovement(Movement target) {
 		Property prop = cfg.get("movements", target.getName(), true);
 		if (!prop.getBoolean(true)) {
 			target.disable();
@@ -86,7 +86,7 @@ public class Util {
 		}
 	}
 
-	public static void registerClientMovement(IMovementClient target) {
+	public static void registerClientMovement(MovementClient target) {
 		Property prop = cfg.get("cmimovements", target.getName(), true);
 		//		if (!prop.getBoolean(true)) {
 		//			target.disable();

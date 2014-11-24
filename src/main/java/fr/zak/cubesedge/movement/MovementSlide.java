@@ -6,16 +6,16 @@ import net.minecraft.util.MathHelper;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
-import fr.zak.cubesedge.IMovement;
+import fr.zak.cubesedge.Movement;
 import fr.zak.cubesedge.Util;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
 
-public class MovementSlide extends IMovement {
+public class MovementSlide extends Movement {
 
 	@Override
 	public void control(EntityPlayerCustom playerCustom, EntityPlayer player, Side side) {
 		int x = MathHelper.floor_double(player.posX);
-		int y = side.isClient() ? MathHelper.floor_double(player.posY) : MathHelper.floor_double(player.posY + 1.62);
+		int y = MathHelper.floor_double(player.posY);
 		int z = MathHelper.floor_double(player.posZ);
 		if (!player.capabilities.isFlying) {
 			if (!player.isSprinting() && playerCustom.wasSprinting) {

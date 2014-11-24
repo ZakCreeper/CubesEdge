@@ -9,12 +9,12 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
-import fr.zak.cubesedge.IMovementClient;
+import fr.zak.cubesedge.MovementClient;
 import fr.zak.cubesedge.Util;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
 import fr.zak.cubesedge.renderer.EntityRendererCustom;
 
-public class MovementSlideClient extends IMovementClient{
+public class MovementSlideClient extends MovementClient{
 
 	private EntityRenderer renderer, prevRenderer;
 	ExtendedBlockStorage ebs;

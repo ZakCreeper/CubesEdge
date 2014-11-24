@@ -24,7 +24,7 @@ import cpw.mods.fml.common.eventhandler.IEventListener;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import fr.zak.cubesedge.IMovement;
+import fr.zak.cubesedge.Movement;
 import fr.zak.cubesedge.Util;
 
 @SideOnly(Side.CLIENT)
@@ -45,7 +45,7 @@ public class GuiMovementList extends GuiListExtended {
 		int j = aObject.length;
 
 		for (int k = 0; k < j; ++k) {
-			IMovement movement = (IMovement) aObject1[k];
+			Movement movement = (Movement) aObject1[k];
 
 			int l = mc.fontRenderer.getStringWidth(movement.getName());
 
@@ -81,11 +81,11 @@ public class GuiMovementList extends GuiListExtended {
 
 	@SideOnly(Side.CLIENT)
 	public class MovementEntry implements GuiListExtended.IGuiListEntry {
-		private final IMovement movement;
+		private final Movement movement;
 		private final String movementName;
 		private final GuiButton btnDisable;
 
-		private MovementEntry(IMovement mov) {
+		private MovementEntry(Movement mov) {
 			this.movement = mov;
 			this.movementName = mov.getName();
 			this.btnDisable = new GuiButton(0, 0, 0, 100, 18, "");
