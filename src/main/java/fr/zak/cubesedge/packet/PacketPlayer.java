@@ -1,6 +1,6 @@
 package fr.zak.cubesedge.packet;
 
-import fr.zak.cubesedge.IMovement;
+import fr.zak.cubesedge.Movement;
 import fr.zak.cubesedge.Util;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
 import io.netty.buffer.ByteBuf;
@@ -73,7 +73,7 @@ public class PacketPlayer {
 //							ctx.getServerHandler().playerEntity, 0.6F, 1.8F);
 //				}
 ////				System.out.println("1 + " + playerEntity);
-				((IMovement)Util.getMovements()[message.actionId]).control(((EntityPlayerCustom)ctx.getServerHandler().playerEntity.getExtendedProperties("Cube's Edge Player")), ctx.getServerHandler().playerEntity, Side.SERVER);
+				((Movement)Util.getMovements()[message.actionId]).control(((EntityPlayerCustom)ctx.getServerHandler().playerEntity.getExtendedProperties("Cube's Edge Player")), ctx.getServerHandler().playerEntity, Side.SERVER);
 				return null;
 			}
 		}

@@ -44,6 +44,8 @@ import org.lwjgl.opengl.GL12;
 import org.lwjgl.util.glu.Project;
 
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import fr.zak.cubesedge.Util;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
 
@@ -92,7 +94,7 @@ public class Patch {
 			entity.rotationYaw = (float) ((double) entity.rotationYaw + (double) par1 * 0.15D);
 			entity.rotationPitch = (float) ((double) entity.rotationPitch - (double) par2 * 0.15D);
 			int heading = MathHelper
-					.floor_double((double) (Minecraft.getMinecraft().thePlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+					.floor_double((double) (entity.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
 
 			if (((EntityPlayerCustom) entity
 					.getExtendedProperties("Cube's Edge Player")).grabbingDirections[0]
@@ -159,6 +161,7 @@ public class Patch {
 		}
 	}
 
+	@SideOnly(Side.CLIENT)
 	public static void entityRendererRenderHandPatch(float par1, int par2,
 			EntityRenderer renderer) {
 		if (renderer.debugViewDirection <= 0) {
@@ -287,9 +290,8 @@ public class Patch {
 	private static float getFOVModifier(Class c, EntityRenderer renderer,
 			float par1, boolean par2) {
 		try {
-			Method m = c.getDeclaredMethod(
-					Util.obfuscation ? "func_78481_a"
-							: "getFOVModifier", float.class, boolean.class);
+			Method m = c.getDeclaredMethod(Util.obfuscation ? "func_78481_a"
+					: "getFOVModifier", float.class, boolean.class);
 			m.setAccessible(true);
 			return (Float) m.invoke(renderer, par1, par2);
 		} catch (IllegalAccessException e) {
@@ -313,9 +315,8 @@ public class Patch {
 	private static void hurtCameraEffect(Class c, EntityRenderer renderer,
 			float par1) {
 		try {
-			Method m = c.getDeclaredMethod(
-					Util.obfuscation ? "func_78482_e"
-							: "hurtCameraEffect", float.class);
+			Method m = c.getDeclaredMethod(Util.obfuscation ? "func_78482_e"
+					: "hurtCameraEffect", float.class);
 			m.setAccessible(true);
 			m.invoke(renderer, par1);
 		} catch (IllegalAccessException e) {
@@ -361,6 +362,7 @@ public class Patch {
 		}
 	}
 
+	@SideOnly(Side.CLIENT)
 	private static void renderItemInFirstPerson(ItemRenderer renderer,
 			float par1) {
 		float f1 = (Float) ObfuscationReflectionHelper.getPrivateValue(
@@ -1335,8 +1337,7 @@ public class Patch {
 						|| (Util.isCube(ent.worldObj.getBlock(
 								MathHelper.floor_double(ent.posX),
 								MathHelper.floor_double(ent.posY),
-								MathHelper.floor_double(ent.posZ))
-								) && (((EntityPlayerCustom) ent
+								MathHelper.floor_double(ent.posZ))) && (((EntityPlayerCustom) ent
 								.getExtendedProperties("Cube's Edge Player")).wasSliding || ((EntityPlayerCustom) ent
 								.getExtendedProperties("Cube's Edge Player")).wasRolling))) {
 					k = MathHelper.floor_double(ent.posY
@@ -1354,6 +1355,7 @@ public class Patch {
 		return false;
 	}
 
+	@SideOnly(Side.CLIENT)
 	public static void orientCameraPatch(float par1, EntityRenderer renderer) {
 		EntityLivingBase entitylivingbase = Minecraft.getMinecraft().renderViewEntity;
 		float f1 = entitylivingbase.yOffset - 1.62F;
@@ -1361,15 +1363,11 @@ public class Patch {
 				.getExtendedProperties("Cube's Edge Player")).isSneaking
 				|| ((EntityPlayerCustom) Minecraft.getMinecraft().thePlayer
 						.getExtendedProperties("Cube's Edge Player")).isRolling
-				|| (Util.isCube(Minecraft.getMinecraft().theWorld
-						.getBlock(
-								MathHelper.floor_double(Minecraft
-										.getMinecraft().thePlayer.posX),
-								MathHelper.floor_double(Minecraft
-										.getMinecraft().thePlayer.posY),
-								MathHelper.floor_double(Minecraft
-										.getMinecraft().thePlayer.posZ))
-						) && (((EntityPlayerCustom) Minecraft
+				|| (Util.isCube(Minecraft.getMinecraft().theWorld.getBlock(
+						MathHelper
+								.floor_double(Minecraft.getMinecraft().thePlayer.posX),
+						MathHelper.floor_double(Minecraft.getMinecraft().thePlayer.posY),
+						MathHelper.floor_double(Minecraft.getMinecraft().thePlayer.posZ))) && (((EntityPlayerCustom) Minecraft
 						.getMinecraft().thePlayer
 						.getExtendedProperties("Cube's Edge Player")).wasSliding || ((EntityPlayerCustom) Minecraft
 						.getMinecraft().thePlayer

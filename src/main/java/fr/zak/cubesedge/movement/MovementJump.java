@@ -7,16 +7,16 @@ import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
-import fr.zak.cubesedge.IMovement;
+import fr.zak.cubesedge.Movement;
 import fr.zak.cubesedge.Util;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
 
-public class MovementJump extends IMovement {
+public class MovementJump extends Movement {
 
 	@Override
 	public void control(EntityPlayerCustom playerCustom, EntityPlayer player, Side side) {
 		int x = MathHelper.floor_double(player.posX);
-		int y = side.equals(Side.CLIENT) ? MathHelper.floor_double(player.posY) : MathHelper.floor_double(player.posY - 1.62);
+		int y = MathHelper.floor_double(player.posY);
 		int z = MathHelper.floor_double(player.posZ);
 		int heading = MathHelper
 				.floor_double((double) (player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;

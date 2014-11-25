@@ -11,12 +11,12 @@ import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 import net.minecraftforge.client.event.MouseEvent;
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import fr.zak.cubesedge.IMovementClient;
+import fr.zak.cubesedge.MovementClient;
 import fr.zak.cubesedge.Util;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
 import fr.zak.cubesedge.renderer.EntityRendererCustom;
 
-public class MovementRollClient extends IMovementClient {
+public class MovementRollClient extends MovementClient {
 
 	private EntityRenderer renderer, prevRenderer;
 	

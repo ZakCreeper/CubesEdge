@@ -4,10 +4,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
-import fr.zak.cubesedge.IMovement;
+import fr.zak.cubesedge.Movement;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
 
-public class MovementSprint extends IMovement {
+public class MovementSprint extends Movement {
 
 	@Override
 	public void control(EntityPlayerCustom playerCustom, EntityPlayer player, Side side) {

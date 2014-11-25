@@ -8,10 +8,10 @@ import org.lwjgl.input.Keyboard;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
-import fr.zak.cubesedge.IMovementClient;
+import fr.zak.cubesedge.MovementClient;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
 
-public class MovementTurnClient extends IMovementClient {
+public class MovementTurnClient extends MovementClient {
 
 	private KeyBinding turn = new KeyBinding("Turn", Keyboard.KEY_APOSTROPHE,
 			"Cube's Edge");
