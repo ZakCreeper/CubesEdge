@@ -9,29 +9,26 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 import net.minecraftforge.client.event.MouseEvent;
-import cpw.mods.fml.common.ObfuscationReflectionHelper;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import fr.zak.cubesedge.MovementClient;
 import fr.zak.cubesedge.Util;
+import fr.zak.cubesedge.WorldUtil;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
 import fr.zak.cubesedge.renderer.EntityRendererCustom;
 
 public class MovementRollClient extends MovementClient {
 
 	private EntityRenderer renderer, prevRenderer;
-	
+
 	@Override
 	public void renderTick(EntityPlayerCustom playerCustom) {
 		if (playerCustom.isRolling
-				|| (Util.isCube(Minecraft.getMinecraft().theWorld
-						.getBlock(
-								MathHelper.floor_double(Minecraft
-										.getMinecraft().thePlayer.posX),
-								MathHelper.floor_double(Minecraft
-										.getMinecraft().thePlayer.posY),
-								MathHelper.floor_double(Minecraft
-										.getMinecraft().thePlayer.posZ))
-						) && playerCustom.wasRolling)) {
+				|| (Util.isCube(WorldUtil.getBlock(
+						Minecraft.getMinecraft().theWorld,
+						MathHelper.floor_double(Minecraft.getMinecraft().thePlayer.posX),
+						MathHelper.floor_double(Minecraft.getMinecraft().thePlayer.posY),
+						MathHelper.floor_double(Minecraft.getMinecraft().thePlayer.posZ))) && playerCustom.wasRolling)) {
 			int x1 = MathHelper
 					.floor_double(Minecraft.getMinecraft().thePlayer.posX);
 			int y1 = MathHelper
@@ -41,7 +38,7 @@ public class MovementRollClient extends MovementClient {
 			ExtendedBlockStorage ebs = ((ExtendedBlockStorage[]) ObfuscationReflectionHelper
 					.getPrivateValue(Chunk.class,
 							Minecraft.getMinecraft().thePlayer.worldObj
-									.getChunkFromBlockCoords(x1, z1), 2))[y1 >> 4];
+									.getChunkFromChunkCoords(x1, z1), 2))[y1 >> 4];
 			if (ebs.getExtSkylightValue((x1 & 15), y1 & 15, (z1 & 15)) == 0) {
 				ebs.setExtSkylightValue((x1 & 15), y1 & 15, (z1 & 15),
 						playerCustom.lastLightValue);
@@ -73,10 +70,11 @@ public class MovementRollClient extends MovementClient {
 			playerCustom.wasRolling = playerCustom.isRolling;
 		}
 	}
-	
+
 	@SubscribeEvent
 	public void onClick(MouseEvent event) {
-		if (((EntityPlayerCustom)Minecraft.getMinecraft().thePlayer.getExtendedProperties("Cube's Edge Player")).isRolling) {
+		if (((EntityPlayerCustom) Minecraft.getMinecraft().thePlayer
+				.getExtendedProperties("Cube's Edge Player")).isRolling) {
 			event.setCanceled(true);
 		}
 	}
@@ -94,15 +92,10 @@ public class MovementRollClient extends MovementClient {
 		int z = MathHelper.floor_double(player.posZ);
 		if (!player.capabilities.isFlying && !playerCustom.isSneaking) {
 			if (player.fallDistance > 3.0F && player.fallDistance < 15F) {
-				if (Util.isCube(player.worldObj.getBlock(
-						x,
-						y - 3,
-						z))
-						|| Util.isCube(player.worldObj.getBlock(
-								x,
-								y - 4,
-								z)
-								)) {
+				if (Util.isCube(WorldUtil
+						.getBlock(player.worldObj, x, y - 3, z))
+						|| Util.isCube(WorldUtil.getBlock(player.worldObj, x,
+								y - 4, z))) {
 					if (player instanceof EntityPlayerSP) {
 						if (((EntityPlayerSP) player).movementInput.sneak) {
 							playerCustom.prevRolling = true;

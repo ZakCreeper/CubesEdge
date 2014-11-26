@@ -17,12 +17,12 @@ buildscript {
 
 apply plugin: 'forge'
 
-version = "0.2.0Alpha"
+version = "0.2.1Alpha"
 group= "fr.zak.cubesedge" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "CubesEdge"
 
 minecraft {
-    version = "1.7.10-10.13.2.1230"
+    version = "1.8-11.14.0.1239-1.8"
     runDir = "eclipse"
 }
 

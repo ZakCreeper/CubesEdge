@@ -1,7 +1,7 @@
 package fr.zak.cubesedge;
 
 import net.minecraft.entity.player.EntityPlayer;
-import cpw.mods.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.Side;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
 
 public abstract class IMovement {

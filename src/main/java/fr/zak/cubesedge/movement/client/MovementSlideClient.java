@@ -8,9 +8,10 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
-import cpw.mods.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import fr.zak.cubesedge.MovementClient;
 import fr.zak.cubesedge.Util;
+import fr.zak.cubesedge.WorldUtil;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
 import fr.zak.cubesedge.renderer.EntityRendererCustom;
 
@@ -22,8 +23,7 @@ public class MovementSlideClient extends MovementClient{
 	@Override
 	public void renderTick(EntityPlayerCustom playerCustom) {
 		if (playerCustom.isSneaking
-				|| (Util.isCube(Minecraft.getMinecraft().theWorld
-						.getBlock(
+				|| (Util.isCube(WorldUtil.getBlock(Minecraft.getMinecraft().theWorld,
 								MathHelper.floor_double(Minecraft
 										.getMinecraft().thePlayer.posX),
 								MathHelper.floor_double(Minecraft
@@ -40,7 +40,7 @@ public class MovementSlideClient extends MovementClient{
 			ebs = ((ExtendedBlockStorage[]) ObfuscationReflectionHelper
 					.getPrivateValue(Chunk.class,
 							Minecraft.getMinecraft().thePlayer.worldObj
-									.getChunkFromBlockCoords(x1, z1), 2))[y1 >> 4];
+									.getChunkFromChunkCoords(x1, z1), 2))[y1 >> 4];
 			if (ebs.getExtSkylightValue((x1 & 15), y1 & 15, (z1 & 15)) == 0) {
 				ebs.setExtSkylightValue((x1 & 15), y1 & 15, (z1 & 15),
 						playerCustom.lastLightValue);
@@ -60,8 +60,7 @@ public class MovementSlideClient extends MovementClient{
 			}
 		} else if (prevRenderer != null
 				&& Minecraft.getMinecraft().entityRenderer != prevRenderer
-				&& Minecraft.getMinecraft().theWorld
-						.getBlock(MathHelper.floor_double(Minecraft
+				&& WorldUtil.getBlock(Minecraft.getMinecraft().theWorld, MathHelper.floor_double(Minecraft
 								.getMinecraft().thePlayer.posX),
 								MathHelper.floor_double(Minecraft
 										.getMinecraft().thePlayer.posY),

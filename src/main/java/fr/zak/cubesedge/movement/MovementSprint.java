@@ -2,8 +2,8 @@ package fr.zak.cubesedge.movement;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.Side;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
 import fr.zak.cubesedge.Movement;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
 
