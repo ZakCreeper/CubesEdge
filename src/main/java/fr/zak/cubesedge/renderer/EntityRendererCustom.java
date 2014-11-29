@@ -32,4 +32,10 @@ public class EntityRendererCustom extends EntityRenderer {
 		mc.thePlayer.prevPosY -= offsetY;
 		mc.thePlayer.lastTickPosY -= offsetY;
 	}
+	
+	@Override
+	public void orientCamera(float f){
+		super.orientCamera(f);
+		System.out.println("dfeqf");
+	}
 }
