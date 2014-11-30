@@ -30,7 +30,7 @@ public class Patch {
 	@SideOnly(Side.CLIENT)
 	public static void entityRendererRenderHandPatch(float par1, int par2,
 			EntityRenderer renderer) {
-
+		
 	}
 
 	private static float getFOVModifier(Class c, EntityRenderer renderer,

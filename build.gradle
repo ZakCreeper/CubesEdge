@@ -22,7 +22,7 @@ group= "fr.zak.cubesedge" // http://maven.apache.org/guides/mini/guide-naming-co
 archivesBaseName = "CubesEdge"
 
 minecraft {
-    version = "1.8-11.14.0.1239-1.8"
+    version = "1.8-11.14.0.1246-1.8"
     runDir = "eclipse"
 }
 
