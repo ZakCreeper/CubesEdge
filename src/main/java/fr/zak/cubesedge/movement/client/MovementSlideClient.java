@@ -41,7 +41,7 @@ public class MovementSlideClient extends MovementClient{
 					.getPrivateValue(Chunk.class,
 							Minecraft.getMinecraft().thePlayer.worldObj
 									.getChunkFromBlockCoords(x1, z1), 2))[y1 >> 4];
-			if (ebs.getExtSkylightValue((x1 & 15), y1 & 15, (z1 & 15)) == 0) {
+			if (ebs != null && ebs.getExtSkylightValue((x1 & 15), y1 & 15, (z1 & 15)) == 0) {
 				ebs.setExtSkylightValue((x1 & 15), y1 & 15, (z1 & 15),
 						playerCustom.lastLightValue);
 			}

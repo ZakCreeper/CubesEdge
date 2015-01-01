@@ -23,7 +23,6 @@ public class EntityRendererCustom extends EntityRenderer {
 		// not perfect, as the server posY does not match, meaning
 		// that some block clicks do not process correctly
 		// (distance check or something like that)
-
 		mc.thePlayer.posY += offsetY;
 		mc.thePlayer.prevPosY += offsetY;
 		mc.thePlayer.lastTickPosY += offsetY;

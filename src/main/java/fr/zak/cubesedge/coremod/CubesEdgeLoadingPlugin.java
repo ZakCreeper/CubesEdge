@@ -34,7 +34,7 @@ cpw.mods.fml.relauncher.IFMLLoadingPlugin {
 
 	@Override
 	public String getAccessTransformerClass() {
-		return CubesEdgeAccessTransformer.class.getName();
+		return /*CubesEdgeAccessTransformer.class.getName()*/null;
 	}
 	
 }
