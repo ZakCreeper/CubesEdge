@@ -162,50 +162,7 @@ public class Patch {
 	}
 
 	@SideOnly(Side.CLIENT)
-	public static void entityRendererRenderHandPatch(float par1, int par2,
-			EntityRenderer renderer) {
-		if (renderer.debugViewDirection <= 0) {
-			GL11.glMatrixMode(GL11.GL_PROJECTION);
-			GL11.glLoadIdentity();
-			float f1 = 0.07F;
-
-			if (((Minecraft) ObfuscationReflectionHelper.getPrivateValue(
-					EntityRenderer.class, renderer, 5)).gameSettings.anaglyph) {
-				GL11.glTranslatef((float) (-(par2 * 2 - 1)) * f1, 0.0F, 0.0F);
-			}
-
-			if ((Double) ObfuscationReflectionHelper.getPrivateValue(
-					EntityRenderer.class, renderer, 46) != 1.0D) {
-				GL11.glTranslatef(((Double) ObfuscationReflectionHelper
-						.getPrivateValue(EntityRenderer.class, renderer, 47))
-						.floatValue(),
-						(float) (-(Double) ObfuscationReflectionHelper
-								.getPrivateValue(EntityRenderer.class,
-										renderer, 48)), 0.0F);
-				GL11.glScaled((Double) ObfuscationReflectionHelper
-						.getPrivateValue(EntityRenderer.class, renderer, 46),
-						(Double) ObfuscationReflectionHelper.getPrivateValue(
-								EntityRenderer.class, renderer, 46), 1.0D);
-			}
-
-			Project.gluPerspective(
-					getFOVModifier(EntityRenderer.class, renderer, par1, false),
-					(float) ((Minecraft) ObfuscationReflectionHelper
-							.getPrivateValue(EntityRenderer.class, renderer, 5)).displayWidth
-							/ (float) ((Minecraft) ObfuscationReflectionHelper
-									.getPrivateValue(EntityRenderer.class,
-											renderer, 5)).displayHeight, 0.05F,
-					((Float) ObfuscationReflectionHelper.getPrivateValue(
-							EntityRenderer.class, renderer, 6)) * 2.0F);
-
-			if (((Minecraft) ObfuscationReflectionHelper.getPrivateValue(
-					EntityRenderer.class, renderer, 5)).playerController
-					.enableEverythingIsScrewedUpMode()) {
-				float f2 = 0.6666667F;
-				GL11.glScalef(1.0F, f2, 1.0F);
-			}
-
-			GL11.glMatrixMode(GL11.GL_MODELVIEW);
+	public static void entityRendererRenderHandPatch(EntityRenderer renderer) {
 			if (!((EntityPlayerCustom) Minecraft.getMinecraft().thePlayer
 					.getExtendedProperties("Cube's Edge Player")).isGrabbing) {
 				if (!((EntityPlayerCustom) Minecraft.getMinecraft().thePlayer
@@ -240,51 +197,6 @@ public class Patch {
 					.getExtendedProperties("Cube's Edge Player")).animRight) {
 				GL11.glRotatef(-90 * heading, 0, 1, 0);
 			}
-
-			if (((Minecraft) ObfuscationReflectionHelper.getPrivateValue(
-					EntityRenderer.class, renderer, 5)).gameSettings.anaglyph) {
-				GL11.glTranslatef((float) (par2 * 2 - 1) * 0.1F, 0.0F, 0.0F);
-			}
-
-			GL11.glPushMatrix();
-			hurtCameraEffect(EntityRenderer.class, renderer, par1);
-
-			if (((Minecraft) ObfuscationReflectionHelper.getPrivateValue(
-					EntityRenderer.class, renderer, 5)).gameSettings.viewBobbing) {
-				setupViewBobbing(renderer, par1);
-			}
-
-			if (((Minecraft) ObfuscationReflectionHelper.getPrivateValue(
-					EntityRenderer.class, renderer, 5)).gameSettings.thirdPersonView == 0
-					&& !((Minecraft) ObfuscationReflectionHelper
-							.getPrivateValue(EntityRenderer.class, renderer, 5)).renderViewEntity
-							.isPlayerSleeping()
-					&& !((Minecraft) ObfuscationReflectionHelper
-							.getPrivateValue(EntityRenderer.class, renderer, 5)).gameSettings.hideGUI
-					&& !((Minecraft) ObfuscationReflectionHelper
-							.getPrivateValue(EntityRenderer.class, renderer, 5)).playerController
-							.enableEverythingIsScrewedUpMode()) {
-				renderer.enableLightmap((double) par1);
-				renderItemInFirstPerson(renderer.itemRenderer, par1);
-				renderer.disableLightmap((double) par1);
-			}
-
-			GL11.glPopMatrix();
-
-			if (((Minecraft) ObfuscationReflectionHelper.getPrivateValue(
-					EntityRenderer.class, renderer, 5)).gameSettings.thirdPersonView == 0
-					&& !((Minecraft) ObfuscationReflectionHelper
-							.getPrivateValue(EntityRenderer.class, renderer, 5)).renderViewEntity
-							.isPlayerSleeping()) {
-				renderer.itemRenderer.renderOverlays(par1);
-				hurtCameraEffect(EntityRenderer.class, renderer, par1);
-			}
-
-			if (((Minecraft) ObfuscationReflectionHelper.getPrivateValue(
-					EntityRenderer.class, renderer, 5)).gameSettings.viewBobbing) {
-				setupViewBobbing(renderer, par1);
-			}
-		}
 	}
 
 	private static float getFOVModifier(Class c, EntityRenderer renderer,
@@ -363,7 +275,7 @@ public class Patch {
 	}
 
 	@SideOnly(Side.CLIENT)
-	private static void renderItemInFirstPerson(ItemRenderer renderer,
+	public static void renderItemInFirstPerson(ItemRenderer renderer,
 			float par1) {
 		float f1 = (Float) ObfuscationReflectionHelper.getPrivateValue(
 				ItemRenderer.class, renderer, 6)

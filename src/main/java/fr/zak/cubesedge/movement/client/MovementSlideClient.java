@@ -16,7 +16,7 @@ import fr.zak.cubesedge.renderer.EntityRendererCustom;
 
 public class MovementSlideClient extends MovementClient{
 
-	private EntityRenderer renderer, prevRenderer;
+//	private EntityRenderer renderer, prevRenderer;
 	ExtendedBlockStorage ebs;
 	
 	@Override
@@ -50,17 +50,17 @@ public class MovementSlideClient extends MovementClient{
 			KeyBinding.setKeyBindState(
 					Minecraft.getMinecraft().gameSettings.keyBindSneak
 							.getKeyCode(), true);
-			if (renderer == null) {
-				renderer = new EntityRendererCustom(Minecraft.getMinecraft());
-			}
-			if (Minecraft.getMinecraft().entityRenderer != renderer) {
-				// be sure to store the previous renderer
-				prevRenderer = Minecraft.getMinecraft().entityRenderer;
-				Minecraft.getMinecraft().entityRenderer = renderer;
-			}
-		} else if (prevRenderer != null
+//			if (renderer == null) {
+//				renderer = new EntityRendererCustom(Minecraft.getMinecraft());
+//			}
+//			if (Minecraft.getMinecraft().entityRenderer != renderer) {
+//				// be sure to store the previous renderer
+//				prevRenderer = Minecraft.getMinecraft().entityRenderer;
+//				Minecraft.getMinecraft().entityRenderer = renderer;
+//			}
+		} else if (/*prevRenderer != null
 				&& Minecraft.getMinecraft().entityRenderer != prevRenderer
-				&& Minecraft.getMinecraft().theWorld
+				&& */Minecraft.getMinecraft().theWorld
 						.getBlock(MathHelper.floor_double(Minecraft
 								.getMinecraft().thePlayer.posX),
 								MathHelper.floor_double(Minecraft
@@ -68,10 +68,7 @@ public class MovementSlideClient extends MovementClient{
 								MathHelper.floor_double(Minecraft
 										.getMinecraft().thePlayer.posZ)) == Blocks.air && !playerCustom.isRolling) {
 			// reset the renderer
-			KeyBinding.setKeyBindState(
-					Minecraft.getMinecraft().gameSettings.keyBindSneak
-							.getKeyCode(), false);
-			Minecraft.getMinecraft().entityRenderer = prevRenderer;
+//			Minecraft.getMinecraft().entityRenderer = prevRenderer;
 			playerCustom.sneakTime = 0;
 			playerCustom.wasSliding = false;
 		}

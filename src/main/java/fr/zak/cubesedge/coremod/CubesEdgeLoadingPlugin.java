@@ -14,7 +14,8 @@ cpw.mods.fml.relauncher.IFMLLoadingPlugin {
 	public String[] getASMTransformerClass() {
 		return new String[] { EntityRendererTransformer.class.getName(),
 				EntityTransformer.class.getName(),
-				NetHandlerPlayServerTransformer.class.getName() };
+				NetHandlerPlayServerTransformer.class.getName(),
+				ItemRendererTransformer.class.getName()};
 	}
 
 	@Override

@@ -1,5 +1,7 @@
 package fr.zak.cubesedge.coremod;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import net.minecraft.launchwrapper.IClassTransformer;
@@ -7,9 +9,9 @@ import net.minecraft.launchwrapper.IClassTransformer;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.InsnList;
-import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.LocalVariableNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
@@ -26,7 +28,7 @@ public class EntityRendererTransformer implements IClassTransformer {
 		if (transformedName
 				.equals("net.minecraft.client.renderer.EntityRenderer")) {
 			System.out
-					.println("Cube\'s Edge Core - Patching class EntityRenderer...");
+			.println("Cube\'s Edge Core - Patching class EntityRenderer...");
 			renderHandMethodName = CubesEdgeLoadingPlugin.obfuscation ? "b"
 					: "renderHand";
 			className = CubesEdgeLoadingPlugin.obfuscation ? "blt"
@@ -44,9 +46,19 @@ public class EntityRendererTransformer implements IClassTransformer {
 			}
 			ClassWriter cw = new ClassWriter(0);
 			cn.accept(cw);
-			System.out
-					.println("Cube\'s Edge Core - Patching class EntityRenderer done.");
-			return cw.toByteArray();
+			System.out.println("Cube\'s Edge Core - Patching class EntityRenderer done.");
+			byte[] p = cw.toByteArray();
+//			try
+//			{
+//				FileOutputStream out = new FileOutputStream("EntityRenderer.class");
+//				out.write(p);
+//				out.close();
+//			}
+//			catch (IOException ex)
+//			{
+//				ex.printStackTrace();
+//			}
+			return p;
 		} else {
 			return basicClass;
 		}
@@ -58,15 +70,25 @@ public class EntityRendererTransformer implements IClassTransformer {
 		InsnList newList = new InsnList();
 
 		mn.localVariables = new ArrayList<LocalVariableNode>(5);
-		
-		newList.add(new VarInsnNode(Opcodes.FLOAD, 1));
-		newList.add(new VarInsnNode(Opcodes.ILOAD, 2));
+		int loc = 0;
+		AbstractInsnNode insn = null;
+		for(int i = 0; i < mn.instructions.size(); i++) {
+			insn = mn.instructions.get(i);
+			if(insn.getOpcode() == Opcodes.INVOKESTATIC){
+				loc++;
+				if(loc == 9){
+					break;
+				}
+			}
+		}
+
 		newList.add(new VarInsnNode(Opcodes.ALOAD, 0));
 		newList.add(new MethodInsnNode(Opcodes.INVOKESTATIC,
 				"fr/zak/cubesedge/coremod/Patch",
-				"entityRendererRenderHandPatch", "(FIL" + className + ";)V", false));
-		newList.add(new InsnNode(Opcodes.RETURN));
+				"entityRendererRenderHandPatch", "(L" + className + ";)V", false));
 
-		mn.instructions = newList;
+		System.out.println(insn);
+		mn.instructions.insert(insn, newList);
+		mn.instructions.remove(insn);
 	}
 }
