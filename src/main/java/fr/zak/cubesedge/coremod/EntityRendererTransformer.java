@@ -17,7 +17,7 @@ import org.objectweb.asm.tree.VarInsnNode;
 
 public class EntityRendererTransformer implements IClassTransformer {
 
-	private String renderHandMethodName, orientCameraMethodName;
+	private String renderHandMethodName;
 	private static String className;
 
 	@Override
@@ -29,8 +29,6 @@ public class EntityRendererTransformer implements IClassTransformer {
 					.println("Cube\'s Edge Core - Patching class EntityRenderer...");
 			renderHandMethodName = CubesEdgeLoadingPlugin.obfuscation ? "b"
 					: "renderHand";
-			orientCameraMethodName = CubesEdgeLoadingPlugin.obfuscation ? "h"
-					: "orientCamera";
 			className = CubesEdgeLoadingPlugin.obfuscation ? "blt"
 					: "net/minecraft/client/renderer/EntityRenderer";
 
@@ -42,10 +40,6 @@ public class EntityRendererTransformer implements IClassTransformer {
 				if (mn.name.equals(renderHandMethodName)
 						&& mn.desc.equals("(FI)V")) {
 					patchRenderHandMethod(mn);
-				}
-				if (mn.name.equals(orientCameraMethodName)
-						&& mn.desc.equals("(F)V")) {
-					patchOrientCameraMethod(mn);
 				}
 			}
 			ClassWriter cw = new ClassWriter(0);
@@ -63,6 +57,8 @@ public class EntityRendererTransformer implements IClassTransformer {
 		System.out.println("\tPatching method renderHand in EntityRenderer");
 		InsnList newList = new InsnList();
 
+		mn.localVariables = new ArrayList<LocalVariableNode>(5);
+		
 		newList.add(new VarInsnNode(Opcodes.FLOAD, 1));
 		newList.add(new VarInsnNode(Opcodes.ILOAD, 2));
 		newList.add(new VarInsnNode(Opcodes.ALOAD, 0));
@@ -71,22 +67,6 @@ public class EntityRendererTransformer implements IClassTransformer {
 				"entityRendererRenderHandPatch", "(FIL" + className + ";)V", false));
 		newList.add(new InsnNode(Opcodes.RETURN));
 
-		mn.instructions = newList;
-	}
-
-	private static void patchOrientCameraMethod(MethodNode mn) {
-
-		System.out.println("\tPatching method orientCamera in EntityRenderer");
-		InsnList newList = new InsnList();
-
-		newList.add(new VarInsnNode(Opcodes.FLOAD, 1));
-		newList.add(new VarInsnNode(Opcodes.ALOAD, 0));
-		newList.add(new MethodInsnNode(Opcodes.INVOKESTATIC,
-				"fr/zak/cubesedge/coremod/Patch", "orientCameraPatch", "(FL"
-						+ className + ";)V", false));
-		newList.add(new InsnNode(Opcodes.RETURN));
-
-		mn.localVariables = new ArrayList<LocalVariableNode>(5);
 		mn.instructions = newList;
 	}
 }

@@ -30,7 +30,7 @@ dependencies {}
 
 jar {
     manifest {
-        attributes("FMLCorePlugin": "fr.zak.cubesedge.coremod.CubesEdgeLoadingPlugin", "FMLCorePluginContainsFMLMod": "true")
+        attributes("FMLCorePlugin": "fr.zak.cubesedge.coremod.CubesEdgeLoadingPlugin", "FMLCorePluginContainsFMLMod": "true", 'FMLAT': 'cubesedge_at.cfg')
     }
 }
 runServer {
