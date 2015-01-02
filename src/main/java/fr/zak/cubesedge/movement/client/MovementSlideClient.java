@@ -45,8 +45,8 @@ public class MovementSlideClient extends MovementClient{
 				ebs.setExtSkylightValue((x1 & 15), y1 & 15, (z1 & 15),
 						playerCustom.lastLightValue);
 			}
-			playerCustom.lastLightValue = (byte) ebs.getExtSkylightValue(
-					(x1 & 15), y1 & 15, (z1 & 15));
+			playerCustom.lastLightValue = ebs != null ? (byte) ebs.getExtSkylightValue(
+					(x1 & 15), y1 & 15, (z1 & 15)) : 0;
 			KeyBinding.setKeyBindState(
 					Minecraft.getMinecraft().gameSettings.keyBindSneak
 							.getKeyCode(), true);

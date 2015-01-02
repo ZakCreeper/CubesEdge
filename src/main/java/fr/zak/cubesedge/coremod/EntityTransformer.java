@@ -1,5 +1,7 @@
 package fr.zak.cubesedge.coremod;
 
+import java.util.ArrayList;
+
 import net.minecraft.launchwrapper.IClassTransformer;
 
 import org.objectweb.asm.ClassReader;
@@ -8,6 +10,7 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.InsnNode;
+import org.objectweb.asm.tree.LocalVariableNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
@@ -65,6 +68,8 @@ public class EntityTransformer implements IClassTransformer {
 		System.out.println("\tPatching method setAngles in Entity");
 		InsnList newList = new InsnList();
 
+		mn.localVariables = new ArrayList<LocalVariableNode>(5);
+		
 		newList.add(new VarInsnNode(Opcodes.FLOAD, 1));
 		newList.add(new VarInsnNode(Opcodes.FLOAD, 2));
 		newList.add(new VarInsnNode(Opcodes.ALOAD, 0));
