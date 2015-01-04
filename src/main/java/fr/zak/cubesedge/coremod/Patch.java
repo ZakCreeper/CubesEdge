@@ -2,10 +2,6 @@ package fr.zak.cubesedge.coremod;
 
 import static net.minecraftforge.client.IItemRenderer.ItemRenderType.EQUIPPED_FIRST_PERSON;
 import static net.minecraftforge.client.IItemRenderer.ItemRenderType.FIRST_PERSON_MAP;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -18,7 +14,6 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemCloth;
@@ -29,19 +24,15 @@ import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
-import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Vec3;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.storage.MapData;
-import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.MinecraftForgeClient;
 
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
-import org.lwjgl.util.glu.Project;
 
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import cpw.mods.fml.relauncher.Side;
@@ -93,8 +84,6 @@ public class Patch {
 				.getExtendedProperties("Cube's Edge Player")).isGrabbing) {
 			entity.rotationYaw = (float) ((double) entity.rotationYaw + (double) par1 * 0.15D);
 			entity.rotationPitch = (float) ((double) entity.rotationPitch - (double) par2 * 0.15D);
-			int heading = MathHelper
-					.floor_double((double) (entity.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
 
 			if (((EntityPlayerCustom) entity
 					.getExtendedProperties("Cube's Edge Player")).grabbingDirections[0]

@@ -1,5 +1,7 @@
 package fr.zak.cubesedge.coremod;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import net.minecraft.launchwrapper.IClassTransformer;
@@ -14,6 +16,8 @@ import org.objectweb.asm.tree.LocalVariableNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
+
+import com.sun.org.apache.bcel.internal.classfile.LocalVariable;
 
 public class EntityTransformer implements IClassTransformer {
 
@@ -55,6 +59,14 @@ public class EntityTransformer implements IClassTransformer {
 			ClassWriter cw = new ClassWriter(0);
 			cn.accept(cw);
 
+			try {
+				FileOutputStream out = new FileOutputStream("Entity.class");
+				out.write(cw.toByteArray());
+				out.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			System.out
 					.println("Cube\'s Edge Core - Patching class Entity done.");
 			return cw.toByteArray();
@@ -94,5 +106,6 @@ public class EntityTransformer implements IClassTransformer {
 		newList.add(new InsnNode(Opcodes.IRETURN));
 
 		mn.instructions = newList;
+		mn.localVariables = new ArrayList<LocalVariableNode>();
 	}
 }

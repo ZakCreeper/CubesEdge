@@ -48,16 +48,16 @@ public class EntityRendererTransformer implements IClassTransformer {
 			cn.accept(cw);
 			System.out.println("Cube\'s Edge Core - Patching class EntityRenderer done.");
 			byte[] p = cw.toByteArray();
-//			try
-//			{
-//				FileOutputStream out = new FileOutputStream("EntityRenderer.class");
-//				out.write(p);
-//				out.close();
-//			}
-//			catch (IOException ex)
-//			{
-//				ex.printStackTrace();
-//			}
+			try
+			{
+				FileOutputStream out = new FileOutputStream("EntityRenderer.class");
+				out.write(p);
+				out.close();
+			}
+			catch (IOException ex)
+			{
+				ex.printStackTrace();
+			}
 			return p;
 		} else {
 			return basicClass;
