@@ -94,7 +94,7 @@ public class CubesEdge {
 		Util.cubes.add(Blocks.log);
 		Util.cubes.add(Blocks.log2);
 		if(Loader.isModLoaded("chisel")){
-			
+			//TODO : Compability with chisel's blocks
 		}
 	}
 }

@@ -4,7 +4,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.MathHelper;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -17,9 +16,9 @@ public class MovementRoll extends Movement {
 
 	@Override
 	public void control(EntityPlayerCustom playerCustom, EntityPlayer player, Side side) {
-		int x = MathHelper.floor_double(player.posX);
-		int y = MathHelper.floor_double(player.posY);
-		int z = MathHelper.floor_double(player.posZ);
+//		int x = MathHelper.floor_double(player.posX);
+//		int y = MathHelper.floor_double(player.posY);
+//		int z = MathHelper.floor_double(player.posZ);
 		if (!player.capabilities.isFlying && !playerCustom.isSneaking) {
 			if (playerCustom.prevRolling && player.onGround) {
 				playerCustom.isRolling = true;
@@ -73,13 +72,25 @@ public class MovementRoll extends Movement {
 		}
 	}
 
+	//TODO : Experimental code == bullshit but it work xD
+	boolean roll;
+	byte ticks;
+	
 	@SubscribeEvent
 	public void onFall(LivingFallEvent event) {
-		System.out.println("test1");
-		if (event.entityLiving instanceof EntityPlayer
-				&& ((EntityPlayerCustom)event.entityLiving.getExtendedProperties("Cube's Edge Player")).isRolling) {
-			System.out.println("test2");
+		
+		if(event.entityLiving instanceof EntityPlayer && ((EntityPlayerCustom)event.entityLiving.getExtendedProperties("Cube's Edge Player")).prevRolling){
+			roll = true;
+		}
+		if (event.entityLiving instanceof EntityPlayer && roll) {
+			ticks++;
+			System.out.println("1 : " + ((EntityPlayerCustom)event.entityLiving.getExtendedProperties("Cube's Edge Player")).isRolling);
+			System.out.println("2 : " + ((EntityPlayerCustom)event.entityLiving.getExtendedProperties("Cube's Edge Player")).prevRolling);
 			event.distance = 0;
+		}
+		if(ticks >= 2){
+			ticks = 0;
+			roll = false;
 		}
 	}
 
