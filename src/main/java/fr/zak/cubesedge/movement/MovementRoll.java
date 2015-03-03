@@ -75,8 +75,10 @@ public class MovementRoll extends Movement {
 
 	@SubscribeEvent
 	public void onFall(LivingFallEvent event) {
+		System.out.println("test1");
 		if (event.entityLiving instanceof EntityPlayer
 				&& ((EntityPlayerCustom)event.entityLiving.getExtendedProperties("Cube's Edge Player")).isRolling) {
+			System.out.println("test2");
 			event.distance = 0;
 		}
 	}

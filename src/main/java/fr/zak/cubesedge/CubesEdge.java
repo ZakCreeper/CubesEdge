@@ -93,5 +93,8 @@ public class CubesEdge {
 		Util.cubes.remove(Blocks.stone_slab);
 		Util.cubes.add(Blocks.log);
 		Util.cubes.add(Blocks.log2);
+		if(Loader.isModLoaded("chisel")){
+			
+		}
 	}
 }
