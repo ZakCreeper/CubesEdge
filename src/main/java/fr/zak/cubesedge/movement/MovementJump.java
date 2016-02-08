@@ -4,9 +4,9 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
-import cpw.mods.fml.common.ObfuscationReflectionHelper;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.Side;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
 import fr.zak.cubesedge.Movement;
 import fr.zak.cubesedge.Util;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
@@ -21,87 +21,87 @@ public class MovementJump extends Movement {
 		int heading = MathHelper
 				.floor_double((double) (player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
 		if (!player.capabilities.isFlying && !playerCustom.isSneaking) {
-			if ((Util.isCube(player.worldObj.getBlock(x,
+			if ((Util.isCube(getBlock(player.worldObj,x,
 					y - 1,
 					z - 1)) && heading == 2)
-					|| (Util.isCube(player.worldObj.getBlock(
+					|| (Util.isCube(getBlock(player.worldObj,
 							x,
 							y - 1,
 							z + 1)
 							) && heading == 0)
-					|| (Util.isCube(player.worldObj.getBlock(
+					|| (Util.isCube(getBlock(player.worldObj,
 							x - 1,
 							y - 1,
 							z)
 							) && heading == 1)
-					|| (Util.isCube(player.worldObj.getBlock(
+					|| (Util.isCube(getBlock(player.worldObj,
 							x + 1,
 							y - 1,
 							z)
 							) && heading == 3)) {
-				if ((!Util.isCube(player.worldObj.getBlock(
+				if ((!Util.isCube(getBlock(player.worldObj,
 						x,
 						y,
 						z - 1)
 						) && heading == 2)
-						|| (!Util.isCube(player.worldObj.getBlock(
+						|| (!Util.isCube(getBlock(player.worldObj,
 								x,
 								y,
 								z + 1)
 								) && heading == 0)
-						|| (!Util.isCube(player.worldObj.getBlock(
+						|| (!Util.isCube(getBlock(player.worldObj,
 								x - 1,
 								y,
 								z)
 								) && heading == 1)
-						|| (!Util.isCube(player.worldObj.getBlock(
+						|| (!Util.isCube(getBlock(player.worldObj,
 								x + 1,
 								y,
 								z)
 								) && heading == 3)) {
 					if (ObfuscationReflectionHelper.getPrivateValue(
 							EntityLivingBase.class, (EntityLivingBase) player,
-							41)) {
+							39/*isJumping var*/)) {
 						player.motionY = 0.41999998688697815D;
 					}
 				}
-				if ((Util.isCube(player.worldObj.getBlock(
+				if ((Util.isCube(getBlock(player.worldObj,
 						x,
 						y,
 						z - 1)
 						) && heading == 2)
-						|| (Util.isCube(player.worldObj.getBlock(
+						|| (Util.isCube(getBlock(player.worldObj,
 								x,
 								y,
 								z + 1)
 								) && heading == 0)
-						|| (Util.isCube(player.worldObj.getBlock(
+						|| (Util.isCube(getBlock(player.worldObj,
 								x - 1,
 								y,
 								z)
 								) && heading == 1)
-						|| (Util.isCube(player.worldObj.getBlock(
+						|| (Util.isCube(getBlock(player.worldObj,
 								x + 1,
 								y,
 								z)
 								) && heading == 3)) {
 					playerCustom.isJumping = 3;
-					if ((Util.isCube(player.worldObj.getBlock(
+					if ((Util.isCube(getBlock(player.worldObj,
 							x,
 							y + 1,
 							z - 1)
 							) && heading == 2)
-							|| (Util.isCube(player.worldObj.getBlock(
+							|| (Util.isCube(getBlock(player.worldObj,
 									x,
 									y + 1,
 									z + 1)
 									) && heading == 0)
-							|| (Util.isCube(player.worldObj.getBlock(
+							|| (Util.isCube(getBlock(player.worldObj,
 									x - 1,
 									y + 1,
 									z)
 									) && heading == 1)
-							|| (Util.isCube(player.worldObj.getBlock(
+							|| (Util.isCube(getBlock(player.worldObj,
 									x + 1,
 									y + 1,
 									z)
@@ -125,7 +125,7 @@ public class MovementJump extends Movement {
 			if (player.onGround || playerCustom.isTurning
 					|| playerCustom.isGrabbing) {
 				if (!(Boolean) ObfuscationReflectionHelper.getPrivateValue(
-						EntityLivingBase.class, (EntityLivingBase) player, 41)) {
+						EntityLivingBase.class, (EntityLivingBase) player, 39/*isJumping var*/)) {
 					playerCustom.isJumping = 0;
 				}
 				playerCustom.jumpTime = 0;

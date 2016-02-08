@@ -16,14 +16,14 @@ import net.minecraftforge.common.config.Property;
 
 import org.apache.commons.lang3.ArrayUtils;
 
-import cpw.mods.fml.client.registry.ClientRegistry;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.ObfuscationReflectionHelper;
-import cpw.mods.fml.common.eventhandler.EventBus;
-import cpw.mods.fml.common.eventhandler.IEventListener;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.fml.common.eventhandler.EventBus;
+import net.minecraftforge.fml.common.eventhandler.IEventListener;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import fr.zak.cubesedge.Movement;
 import fr.zak.cubesedge.Util;
 
@@ -47,7 +47,7 @@ public class GuiMovementList extends GuiListExtended {
 		for (int k = 0; k < j; ++k) {
 			Movement movement = (Movement) aObject1[k];
 
-			int l = mc.fontRenderer.getStringWidth(movement.getName());
+			int l = mc.fontRendererObj.getStringWidth(movement.getName());
 
 			if (l > this.lenghtName) {
 				this.lenghtName = l;
@@ -91,25 +91,23 @@ public class GuiMovementList extends GuiListExtended {
 			this.btnDisable = new GuiButton(0, 0, 0, 100, 18, "");
 		}
 
-		public void drawEntry(int p_148279_1_, int p_148279_2_,
-				int p_148279_3_, int p_148279_4_, int p_148279_5_,
-				Tessellator p_148279_6_, int p_148279_7_, int p_148279_8_,
-				boolean p_148279_9_) {
-			GuiMovementList.this.mc.fontRenderer.drawString(this.movementName,
-					p_148279_2_ + 105 - GuiMovementList.this.lenghtName,
-					p_148279_3_ + p_148279_5_ / 2
-					- GuiMovementList.this.mc.fontRenderer.FONT_HEIGHT
+		public void drawEntry(int slotIndex, int x, int y, int listWidth,
+				int slotHeight, int mouseX, int mouseY, boolean isSelected){
+			GuiMovementList.this.mc.fontRendererObj.drawString(this.movementName,
+					x + 105 - GuiMovementList.this.lenghtName,
+					y + slotHeight / 2
+					- GuiMovementList.this.mc.fontRendererObj.FONT_HEIGHT
 					/ 2, 16777215);
-			this.btnDisable.xPosition = p_148279_2_ + 125;
-			this.btnDisable.yPosition = p_148279_3_;
+			this.btnDisable.xPosition = x + 125;
+			this.btnDisable.yPosition = y;
 			if (!movement.isMovementDisabled()) {
 				this.btnDisable.displayString = "ON";
 			} else if (movement.isMovementDisabled()) {
 				this.btnDisable.displayString = "OFF";
 			}
 
-			this.btnDisable.drawButton(GuiMovementList.this.mc, p_148279_7_,
-					p_148279_8_);
+			this.btnDisable.drawButton(GuiMovementList.this.mc, mouseX,
+					mouseY);
 		}
 
 		/**
@@ -241,6 +239,13 @@ public class GuiMovementList extends GuiListExtended {
 				int p_148277_3_, int p_148277_4_, int p_148277_5_,
 				int p_148277_6_) {
 			this.btnDisable.mouseReleased(p_148277_2_, p_148277_3_);
+		}
+
+		@Override
+		public void setSelected(int p_178011_1_, int p_178011_2_,
+				int p_178011_3_) {
+			// TODO Auto-generated method stub
+			
 		}
 	}
 }

@@ -1,10 +1,12 @@
 package fr.zak.cubesedge.gui;
 
+import java.io.IOException;
+
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class GuiConfig extends GuiScreen {
@@ -26,8 +28,12 @@ public class GuiConfig extends GuiScreen {
 	 * Called when the mouse is clicked.
 	 */
 	protected void mouseClicked(int par1, int par2, int par3) {
-		if (par3 != 0 || !this.movementList.func_148179_a(par1, par2, par3)) {
-			super.mouseClicked(par1, par2, par3);
+		if (par3 != 0 || !this.movementList.mouseClicked(par1, par2, par3)) {
+			try {
+				super.mouseClicked(par1, par2, par3);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

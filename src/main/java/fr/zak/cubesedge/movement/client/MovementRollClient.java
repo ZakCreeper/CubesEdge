@@ -2,19 +2,18 @@ package fr.zak.cubesedge.movement.client;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 import net.minecraftforge.client.event.MouseEvent;
-import cpw.mods.fml.common.ObfuscationReflectionHelper;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import fr.zak.cubesedge.MovementClient;
 import fr.zak.cubesedge.Util;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
-import fr.zak.cubesedge.renderer.EntityRendererCustom;
 
 public class MovementRollClient extends MovementClient {
 
@@ -23,8 +22,7 @@ public class MovementRollClient extends MovementClient {
 	@Override
 	public void renderTick(EntityPlayerCustom playerCustom) {
 		if (playerCustom.isRolling
-				|| (Util.isCube(Minecraft.getMinecraft().theWorld
-						.getBlock(
+				|| (Util.isCube(getBlock(Minecraft.getMinecraft().theWorld,
 								MathHelper.floor_double(Minecraft
 										.getMinecraft().thePlayer.posX),
 								MathHelper.floor_double(Minecraft
@@ -41,7 +39,7 @@ public class MovementRollClient extends MovementClient {
 			ExtendedBlockStorage ebs = ((ExtendedBlockStorage[]) ObfuscationReflectionHelper
 					.getPrivateValue(Chunk.class,
 							Minecraft.getMinecraft().thePlayer.worldObj
-									.getChunkFromBlockCoords(x1, z1), 2))[y1 >> 4];
+									.getChunkFromBlockCoords(new BlockPos(x1, z1, 0)), 2))[y1 >> 4];
 			if (ebs.getExtSkylightValue((x1 & 15), y1 & 15, (z1 & 15)) == 0) {
 				ebs.setExtSkylightValue((x1 & 15), y1 & 15, (z1 & 15),
 						playerCustom.lastLightValue);
@@ -92,11 +90,11 @@ public class MovementRollClient extends MovementClient {
 		int z = MathHelper.floor_double(player.posZ);
 		if (!player.capabilities.isFlying && !playerCustom.isSneaking) {
 			if (player.fallDistance > 3.0F && player.fallDistance < 15F) {
-				if (Util.isCube(player.worldObj.getBlock(
+				if (Util.isCube(getBlock(player.worldObj,
 						x,
 						y - 3,
 						z))
-						|| Util.isCube(player.worldObj.getBlock(
+						|| Util.isCube(getBlock(player.worldObj,
 								x,
 								y - 4,
 								z)

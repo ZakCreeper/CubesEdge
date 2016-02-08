@@ -5,8 +5,8 @@ import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.client.event.MouseEvent;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.Side;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
 import fr.zak.cubesedge.Movement;
 import fr.zak.cubesedge.Util;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
@@ -22,11 +22,11 @@ public class MovementWallJump extends Movement {
 				.floor_double((double) (player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
 		if (!player.capabilities.isFlying && !playerCustom.isSneaking) {
 			if (!player.onGround && player.motionY <= 0) {
-				if ((Util.isCube(player.worldObj.getBlock(
+				if ((Util.isCube(getBlock(player.worldObj,
 						x + 1,
 						y,
-						z)) || Util.isCube(player.worldObj
-						.getBlock(x + 1,
+						z)) || Util.isCube(getBlock(player.worldObj,
+								x + 1,
 								y - 1,
 								z)
 						))
@@ -64,11 +64,11 @@ public class MovementWallJump extends Movement {
 
 						}
 					}
-				} else if ((Util.isCube(player.worldObj.getBlock(
+				} else if ((Util.isCube(getBlock(player.worldObj,
 						x - 1,
 						y,
-						z)) || Util.isCube(player.worldObj
-						.getBlock(x - 1,
+						z)) || Util.isCube(getBlock(player.worldObj,
+								x - 1,
 								y - 1,
 								z)
 						))
@@ -105,11 +105,11 @@ public class MovementWallJump extends Movement {
 							playerCustom.animRight = true;
 						}
 					}
-				} else if ((Util.isCube(player.worldObj.getBlock(
+				} else if ((Util.isCube(getBlock(player.worldObj,
 						x,
 						y,
 						z + 1)
-						) || Util.isCube(player.worldObj.getBlock(
+						) || Util.isCube(getBlock(player.worldObj,
 						x,
 						y - 1,
 						z + 1)
@@ -147,11 +147,11 @@ public class MovementWallJump extends Movement {
 							playerCustom.animLeft = true;
 						}
 					}
-				} else if ((Util.isCube(player.worldObj.getBlock(
+				} else if ((Util.isCube(getBlock(player.worldObj,
 						x,
 						y,
 						z - 1)
-						) || Util.isCube(player.worldObj.getBlock(
+						) || Util.isCube(getBlock(player.worldObj,
 						x,
 						y - 1,
 						z - 1)

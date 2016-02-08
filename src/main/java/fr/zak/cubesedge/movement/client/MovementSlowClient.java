@@ -7,9 +7,9 @@ import net.minecraft.util.Timer;
 
 import org.lwjgl.input.Keyboard;
 
-import cpw.mods.fml.common.ObfuscationReflectionHelper;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent;
 import fr.zak.cubesedge.MovementClient;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
 

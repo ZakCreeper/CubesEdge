@@ -7,7 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import fr.zak.cubesedge.MovementClient;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
 
@@ -27,7 +27,7 @@ public class MovementSprintClient extends MovementClient {
 		calculateSpeed();
 		if (event.type == RenderGameOverlayEvent.ElementType.ALL) {
 			this.drawString(
-				mc.fontRenderer,
+				mc.fontRendererObj,
 				"Speed : ",
 				event.resolution.getScaledWidth() - 115,
 				event.resolution.getScaledHeight() - 15,
@@ -35,15 +35,15 @@ public class MovementSprintClient extends MovementClient {
 			);
 			
 			this.drawString(
-				mc.fontRenderer,
+				mc.fontRendererObj,
 				speedToStr(),
-				event.resolution.getScaledWidth() - 45 - mc.fontRenderer.getStringWidth(speedToStr()),
+				event.resolution.getScaledWidth() - 45 - mc.fontRendererObj.getStringWidth(speedToStr()),
 				event.resolution.getScaledHeight() - 15,
 				new Color(255, 255, 255).getRGB()
 			);
 			
 			this.drawString(
-				mc.fontRenderer,
+				mc.fontRendererObj,
 				"kb/h",
 				event.resolution.getScaledWidth() - 40,
 				event.resolution.getScaledHeight() - 15,

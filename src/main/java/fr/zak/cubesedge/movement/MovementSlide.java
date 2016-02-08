@@ -4,8 +4,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.Side;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
 import fr.zak.cubesedge.Movement;
 import fr.zak.cubesedge.Util;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
@@ -40,8 +40,7 @@ public class MovementSlide extends Movement {
 			}
 			playerCustom.wasSprinting = player.isSprinting();
 		}
-		if(playerCustom.isSneaking || (Util.isCube(player.worldObj
-				.getBlock(
+		if(playerCustom.isSneaking || (Util.isCube(getBlock(player.worldObj,
 						x, y, z)) && playerCustom.wasSliding)){
 			Util.forceSetSize(Entity.class, player,
 					0.6F, 0.6F);

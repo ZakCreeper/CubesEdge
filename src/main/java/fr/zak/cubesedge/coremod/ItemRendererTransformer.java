@@ -7,6 +7,7 @@ import net.minecraft.launchwrapper.IClassTransformer;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.InsnNode;
@@ -55,17 +56,32 @@ public class ItemRendererTransformer implements IClassTransformer {
 	private static void patchRenderHandMethod(MethodNode mn) {
 
 		System.out.println("\tPatching method renderItemFirstPerson in ItemRenderer");
+		
 		InsnList newList = new InsnList();
 
 		mn.localVariables = new ArrayList<LocalVariableNode>(5);
 		
+		int loc = 0;
+		
+		AbstractInsnNode insn = null;
+		
+		for(int i = 0; i < mn.instructions.size(); i++) {
+			insn = mn.instructions.get(i);
+			if(insn.getOpcode() == Opcodes.INVOKESPECIAL){
+				loc++;
+				if(loc == 14){
+					break;
+				}
+			}
+			System.out.println(insn.getOpcode());
+		}
 		newList.add(new VarInsnNode(Opcodes.ALOAD, 0));
 		newList.add(new VarInsnNode(Opcodes.FLOAD, 1));
+		newList.add(new VarInsnNode(Opcodes.FLOAD, 2));
 		newList.add(new MethodInsnNode(Opcodes.INVOKESTATIC,
 				"fr/zak/cubesedge/coremod/Patch",
-				"renderItemInFirstPerson", "(L" + className + ";F)V", false));
-		newList.add(new InsnNode(Opcodes.RETURN));
+				"renderItemInFirstPerson", "(L" + className + ";FF)V", false));
 
-		mn.instructions = newList;
+		mn.instructions.insert(insn, newList);
 	}
 }

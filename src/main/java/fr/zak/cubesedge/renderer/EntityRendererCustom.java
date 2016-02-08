@@ -1,14 +1,15 @@
 package fr.zak.cubesedge.renderer;
 
-import org.lwjgl.opengl.GL11;
-
-import cpw.mods.fml.common.ObfuscationReflectionHelper;
-import fr.zak.cubesedge.Util;
-import fr.zak.cubesedge.entity.EntityPlayerCustom;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
+
+import org.lwjgl.opengl.GL11;
+
+import fr.zak.cubesedge.Util;
+import fr.zak.cubesedge.entity.EntityPlayerCustom;
 
 public class EntityRendererCustom extends EntityRenderer {
 	private final Minecraft mc;
@@ -32,11 +33,11 @@ public class EntityRendererCustom extends EntityRenderer {
 				.getExtendedProperties("Cube's Edge Player")).isSneaking
 				|| ((EntityPlayerCustom) Minecraft.getMinecraft().thePlayer
 						.getExtendedProperties("Cube's Edge Player")).isRolling
-						|| (Util.isCube(Minecraft.getMinecraft().theWorld.getBlock(
+						|| (Util.isCube(Minecraft.getMinecraft().theWorld.getBlockState(new BlockPos(
 								MathHelper
 								.floor_double(Minecraft.getMinecraft().thePlayer.posX),
 								MathHelper.floor_double(Minecraft.getMinecraft().thePlayer.posY),
-								MathHelper.floor_double(Minecraft.getMinecraft().thePlayer.posZ))) && (((EntityPlayerCustom) Minecraft
+								MathHelper.floor_double(Minecraft.getMinecraft().thePlayer.posZ))).getBlock()) && (((EntityPlayerCustom) Minecraft
 										.getMinecraft().thePlayer
 										.getExtendedProperties("Cube's Edge Player")).wasSliding || ((EntityPlayerCustom) Minecraft
 												.getMinecraft().thePlayer
@@ -69,11 +70,11 @@ public class EntityRendererCustom extends EntityRenderer {
 				.getExtendedProperties("Cube's Edge Player")).isSneaking
 				|| ((EntityPlayerCustom) Minecraft.getMinecraft().thePlayer
 						.getExtendedProperties("Cube's Edge Player")).isRolling
-						|| (Util.isCube(Minecraft.getMinecraft().theWorld.getBlock(
+						|| (Util.isCube(Minecraft.getMinecraft().theWorld.getBlockState(new BlockPos(
 								MathHelper
 								.floor_double(Minecraft.getMinecraft().thePlayer.posX),
 								MathHelper.floor_double(Minecraft.getMinecraft().thePlayer.posY),
-								MathHelper.floor_double(Minecraft.getMinecraft().thePlayer.posZ))) && (((EntityPlayerCustom) Minecraft
+								MathHelper.floor_double(Minecraft.getMinecraft().thePlayer.posZ))).getBlock()) && (((EntityPlayerCustom) Minecraft
 										.getMinecraft().thePlayer
 										.getExtendedProperties("Cube's Edge Player")).wasSliding || ((EntityPlayerCustom) Minecraft
 												.getMinecraft().thePlayer
@@ -82,8 +83,8 @@ public class EntityRendererCustom extends EntityRenderer {
 		}
 	}
 	
-	@Override
-	public void renderHand(float f, int i){
+//	@Override
+//	public void renderHand(float f, int i){
 //		GL11.glMatrixMode(GL11.GL_MODELVIEW);
 //		if (!((EntityPlayerCustom) Minecraft.getMinecraft().thePlayer
 //				.getExtendedProperties("Cube's Edge Player")).isGrabbing) {
@@ -123,6 +124,6 @@ public class EntityRendererCustom extends EntityRenderer {
 //		if (mc.gameSettings.anaglyph) {
 //			GL11.glTranslatef((float) (i * 2 - 1) * 0.1F, 0.0F, 0.0F);
 //		}
-		super.renderHand(f, i);
-	}
+//		super.renderHand(f, i);
+//	}
 }

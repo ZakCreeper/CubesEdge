@@ -6,8 +6,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.Side;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
 import fr.zak.cubesedge.Movement;
 import fr.zak.cubesedge.Util;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
@@ -84,8 +84,6 @@ public class MovementRoll extends Movement {
 		}
 		if (event.entityLiving instanceof EntityPlayer && roll) {
 			ticks++;
-			System.out.println("1 : " + ((EntityPlayerCustom)event.entityLiving.getExtendedProperties("Cube's Edge Player")).isRolling);
-			System.out.println("2 : " + ((EntityPlayerCustom)event.entityLiving.getExtendedProperties("Cube's Edge Player")).prevRolling);
 			event.distance = 0;
 		}
 		if(ticks >= 2){

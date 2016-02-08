@@ -10,12 +10,13 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.client.event.MouseEvent;
-import cpw.mods.fml.common.ObfuscationReflectionHelper;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.Side;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
 import fr.zak.cubesedge.Movement;
 import fr.zak.cubesedge.Util;
 import fr.zak.cubesedge.entity.EntityPlayerCustom;
@@ -29,53 +30,20 @@ public class MovementGrab extends Movement {
 		int z = MathHelper.floor_double(player.posZ);
 		int heading = MathHelper
 				.floor_double((double) (player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+		System.out.println(getBlock(player.worldObj, x, y+1, z+1) + " " + heading);
 		if (!playerCustom.isSneaking) {
-			if (((((Util.isCube(player.worldObj.getBlock(
-					x,
-					y,
-					z - 1)) && heading == 2)
-					|| (Util.isCube(player.worldObj.getBlock(
-							x,
-							y,
-							z + 1)
-							) && heading == 0)
-							|| (Util.isCube(player.worldObj.getBlock(
-									x - 1,
-									y,
-									z)
-									) && heading == 1) || (Util.isCube(player.worldObj
-											.getBlock(x + 1,
-													y,
-													z)
-											) && heading == 3))
-											&& ((!Util.isCube(player.worldObj.getBlock(
-													x,
-													y + 1,
-													z - 1)
-													) && heading == 2)
-													|| (!Util.isCube(player.worldObj.getBlock(
-															x,
-															y + 1,
-															z + 1)
-															) && heading == 0)
-															|| (!Util.isCube(player.worldObj.getBlock(
-																	x - 1,
-																	y + 1,
-																	z)
-																	) && heading == 1) || (!Util.isCube(player.worldObj
-																			.getBlock(x + 1,
-																					y + 1,
-																					z)
-																			) && heading == 3)) && (!Util.isCube(player.worldObj
-																					.getBlock(x,
-																							y - 2,
-																							z)
-																					))))
-																					&& player.worldObj.getBlock(
-																							x,
-																							y,
-																							z) != Blocks.ladder
-																							&& player.getCurrentEquippedItem() == null) {
+			if (((Util.isCube(getBlock(player.worldObj,x,y,z - 1)) && heading == 2)
+							|| (Util.isCube(player.worldObj.getBlockState(new BlockPos(x, y, z + 1)).getBlock()) && heading == 0)
+							|| (Util.isCube(getBlock(player.worldObj, x - 1, y, z)) && heading == 1)
+							|| (Util.isCube(getBlock(player.worldObj, x + 1, y, z)) && heading == 3))
+					&& ((!Util.isCube(getBlock(player.worldObj, x, y + 1, z - 1)) && heading == 2)
+							|| (!Util.isCube(getBlock(player.worldObj, x, y + 1, z + 1)) && heading == 0)
+							|| (!Util.isCube(getBlock(player.worldObj, x - 1, y + 1, z)) && heading == 1)
+							|| (!Util.isCube(getBlock(player.worldObj, x + 1, y + 1, z)) && heading == 3))
+					&& (!Util.isCube(getBlock(player.worldObj, x, y - 2, z)))
+					&& getBlock(player.worldObj, x, y, z) != Blocks.ladder
+					&& player.getCurrentEquippedItem() == null) {
+				
 				playerCustom.isGrabbing = true;
 				playerCustom.rotationYaw = player.rotationYaw;
 				playerCustom.rotationPitch = player.rotationPitch;
@@ -119,7 +87,7 @@ public class MovementGrab extends Movement {
 			if (!player.isSneaking()
 					&& !(Boolean) ObfuscationReflectionHelper.getPrivateValue(
 							EntityLivingBase.class, (EntityLivingBase) player,
-							41) && playerCustom.isGrabbing) {
+							39/*isJumping var*/) && playerCustom.isGrabbing) {
 				if (heading == 1 || heading == 3) {
 					player.setPosition(
 							x + 0.5F,
@@ -138,7 +106,7 @@ public class MovementGrab extends Movement {
 					player.setSprinting(false);
 				}
 			} else if ((Boolean) ObfuscationReflectionHelper.getPrivateValue(
-					EntityLivingBase.class, (EntityLivingBase) player, 41)
+					EntityLivingBase.class, (EntityLivingBase) player, 39/*isJumping var*/)
 					&& playerCustom.isGrabbing) {
 				player.motionY = 0.55D;
 			}

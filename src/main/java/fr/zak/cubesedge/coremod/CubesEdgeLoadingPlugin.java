@@ -2,19 +2,19 @@ package fr.zak.cubesedge.coremod;
 
 import java.util.Map;
 
-import cpw.mods.fml.relauncher.IFMLLoadingPlugin.MCVersion;
+import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin.MCVersion;
 
-@MCVersion("1.7.10")
+@MCVersion("1.8")
 public class CubesEdgeLoadingPlugin implements
-cpw.mods.fml.relauncher.IFMLLoadingPlugin {
+net.minecraftforge.fml.relauncher.IFMLLoadingPlugin {
 
 	public static boolean obfuscation = false;
 
 	@Override
 	public String[] getASMTransformerClass() {
-		return new String[] { EntityRendererTransformer.class.getName(),
+		return new String[] { /*EntityRendererTransformer.class.getName(),
 				EntityTransformer.class.getName(),
-				NetHandlerPlayServerTransformer.class.getName(),
+				NetHandlerPlayServerTransformer.class.getName(),*/
 				ItemRendererTransformer.class.getName()};
 	}
 
