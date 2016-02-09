@@ -67,17 +67,14 @@ public class ItemRendererTransformer implements IClassTransformer {
 		AbstractInsnNode insn = null, insn2 = null;
 		
 		for(int i = 0; i < mn.instructions.size(); i++) {
-			insn2 = mn.instructions.get(i);
-			if(insn2.getOpcode() == Opcodes.INVOKESTATIC){
+			insn = mn.instructions.get(i);
+			if(insn.getOpcode() == Opcodes.INVOKESTATIC){
 				loc2++;
 				if(loc2 == 2){
-					break;
+					insn2 = insn;
+					loc2++;
 				}
 			}
-		}
-		
-		for(int i = 0; i < mn.instructions.size(); i++) {
-			insn = mn.instructions.get(i);
 			if(insn.getOpcode() == Opcodes.INVOKESPECIAL){
 				loc++;
 				if(loc == 14){
