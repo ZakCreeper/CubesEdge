@@ -58,18 +58,30 @@ public class ItemRendererTransformer implements IClassTransformer {
 		System.out.println("\tPatching method renderItemFirstPerson in ItemRenderer");
 		
 		InsnList newList = new InsnList();
+		InsnList newList2 = new InsnList();
 
 		mn.localVariables = new ArrayList<LocalVariableNode>(5);
 		
-		int loc = 0;
+		int loc = 0, loc2 = 0;
 		
-		AbstractInsnNode insn = null;
+		AbstractInsnNode insn = null, insn2 = null;
+		
+		for(int i = 0; i < mn.instructions.size(); i++) {
+			insn2 = mn.instructions.get(i);
+			if(insn2.getOpcode() == Opcodes.INVOKESTATIC){
+				loc2++;
+				if(loc2 == 2){
+					break;
+				}
+			}
+		}
 		
 		for(int i = 0; i < mn.instructions.size(); i++) {
 			insn = mn.instructions.get(i);
 			if(insn.getOpcode() == Opcodes.INVOKESPECIAL){
 				loc++;
 				if(loc == 14){
+					mn.instructions.remove(mn.instructions.get(i-4));
 					break;
 				}
 			}
@@ -77,11 +89,20 @@ public class ItemRendererTransformer implements IClassTransformer {
 		}
 		newList.add(new VarInsnNode(Opcodes.ALOAD, 0));
 		newList.add(new VarInsnNode(Opcodes.FLOAD, 1));
-		newList.add(new VarInsnNode(Opcodes.FLOAD, 2));
 		newList.add(new MethodInsnNode(Opcodes.INVOKESTATIC,
 				"fr/zak/cubesedge/coremod/Patch",
-				"renderItemInFirstPerson", "(L" + className + ";FF)V", false));
+				"renderRightHand", "(Lnet/minecraft/client/entity/EntityPlayerSP;FFL" + className + ";F)V", false));
+		
+		newList2.add(new VarInsnNode(Opcodes.FLOAD, 1));
+		newList2.add(new VarInsnNode(Opcodes.ALOAD, 0));
+		newList2.add(new VarInsnNode(Opcodes.FLOAD, 2));
+		newList2.add(new MethodInsnNode(Opcodes.INVOKESTATIC,
+				"fr/zak/cubesedge/coremod/Patch",
+				"renderLeftHand", "(FL" + className + ";F)V", false));
 
 		mn.instructions.insert(insn, newList);
+		mn.instructions.remove(insn);
+		
+		mn.instructions.insert(insn2, newList2);
 	}
 }

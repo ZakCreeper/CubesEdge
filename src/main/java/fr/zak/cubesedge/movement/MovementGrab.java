@@ -30,7 +30,7 @@ public class MovementGrab extends Movement {
 		int z = MathHelper.floor_double(player.posZ);
 		int heading = MathHelper
 				.floor_double((double) (player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-		System.out.println(getBlock(player.worldObj, x, y+1, z+1) + " " + heading);
+//		System.out.println(getBlock(player.worldObj, x, y+1, z+1) + " " + heading);
 		if (!playerCustom.isSneaking) {
 			if (((Util.isCube(getBlock(player.worldObj,x,y,z - 1)) && heading == 2)
 							|| (Util.isCube(player.worldObj.getBlockState(new BlockPos(x, y, z + 1)).getBlock()) && heading == 0)
